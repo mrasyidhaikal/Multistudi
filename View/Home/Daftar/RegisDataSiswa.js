@@ -32,16 +32,187 @@ class RegisDataSiswa extends React.Component{
         <View style={Style.container}>
         <SafeAreaView>
         <ScrollView
-               
-        showsVerticalScrollIndicator={true}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
             
         >
         <View style={Style.NavBackContainer}>
-                <TouchableOpacity style={Style.buttonGhost}>
-                    <Text style={Style.buttonGhostText}>Tutup</Text>
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon name={'ios-chevron-back-sharp'} size={25} color={'#000'}/>
+            </TouchableOpacity>
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+            <Text style={Style.headerText}>Registration</Text>
+            </View>
+         
         </View>
-               
+
+        <View style={Style.ContainerViewHorizontal}>
+            <ScrollView
+            horizontal={true}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
+            <TouchableOpacity style={Style.buttonBlueActive}>
+              <Text style={Style.textNormalWhite}>Data Siswa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={Style.buttonBlank}>
+              <Text style={Style.textNormalGrey}>Data Wali</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={Style.buttonBlank}>
+              <Text style={Style.textNormalGrey}>Hobi/Minat</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={Style.buttonBlank}>
+              <Text style={Style.textNormalGrey}>Prestasi</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={Style.buttonBlank}>
+              <Text style={Style.textNormalGrey}>Dokumen</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={Style.buttonBlank}>
+              <Text style={Style.textNormalGrey}>Selesai</Text>
+            </TouchableOpacity>
+            </ScrollView>
+        </View>
+        
+        <View style={Style.ContainerViewBiasa}> 
+            <Text style={Style.textBold}>Data Diri</Text>
+
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Nomor Pendaftaran'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Jurusan'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Nama Lengkap'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Nama Panggilan'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Jenis Kelamin'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Agama'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Tempat Lahir'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Tanggal Lahir'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Alamat'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Nomor HP'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Email'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Sekolah Asal'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Alamat Sekolah Asal'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Anak No.'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+            <View style={Style.inputContainer}>
+            <TextInput
+                    style={Style.input}
+                    placeholder={'Jumlah Saudara'}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                   // onChangeText={val => this.setState({email:val})}
+                />
+            </View>
+        </View>
+
+       
 
  
             
