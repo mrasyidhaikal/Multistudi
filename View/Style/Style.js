@@ -20,6 +20,14 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:black,
     },
+    textNormalWhite:{
+        fontSize:16,
+        color:white,
+    },
+    textNormalGrey:{
+        fontSize:16,
+        color:greyText,
+    },
     headerText:{
         fontSize:24,
         fontWeight:'bold',
@@ -46,8 +54,17 @@ const styles = StyleSheet.create({
        justifyContent:'center',
 
    },
+   buttonBlueActive:{
+    borderRadius:10,
+    backgroundColor:backgroundBlue,
+    padding:10,
+   },
+   buttonBlank:{
+    padding:10,
+   },
+
    inputContainer:{
-    marginTop:5,
+    marginTop:8,
     },
     input: {
         width: WIDTH-55,
@@ -56,13 +73,31 @@ const styles = StyleSheet.create({
         fontSize:16,
         paddingLeft:20,
         backgroundColor:white,
-        color:greyText,
-        marginHorizontal:25,
+        color:black,
+        borderColor:greyText,
+        borderWidth:1,
+        
     },
     NavBackContainer : {
         marginLeft:20,
         marginTop:windowHeight / 20
-    
+    },
+    ContainerViewBiasa:{
+        marginHorizontal:25,
+        marginVertical:10
+    },
+    ContainerViewHorizontal:{
+        margin : 20,
+        paddingVertical:10,
+        flexDirection:'row',
+   
+    },
+    ContainerViewHorizontalSpace:{
+        margin : 20,
+        paddingVertical:8,
+        flexDirection:'row',
+        justifyContent:'space-between'
+   
     },
  
   });
