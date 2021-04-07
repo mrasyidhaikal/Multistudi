@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
     ContainerViewBiasa:{
         marginHorizontal:25,
-     
+        marginBottom:25
     },
     ContainerViewHorizontal:{
         margin : 20,
