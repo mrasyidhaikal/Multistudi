@@ -33,7 +33,7 @@ class Home extends React.Component{
         <SafeAreaView>
       
         <View style={Style.NavBackContainer}>
-                <TouchableOpacity style={Style.buttonGhost} onPress={() => navigation.navigate('RegisDataSiswa')}>
+                <TouchableOpacity style={Style.buttonGhost} onPress={() => navigation.navigate('RegisterNewSiswa',{screen:'RegisDataSiswa'})}>
                     <Text style={Style.buttonGhostText}>Tutup</Text>
                 </TouchableOpacity>
         </View>

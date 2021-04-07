@@ -9,26 +9,46 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import HomeScreen from './View/Home/Home'
 import RegisDataSiswa from './View/Home/Daftar/RegisDataSiswa'
+import RegisDataWali from './View/Home/Daftar/RegisDataWali'
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
-const RegisNewSiswa = createStackNavigator();
+const Main = createStackNavigator();
+const RegisterNewSiswa = createStackNavigator();
 
-const RegisNewSiswaa =()=>{
+const RegisterNewSiswaStack = () => {
   return(
-    <RegisNewSiswa.Navigator
-    screenOptions={{ headerShown: false }}>
-        <RegisNewSiswa.Screen
-          name="AppTabs"
-          component={AppTabs}
-        />
-      <RegisNewSiswa.Screen
+    <RegisterNewSiswa.Navigator
+    screenOptions={{ headerShown: false }}
+    >
+      <RegisterNewSiswa.Screen 
           name="RegisDataSiswa"
           component={RegisDataSiswa}
       />
-    </RegisNewSiswa.Navigator>
+      <RegisterNewSiswa.Screen 
+          name="RegisDataWali"
+          component ={RegisDataWali}
+      />
+    </RegisterNewSiswa.Navigator>
   )
 }
+
+const MainStack =()=>{
+  return(
+    <Main.Navigator
+    screenOptions={{ headerShown: false }}>
+        <Main.Screen
+          name="AppTabs"
+          component={AppTabs}
+        />
+      <Main.Screen
+          name="RegisterNewSiswa"
+          component={RegisterNewSiswaStack}
+      />
+    </Main.Navigator>
+  )
+}
+
 const AppTabs = () =>{
   return (
 
@@ -68,8 +88,8 @@ export default function App() {
    >
 
     <AuthStack.Screen
-    name="RegisNewSiswa"
-    component={RegisNewSiswaa}
+    name="Main"
+    component={MainStack}
   />
  
 </AuthStack.Navigator>

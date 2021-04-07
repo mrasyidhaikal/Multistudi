@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
    textBold:{
        fontWeight:'bold',
-       fontSize:20,
+       fontSize:18,
        color:black
    },
    buttonGhostText:{
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
    },
 
    inputContainer:{
-    marginTop:8,
+    marginTop:10,
     },
     input: {
         width: WIDTH-55,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
     ContainerViewBiasa:{
         marginHorizontal:25,
-        marginVertical:10
+     
     },
     ContainerViewHorizontal:{
         margin : 20,
