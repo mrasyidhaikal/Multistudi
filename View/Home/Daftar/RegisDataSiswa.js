@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {SafeAreaView, StyleSheet, Text, View,Image,Button, Dimensions,TouchableOpacity,TextInput, StatusBar,ScrollView, RefreshControl } from 'react-native';
 
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {Picker} from '@react-native-community/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
@@ -18,11 +19,26 @@ class RegisDataSiswa extends React.Component{
         this.state = {
        
             refreshing: false,
+            kodeJurusan:"",
+            agama:"",
+            displayFormat:"DD MMM YYYY"
            
         }
     }
 
-
+    handleConfirm=(date)=>{
+      this.setState({DateDisplay:date})
+      this.setState({visibility:false})
+      this.setState({TextInputDisableStatus:true})
+    }
+    onPressCancel=()=>{
+        this.setState({visibility:false})
+        this.setState({TextInputDisableStatus:true})
+    }
+    onPressButton=()=>{
+        this.setState({visibility:true})
+        this.setState({TextInputDisableStatus:false})
+    }
 
     render(){
     
@@ -79,19 +95,31 @@ class RegisDataSiswa extends React.Component{
             <TextInput
                     style={Style.input}
                     placeholder={'Nomor Pendaftaran'}
+                    editable={false}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
                    // onChangeText={val => this.setState({email:val})}
                 />
             </View>
             <View style={Style.inputContainer}>
-            <TextInput
-                    style={Style.input}
-                    placeholder={'Jurusan'}
-                    placeholderTextColor={'#B2B5BF'}
-                    underlineColorAndroid='transparent'
-                   // onChangeText={val => this.setState({email:val})}
-                />
+              <View style={Style.input}>
+                <Picker
+                  mode="dropdown"
+                  style={{margin:-4}}
+                  selectedValue={this.state.kodeJurusan}
+                  placeholder="Pilih Jurusan"
+                  placeholderTextColor={'#B2B5BF'}
+                  underlineColorAndroid='transparent'
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({kodeJurusan: itemValue})
+                  }>
+                      <Picker.Item label="Rekayasa Perangkat Lunak" value="rpl" />
+                      <Picker.Item label="Teknik Komputer dan Jaringan" value="tkj" />
+                      <Picker.Item label="Akuntansi" value="akuntansi" />
+                      <Picker.Item label="Seni Tari" value="senitari" />
+                      <Picker.Item label="Multimedia" value="multimedia" />
+                </Picker>
+              </View>
             </View>
             <View style={Style.inputContainer}>
             <TextInput
@@ -121,13 +149,32 @@ class RegisDataSiswa extends React.Component{
                 />
             </View>
             <View style={Style.inputContainer}>
-            <TextInput
+            {/* <TextInput
                     style={Style.input}
                     placeholder={'Agama'}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
                    // onChangeText={val => this.setState({email:val})}
-                />
+                /> */}
+
+              <View style={Style.input}>
+                  <Picker
+                    mode="dropdown"
+                    style={{margin:-4}}
+                    selectedValue={this.state.kodeJurusan}
+                    placeholderTextColor={'#B2B5BF'}
+                    underlineColorAndroid='transparent'
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.setState({Agama: itemValue})
+                    }>
+                      {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
+                      <Picker.Item label="Islam" value="islam" />
+                      <Picker.Item label="Kristen" value="kristen" />
+                      <Picker.Item label="Katolik" value="katolik" />
+                      <Picker.Item label="Buddha" value="buddhas" />
+                      <Picker.Item label="Hindu" value="hindu" />
+                  </Picker>
+              </View>
             </View>
             <View style={Style.inputContainer}>
             <TextInput
@@ -139,13 +186,23 @@ class RegisDataSiswa extends React.Component{
                 />
             </View>
             <View style={Style.inputContainer}>
-            <TextInput
-                    style={Style.input}
-                    placeholder={'Tanggal Lahir'}
-                    placeholderTextColor={'#B2B5BF'}
-                    underlineColorAndroid='transparent'
-                   // onChangeText={val => this.setState({email:val})}
-                />
+              <TextInput
+                  style={Style.input}
+                  placeholder={'Tanggal Lahir'}
+                  placeholderTextColor={'#666872'}
+                  underlineColorAndroid='transparent'
+                  editable={this.state.TextInputDisableStatus}
+                  pointerEvents="none"
+                  selectTextOnFocus={false}
+                  onTouchStart={this.onPressButton}
+                  value={this.state.DateDisplay ? moment(this.state.DateDisplay).format(this.state.displayFormat) : ''}
+              />
+                
+                <DateTimePickerModal 
+                mode="date"
+                isVisible={this.state.visibility} 
+                onConfirm={this.handleConfirm} 
+                onCancel={this.onPressCancel}/>
             </View>
             <View style={Style.inputContainer}>
             <TextInput
@@ -159,6 +216,7 @@ class RegisDataSiswa extends React.Component{
             <View style={Style.inputContainer}>
             <TextInput
                     style={Style.input}
+                    keyboardType="number-pad"
                     placeholder={'Nomor HP'}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
@@ -195,6 +253,7 @@ class RegisDataSiswa extends React.Component{
             <View style={Style.inputContainer}>
             <TextInput
                     style={Style.input}
+                    keyboardType="number-pad"
                     placeholder={'Anak No.'}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
@@ -212,12 +271,10 @@ class RegisDataSiswa extends React.Component{
             </View>
         </View>
 
-       
 
- 
-            
        </ScrollView>
         </SafeAreaView>  
+        <StatusBar backgroundColor="#fff" barStyle="dark-content"/>
       </View>
       
     )
