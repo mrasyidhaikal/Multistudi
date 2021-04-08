@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
     ContainerViewBiasa:{
         marginHorizontal:25,
-     
+        marginBottom:25
     },
     ContainerViewHorizontal:{
         margin : 20,
@@ -98,6 +98,11 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between'
    
+    },
+    btnRemove:{
+        position:'absolute',
+        top:8,
+        right:25,
     },
  
   });
