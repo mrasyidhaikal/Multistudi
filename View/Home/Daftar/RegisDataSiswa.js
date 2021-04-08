@@ -57,7 +57,7 @@ class RegisDataSiswa extends React.Component{
                 <Icon name={'ios-chevron-back-sharp'} size={25} color={'#000'}/>
             </TouchableOpacity>
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-            <Text style={Style.headerText}>Registration</Text>
+            <Text style={Style.headerText}>Registrasi</Text>
             </View>
          
         </View>
@@ -70,7 +70,7 @@ class RegisDataSiswa extends React.Component{
             <TouchableOpacity style={Style.buttonBlueActive}>
               <Text style={Style.textNormalWhite}>Data Siswa</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataWali')}>
               <Text style={Style.textNormalGrey}>Data Wali</Text>
             </TouchableOpacity>
             <TouchableOpacity style={Style.buttonBlank}>
@@ -79,7 +79,7 @@ class RegisDataSiswa extends React.Component{
             <TouchableOpacity style={Style.buttonBlank}>
               <Text style={Style.textNormalGrey}>Prestasi</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDokumen')}>
               <Text style={Style.textNormalGrey}>Dokumen</Text>
             </TouchableOpacity>
             <TouchableOpacity style={Style.buttonBlank}>
@@ -98,6 +98,7 @@ class RegisDataSiswa extends React.Component{
                     editable={false}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
+                    value='MHS-08729021'
                    // onChangeText={val => this.setState({email:val})}
                 />
             </View>
@@ -218,6 +219,7 @@ class RegisDataSiswa extends React.Component{
                     style={Style.input}
                     keyboardType="number-pad"
                     placeholder={'Nomor HP'}
+                    maxLength={13}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
                    // onChangeText={val => this.setState({email:val})}
@@ -255,6 +257,7 @@ class RegisDataSiswa extends React.Component{
                     style={Style.input}
                     keyboardType="number-pad"
                     placeholder={'Anak No.'}
+                    maxLength={2}
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
                    // onChangeText={val => this.setState({email:val})}
@@ -264,6 +267,8 @@ class RegisDataSiswa extends React.Component{
             <TextInput
                     style={Style.input}
                     placeholder={'Jumlah Saudara'}
+                    maxLength={2}
+                    keyboardType="number-pad"
                     placeholderTextColor={'#B2B5BF'}
                     underlineColorAndroid='transparent'
                    // onChangeText={val => this.setState({email:val})}
@@ -272,7 +277,7 @@ class RegisDataSiswa extends React.Component{
         </View>
 
         <View style={Style.ContainerViewHorizontalSpace}>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.goBack()}>
               <View style={{flexDirection:'row'}}>
                   <Icon name={'ios-chevron-back-sharp'} size={20} color={'#000'}/>
                   <Text style={Style.textNormalBlack}>Sebelumnya</Text>
