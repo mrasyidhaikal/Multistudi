@@ -99,6 +99,11 @@ const styles = StyleSheet.create({
         justifyContent:'space-between'
    
     },
+    btnRemove:{
+        position:'absolute',
+        top:8,
+        right:25,
+    },
  
   });
   

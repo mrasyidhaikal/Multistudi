@@ -8,8 +8,12 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 
 import HomeScreen from './View/Home/Home'
+
+// Screen Register Siswa Baru
 import RegisDataSiswa from './View/Home/Daftar/RegisDataSiswa'
 import RegisDataWali from './View/Home/Daftar/RegisDataWali'
+import RegisHobi from './View/Home/Daftar/RegisHobi'
+import RegisPrestasi from './View/Home/Daftar/RegisPrestasi'
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -28,6 +32,14 @@ const RegisterNewSiswaStack = () => {
       <RegisterNewSiswa.Screen 
           name="RegisDataWali"
           component ={RegisDataWali}
+      />
+          <RegisterNewSiswa.Screen 
+          name="RegisHobi"
+          component ={RegisHobi}
+      />
+         <RegisterNewSiswa.Screen 
+          name="RegisPrestasi"
+          component ={RegisPrestasi}
       />
     </RegisterNewSiswa.Navigator>
   )

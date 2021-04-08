@@ -265,7 +265,7 @@ class RegisDataWali extends React.Component{
                   <Text style={Style.textNormalBlack}>Sebelumnya</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataWali')}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisHobi')}>
             <View style={{flexDirection:'row'}}>
               <Text style={Style.textNormalBlack}>Selanjutnya</Text>
               <Icon name={'ios-chevron-forward-sharp'} size={20} color={'#000'}/>
