@@ -21,15 +21,42 @@ import moment from "moment";
 import Style from "./../Style/Style";
 
 const { width: WIDTH } = Dimensions.get("window");
+const slider = [
+  {
+    image: require("./../../assets/banner.png"),
+    linkStack: "RegisterNewSiswa",
+    linkScren: "RegisDataSiswa",
+  },
+  {
+    image: require("./../../assets/banner2.png"),
+    linkStack: "RegisterNewSiswa",
+    linkScren: "RegisDataSiswa",
+  },
+  {
+    image: require("./../../assets/banner3.png"),
+    linkStack: "RegisterNewSiswa",
+    linkScren: "RegisDataSiswa",
+  },
+];
+const image = "./../../assets/banner3.png";
 class Home extends React.Component {
   constructor() {
     super();
 
     this.state = {
       refreshing: false,
+      active: 0,
     };
   }
 
+  change = ({ nativeEvent }) => {
+    const slide = Math.ceil(
+      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+    );
+    if (slide !== this.state.active) {
+      this.setState({ active: slide });
+    }
+  };
   render() {
     const { navigation } = this.props;
     return (
@@ -39,7 +66,7 @@ class Home extends React.Component {
             <View style={Style.NavBackContainer}>
               <View style={{ flexDirection: "row" }}>
                 <Image source={require("./../../assets/profile.png")} />
-                <View>
+                <View style={{ marginLeft: 15 }}>
                   <Text style={Style.textBold}>Jenny Willson</Text>
                   <Text style={Style.textNormalGrey}>
                     Kelas XI Teknik Komputer
@@ -47,27 +74,45 @@ class Home extends React.Component {
                 </View>
               </View>
             </View>
-            <View style={Style.ContainerViewBiasa}>
-              <TouchableOpacity
-                style={Style.buttonBlank}
-                onPress={() =>
-                  navigation.navigate("RegisterNewSiswa", {
-                    screen: "RegisDataSiswa",
-                  })
-                }
-              >
-                <ImageBackground
-                  source={require("./../../assets/banner.png")}
-                  style={{
-                    justifyContent: "center",
-                    alignContent: "flex-start",
-                    height: 170,
-                    width: WIDTH - 50,
 
-                    flex: 1,
-                  }}
-                ></ImageBackground>
-              </TouchableOpacity>
+            <ScrollView
+              horizontal={true}
+              pagingEnabled={true}
+              onScroll={this.change}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+            >
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
+              >
+                {slider.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(item.linkStack, {
+                        screen: item.linkScren,
+                      })
+                    }
+                  >
+                    <Image source={item.image} style={Style.imageSlider} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+            <View style={Style.paging}>
+              {slider.map((i, k) => (
+                <View style={{ marginHorizontal: 10 }}>
+                  <Text
+                    style={
+                      k == this.state.active
+                        ? Style.textNormalBlack
+                        : Style.textNormalGrey
+                    }
+                    key={k}
+                  >
+                    ⬤
+                  </Text>
+                </View>
+              ))}
             </View>
           </ScrollView>
         </SafeAreaView>

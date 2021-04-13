@@ -115,6 +115,16 @@ const styles = StyleSheet.create({
     top: 8,
     right: 25,
   },
+  imageSlider: {
+    borderRadius: 10,
+    height: 170,
+    margin: 9,
+  },
+  paging: {
+    flexDirection: "row",
+
+    justifyContent: "center",
+  },
 });
 
 export default styles;
