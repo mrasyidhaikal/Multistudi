@@ -37,6 +37,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: black,
   },
+  textBoldCenter: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: black,
+    textAlign:"center",
+  },
   buttonGhostText: {
     fontSize: 16,
     fontWeight: "bold",

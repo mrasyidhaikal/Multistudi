@@ -106,19 +106,19 @@ class RegisHobi extends React.Component{
             horizontal={true}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataSiswa')}>
               <Text style={Style.textNormalGrey}>Data Siswa</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataWali')}>
               <Text style={Style.textNormalGrey}>Data Wali</Text>
             </TouchableOpacity>
             <TouchableOpacity style={Style.buttonBlueActive}>
               <Text style={Style.textNormalWhite}>Hobi/Minat</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisPrestasi')}>
               <Text style={Style.textNormalGrey}>Prestasi</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataFoto')}>
               <Text style={Style.textNormalGrey}>Dokumen</Text>
             </TouchableOpacity>
             <TouchableOpacity style={Style.buttonBlank}>
@@ -151,7 +151,7 @@ class RegisHobi extends React.Component{
               />
         </View>
         <View style={Style.ContainerViewHorizontalSpace}>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate("RegisDataWali")}>
               <View style={{flexDirection:'row'}}>
                   <Icon name={'ios-chevron-back-sharp'} size={20} color={'#000'}/>
                   <Text style={Style.textNormalBlack}>Sebelumnya</Text>

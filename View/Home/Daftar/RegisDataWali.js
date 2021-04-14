@@ -84,13 +84,13 @@ class RegisDataWali extends React.Component{
             <TouchableOpacity style={Style.buttonBlueActive}>
               <Text style={Style.textNormalWhite}>Data Wali</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisHobi')}>
               <Text style={Style.textNormalGrey}>Hobi/Minat</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisPrestasi')}>
               <Text style={Style.textNormalGrey}>Prestasi</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataFoto')}>
               <Text style={Style.textNormalGrey}>Dokumen</Text>
             </TouchableOpacity>
             <TouchableOpacity style={Style.buttonBlank}>
@@ -362,7 +362,7 @@ class RegisDataWali extends React.Component{
             </View>
         </View>
         <View style={Style.ContainerViewHorizontalSpace}>
-            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate("RegisDataSiswa")}>
               <View style={{flexDirection:'row'}}>
                   <Icon name={'ios-chevron-back-sharp'} size={20} color={'#000'}/>
                   <Text style={Style.textNormalBlack}>Sebelumnya</Text>
@@ -376,7 +376,7 @@ class RegisDataWali extends React.Component{
             </TouchableOpacity>
         </View>
 
-
+ 
             </ScrollView>
         
                
