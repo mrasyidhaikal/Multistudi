@@ -14,6 +14,9 @@ import RegisDataWali from "./View/Home/Daftar/RegisDataWali";
 import RegisHobi from "./View/Home/Daftar/RegisHobi";
 import RegisPrestasi from "./View/Home/Daftar/RegisPrestasi";
 import RegisDataFoto from "./View/Home/Daftar/RegisDataFoto";
+import RegisSelesai from "./View/Home/Daftar/RegisSelesai";
+import Guru from "./View/Home/Guru";
+import DetailGuru from "./View/Home/DetailGuru";
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -31,6 +34,7 @@ const RegisterNewSiswaStack = () => {
       <RegisterNewSiswa.Screen name="RegisHobi" component={RegisHobi} />
       <RegisterNewSiswa.Screen name="RegisPrestasi" component={RegisPrestasi} />
       <RegisterNewSiswa.Screen name="RegisDataFoto" component={RegisDataFoto} />
+      <RegisterNewSiswa.Screen name="RegisSelesai" component={RegisSelesai} />
     </RegisterNewSiswa.Navigator>
   );
 };
@@ -40,6 +44,8 @@ const MainStack = () => {
     <Main.Navigator screenOptions={{ headerShown: false }}>
       <Main.Screen name="AppTabs" component={AppTabs} />
       <Main.Screen name="RegisterNewSiswa" component={RegisterNewSiswaStack} />
+      <Main.Screen name="Guru" component={Guru} />
+      <Main.Screen name="DetailGuru" component={DetailGuru} />
     </Main.Navigator>
   );
 };
@@ -69,6 +75,7 @@ const AppTabs = () => {
           ),
         }}
       />
+      
     </Tab.Navigator>
   );
 };

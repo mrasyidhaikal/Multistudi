@@ -73,13 +73,13 @@ class RegisDataSiswa extends React.Component{
             <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataWali')}>
               <Text style={Style.textNormalGrey}>Data Wali</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisHobi')}>
               <Text style={Style.textNormalGrey}>Hobi/Minat</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisPrestasi')}>
               <Text style={Style.textNormalGrey}>Prestasi</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDokumen')}>
+            <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataFoto')}>
               <Text style={Style.textNormalGrey}>Dokumen</Text>
             </TouchableOpacity>
             <TouchableOpacity style={Style.buttonBlank}>
