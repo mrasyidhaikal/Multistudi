@@ -1,15 +1,16 @@
 import * as React from "react";
 
 import { StyleSheet, Dimensions } from "react-native";
-const { width: WIDTH } = Dimensions.get("window");
-const windowHeight = Dimensions.get("window").height;
-const black = "#000000";
-const white = "#fff";
-const greyText = "#B2B5BF";
-const greyBorder = "#E7E9F1";
-const backgroundBlue = "#3FA2F7";
-const greenDone = "#06BFAD";
-const biru = "#3FA2F7";
+export const { width: WIDTH } = Dimensions.get("window");
+export const windowHeight = Dimensions.get("window").height;
+export const black = "#000000";
+export const white = "#fff";
+export const greyText = "#B2B5BF";
+export const greyBorder = "#E7E9F1";
+export const backgroundBlue = "#3FA2F7";
+export const greenDone = "#06BFAD";
+export const biru = "#3FA2F7";
+export const merah = "#FF3737";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -37,11 +38,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: black,
   },
+  textBold20: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: black,
+  },
   textBoldCenter: {
     fontWeight: "bold",
     fontSize: 18,
     color: black,
-    textAlign:"center",
+    textAlign: "center",
   },
   buttonGhostText: {
     fontSize: 16,
@@ -96,7 +102,7 @@ const styles = StyleSheet.create({
     marginTop: windowHeight / 20,
   },
   ContainerViewBiasa: {
-    marginHorizontal: 25,
+    marginHorizontal: 20,
     marginBottom: 25,
   },
   ContainerViewHorizontal: {
@@ -130,6 +136,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     justifyContent: "center",
+  },
+  inputIcon: {
+    position: "absolute",
+
+    top: 8,
+    left: 10,
+    paddingRight: 5,
   },
 });
 
