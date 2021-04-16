@@ -17,6 +17,7 @@ import RegisDataFoto from "./View/Home/Daftar/RegisDataFoto";
 import RegisSelesai from "./View/Home/Daftar/RegisSelesai";
 import Guru from "./View/Home/Guru";
 import DetailGuru from "./View/Home/DetailGuru";
+import Profil from "./View/Home/Profil";
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -46,6 +47,7 @@ const MainStack = () => {
       <Main.Screen name="RegisterNewSiswa" component={RegisterNewSiswaStack} />
       <Main.Screen name="Guru" component={Guru} />
       <Main.Screen name="DetailGuru" component={DetailGuru} />
+      <Main.Screen name="Profil" component={Profil} />
     </Main.Navigator>
   );
 };

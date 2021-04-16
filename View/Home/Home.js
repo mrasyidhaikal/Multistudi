@@ -65,7 +65,9 @@ class Home extends React.Component {
           <ScrollView>
             <View style={[Style.NavBackContainer,{marginTop:40}]}>
               <View style={{ flexDirection: "row" }}>
-                <Image source={require("./../../assets/profile.png")} />
+                <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
+                  <Image source={require("./../../assets/profile.png")} />
+                </TouchableOpacity>
                 <View style={{ marginLeft: 15 }}>
                   <Text style={Style.textBold}>Jenny Willson</Text>
                   <Text style={Style.textNormalGrey}>
