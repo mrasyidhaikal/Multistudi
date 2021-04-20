@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 70,
     width: WIDTH - 55,
-
+    marginVertical: 10,
     justifyContent: "center",
   },
   buttonBlank: {

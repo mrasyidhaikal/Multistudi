@@ -68,9 +68,7 @@ class Home extends React.Component {
           <ScrollView>
             <View style={[Style.NavBackContainer, { marginTop: 40 }]}>
               <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-                  <Image source={require("./../../assets/profile.png")} />
-                </TouchableOpacity>
+                <Image source={require("./../../assets/profile.png")} />
                 <View style={{ marginLeft: 15 }}>
                   <Text style={Style.textBold}>Jenny Willson</Text>
                   <Text style={Style.textNormalGrey}>
@@ -163,13 +161,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-people-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Kehadiran
@@ -194,13 +192,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-book-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Jadwal Pel.
@@ -228,13 +226,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-person-circle-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Guru
@@ -267,13 +265,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-star"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Nilai
@@ -298,13 +296,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-reader-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Rapor
@@ -332,13 +330,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-wallet-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Pembayaran

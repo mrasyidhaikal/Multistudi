@@ -13,12 +13,15 @@ import {
   ScrollView,
   RefreshControl,
   ImageBackground,
+  Linking,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import Style from "../../Style/Style";
+import CallAPIData from '../../../Controller/CallAPI';
+
 
 const { width: WIDTH } = Dimensions.get("window");
 
@@ -29,7 +32,25 @@ class DetailGuru extends React.Component {
     this.state = {
       refreshing: false,
       active: 0,
+      dataTeacher: [],
     };
+  }
+
+  
+  handleMail = () => {
+    if (this.state.dataTeacher['email'] == null){
+      return;
+    }else{
+      Linking.openURL('mailto:'+this.state.dataTeacher['email']).catch(err => console.error("Couldn't load page", err));
+    }
+  };
+
+  handlePhone = () => {
+    if (this.state.dataTeacher['mobileno'] == null){
+      return;
+    }else{
+    Linking.openURL(`tel:${this.state.dataTeacher['mobileno']}`)
+    }
   }
 
   change = ({ nativeEvent }) => {
@@ -40,6 +61,27 @@ class DetailGuru extends React.Component {
       this.setState({ active: slide });
     }
   };
+
+  getTeacher = async() =>{
+    const { navigation,route } = this.props;
+    const { params: teacherID } = route.params;
+
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/TeacherbyID/${teacherID}`
+    const response = await CallAPIData.getData(url)
+    const {data,statusCode} = response
+    
+    if(statusCode == 200){
+      this.setState({dataTeacher:data})
+      // console.log(this.state.dataTeacher)
+    }else{
+      console.log('Gagal Akses API')
+    }
+  }
+
+  componentDidMount(){
+    this.getTeacher()
+  }
+
   render() {
     const { navigation } = this.props;
     return (
@@ -54,16 +96,18 @@ class DetailGuru extends React.Component {
               style={{ marginTop: 30, marginRight: 20, alignItems: "center" }}
             >
               <Image
-                style={{ width: 120, height: 120 }}
-                source={require("./../../../assets/profile.png")}
+                style={{ width: 120, height: 120, borderRadius: 60 }}
+                source={{uri:this.state.dataTeacher['picture']}}
               />
               <Text style={[Style.textBold, { marginTop: 20 }]}>
-                Joni Firdaus, S.S
+                {this.state.dataTeacher['name']}
               </Text>
               <Text style={{ color: "#B2B5BF", marginTop: 10 }}>
-                Kepala Sekolah
+                {this.state.dataTeacher['title']}
               </Text>
-              <Text style={{ color: "#B2B5BF" }}>T29067601</Text>
+              <Text style={{ color: "#B2B5BF" }}>
+                {this.state.dataTeacher['nrp']}
+              </Text>
             </View>
 
             <View style={[Style.inputContainer, { padding: 15 }]}>
@@ -78,43 +122,47 @@ class DetailGuru extends React.Component {
                     width: WIDTH - 75,
                   },
                 ]}
-                value="Permanen"
+                value={this.state.dataTeacher['empstatus']}
                 editable={false}
               ></TextInput>
             </View>
 
             <View style={[Style.inputContainer, { padding: 15 }]}>
-              <Text style={{ color: "#B2B5BF" }}>Telepon</Text>
-              <TextInput
-                style={[
-                  Style.input,
-                  {
-                    borderBottomColor: "#E7E9F1",
-                    borderColor: 0,
-                    borderRadius: 0,
-                    width: WIDTH - 75,
-                  },
-                ]}
-                value="082171226322"
-                editable={false}
-              ></TextInput>
+              <TouchableOpacity onPress={this.handlePhone} >
+                <Text style={{ color: "#B2B5BF" }}>Telepon</Text>
+                <TextInput
+                  style={[
+                    Style.input,
+                    {
+                      borderBottomColor: "#E7E9F1",
+                      borderColor: 0,
+                      borderRadius: 0,
+                      width: WIDTH - 75,
+                    },
+                  ]}
+                  value={this.state.dataTeacher['mobileno']}
+                  editable={false}
+                ></TextInput>
+              </TouchableOpacity>
             </View>
 
             <View style={[Style.inputContainer, { padding: 15 }]}>
-              <Text style={{ color: "#B2B5BF" }}>Email</Text>
-              <TextInput
-                style={[
-                  Style.input,
-                  {
-                    borderBottomColor: "#E7E9F1",
-                    borderColor: 0,
-                    borderRadius: 0,
-                    width: WIDTH - 75,
-                  },
-                ]}
-                value="humas@multistudi.sch.id"
-                editable={false}
-              ></TextInput>
+              <TouchableOpacity onPress={this.handleMail}>
+                <Text style={{ color: "#B2B5BF" }}>Email</Text>
+                <TextInput
+                  style={[
+                    Style.input,
+                    {
+                      borderBottomColor: "#E7E9F1",
+                      borderColor: 0,
+                      borderRadius: 0,
+                      width: WIDTH - 75,
+                    },
+                  ]}
+                  value={this.state.dataTeacher['email']}
+                  editable={false}
+                ></TextInput>
+              </TouchableOpacity>
             </View>
           </View>
         </SafeAreaView>
