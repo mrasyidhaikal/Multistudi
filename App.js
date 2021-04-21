@@ -19,6 +19,12 @@ import Guru from "./View/Home/Guru/Guru";
 import DetailGuru from "./View/Home/Guru/DetailGuru";
 import NoteScreen from "./View/Notes/NotesView";
 import Pembayaran from "./View/Home/Pembayaran/Pembayaran";
+import Tagihan from "./View/Home/Pembayaran/Tagihan";
+import MetodePembayaran from "./View/Home/Pembayaran/MetodePembayaran";
+import RiwayatPembayaran from "./View/Home/Pembayaran/RiwayatPembayaran";
+import Profil from "./View/Home/Profil/Profil";
+import InfoAplikasi from "./View/Home/Profil/InfoAplikasi";
+import TentangKami from "./View/Home/Profil/TentangKami";
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -26,6 +32,8 @@ const Main = createStackNavigator();
 const RegisterNewSiswa = createStackNavigator();
 const guruStack = createStackNavigator();
 const pembayaranStack = createStackNavigator();
+const profilStack = createStackNavigator();
+
 const RegisterNewSiswaStack = () => {
   return (
     <RegisterNewSiswa.Navigator screenOptions={{ headerShown: false }}>
@@ -49,6 +57,7 @@ const MainStack = () => {
       <Main.Screen name="RegisterNewSiswa" component={RegisterNewSiswaStack} />
       <Main.Screen name="guruStacks" component={guruStacks} />
       <Main.Screen name="pembayranStacks" component={pembayranStacks} />
+      <Main.Screen name="Profil" component={profilStacks} />
     </Main.Navigator>
   );
 };
@@ -66,7 +75,20 @@ const pembayranStacks = () => {
   return (
     <pembayaranStack.Navigator screenOptions={{ headerShown: false }}>
       <pembayaranStack.Screen name="Pembayaran" component={Pembayaran} />
+      <pembayaranStack.Screen name="Tagihan" component={Tagihan} />
+      <pembayaranStack.Screen name="MetodePembayaran" component={MetodePembayaran} />
+      <pembayaranStack.Screen name="RiwayatPembayaran" component={RiwayatPembayaran} />
     </pembayaranStack.Navigator>
+  );
+};
+
+const profilStacks = () => {
+  return (
+    <profilStack.Navigator screenOptions={{ headerShown: false }}>
+      <profilStack.Screen name="Profil" component={Profil} />
+      <profilStack.Screen name="InfoAplikasi" component={InfoAplikasi} />
+      <profilStack.Screen name="TentangKami" component={TentangKami} />
+    </profilStack.Navigator>
   );
 };
 
@@ -103,6 +125,17 @@ const AppTabs = () => {
 
           tabBarIcon: ({ color }) => (
             <Icon name="document-text-outline" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ProfilScreen"
+        component={Profil}
+        options={{
+          tabBarLabel: "Profil",
+
+          tabBarIcon: ({ color }) => (
+            <Icon name="ios-person-circle-outline" color={color} size={26} />
           ),
         }}
       />

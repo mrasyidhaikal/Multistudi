@@ -18,9 +18,10 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
-import Style, { black } from "./../../Style/Style";
+import Style, { black, WIDTH } from "./../../Style/Style";
 import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "./../../Style/PembayranStyle";
+import { Table, Row, Rows } from 'react-native-table-component';
 
 class Pembayaran extends React.Component {
   constructor() {
@@ -29,8 +30,17 @@ class Pembayaran extends React.Component {
     this.state = {
       refreshing: false,
       active: 0,
-    };
+      tableHead: ['Kategori', 'Jml. Tagihan', 'Sisa/Status', 'Keterangan'],
+      tableData: [
+        ['MOS', 'Rp. 440.000', 'Rp. 440.000', 'Lunas'],
+        ['Perlengkapan', 'Rp. 2.664.000', 'Rp. 2.664.000', 'Lunas'],
+        ['Pembangunan', 'Rp. 2.574.000', 'Rp. 2.574.000', 'Lunas'],
+        ['SPP', 'Rp. 550.000', 'Rp. 550.000', 'Lunas'],
+      ]
+    }
   }
+
+  
 
   render() {
     const { navigation } = this.props;
@@ -46,46 +56,52 @@ class Pembayaran extends React.Component {
                   color={"#000"}
                 />
               </TouchableOpacity>
+              <TouchableOpacity style={{position: 'absolute', left: WIDTH-85}} onPress={() => navigation.navigate('RiwayatPembayaran')}>
+                <Icon
+                  name={"ios-timer-outline"}
+                  size={25}
+                  color={"#000"}
+                />
+              </TouchableOpacity>
               <Text style={[Style.headerText, { marginVertical: 10 }]}>
-                Pembayran
+                Pembayaran
               </Text>
             </View>
 
-            <View style={[Style.ContainerViewBiasa, { marginTop: 10 }]}>
+            <View style={[Style.ContainerViewBiasa, { flexDirection: "row" ,marginTop: 10 }]}>
               <View
                 style={{
-                  flexDirection: "row",
+                  flexDirection: "column",
                   justifyContent: "space-between",
                 }}
               >
-                <Text style={[Style.textNormalGrey, { fontWeight: "bold" }]}>
+                <Text style={[Style.textNormalGrey, { fontWeight: "bold", fontSize: 14, }]}>
                   Nomor Pendaftaran
                 </Text>
-                <Text
-                  style={[
-                    Style.textNormalBlack,
-                    { fontWeight: "bold", textAlign: "left" },
-                  ]}
-                >
-                  : PB201-03-011233
+
+                <Text style={[Style.textNormalGrey, { fontWeight: "bold", fontSize: 14, }]}>
+                    Tahun Ajaran
                 </Text>
               </View>
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  marginLeft: 25,
                 }}
               >
-                <View>
-                  <Text style={[Style.textNormalGrey, { fontWeight: "bold" }]}>
-                    Tahun Ajaran
-                  </Text>
-                </View>
-                <View>
-                  <Text style={[Style.textNormalBlack, { fontWeight: "bold" }]}>
+                
+                <Text
+                  style={[
+                    Style.textNormalBlack,
+                    { fontWeight: "bold", textAlign: "left", fontSize: 14, },
+                  ]}
+                >
+                  : PB201-03-011233
+                </Text>
+                  <Text style={[Style.textNormalBlack, { fontWeight: "bold", fontSize: 14, }]}>
                     : 2021/2022 | Gelombang II
                   </Text>
-                </View>
+
               </View>
             </View>
 
@@ -103,12 +119,12 @@ class Pembayaran extends React.Component {
                   </Text>
                 </View>
                 <View style={{ marginTop: 10 }}>
-                  <Text style={Style.textBold20}>Rp.550.000</Text>
+                  <Text style={Style.textBold20}>Rp. 550.000</Text>
                 </View>
               </View>
 
               <View style={{ marginTop: 35 }}>
-                <TouchableOpacity style={PembayaranStyle.buttonRed}>
+                <TouchableOpacity style={PembayaranStyle.buttonRed} onPress={() => navigation.navigate('Tagihan')}>
                   <Text
                     style={[
                       Style.textNormalWhite,
@@ -149,13 +165,62 @@ class Pembayaran extends React.Component {
                       textAlign: "justify",
                     }}
                   >
-                    Pembayaran dapat di cicil,Minimal Pembayaran Biaya
-                    Formulir,Gelombang dan SPP 1 Bulan Pertama atau yang sesuai
-                    tagihan
+                    Pembayaran dapat di cicil, Minimal Pembayaran Biaya
+                    Formulir, Gelombang dan SPP 1 Bulan Pertama atau yang sesuai
+                    tagihan.
                   </Text>
                 </View>
               </View>
             </View>
+
+            <View style={{}}>
+              <View style={[styles.container,{borderWidth:1, margin: 25, borderRadius: 20, borderColor:'#E7E9F1'}]}>
+                <Table>
+                  <Row data={this.state.tableHead} style={styles.head} textStyle={[styles.text,{color:'#B2B5BF'}]}/>
+                  <Rows data={this.state.tableData} textStyle={styles.text}/>
+                </Table>
+              </View>
+            </View>
+
+            <View style={{backgroundColor: '#06BFAD', flexDirection: 'row', alignItems: 'center', marginHorizontal: 25, padding:7, borderRadius: 15}}>
+              <Icon name={"md-checkmark-circle"} size={20} color={"#fff"}/>
+              <Text style={{color: '#fff', fontSize:12, marginLeft: 7}}>Pembayaran ke-1 (15 Maret 2021) Telah Dikonfirmasi</Text>
+            </View>
+
+            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginVertical: 20}]}>
+              <View style={{margin: 20}}>
+                  
+                  <Text style={{fontSize: 14, color: '#B2B5BF'}}>Pembayaran Dapat Melalui</Text>
+
+                  <View style={{width: 250, marginVertical: 15}}>
+                    <View style={{flexDirection:"row", justifyContent: "space-evenly"}}>
+                        <Image source={require("../../../assets/icon/BCAmini.png")} />
+                        <Image source={require("../../../assets/icon/BNImini.png")} />
+                        <Image source={require("../../../assets/icon/Brivamini.png")} />
+                        <Image source={require("../../../assets/icon/Permatamini.png")} />
+                    </View>
+                  </View>
+
+                  {/* Untuk Text */}
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{flexDirection: 'column', width:10}}>
+                      <View>
+                        <Text style={{fontSize: 12,fontWeight: 'bold'}}>• </Text>
+                        <Text style={{fontSize: 12,fontWeight: 'bold'}}>• </Text>
+                      </View>
+                    </View>
+
+                    <View style={{flexDirection: 'column', width: 500}}>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={{fontSize: 12,fontWeight: 'bold'}}>Kode Pembayaran</Text><Text style={{fontSize: 12}}> anda dapatkan setelah klik </Text><Text style={{fontSize: 12,fontWeight: 'bold'}}>Bayar</Text>
+                      </View>
+                      <Text style={{fontSize:12, flexWrap: 'wrap', width: WIDTH-90 }}>Apabila anda masih memiliki tagihan Virtual Account yang belum dibayar, maka transaksi sebelumnya akan kami batalkan secara otomatis.</Text>
+                    </View>
+                  </View>
+
+              </View>
+            </View>
+
           </ScrollView>
         </SafeAreaView>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -163,5 +228,11 @@ class Pembayaran extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+  head: { height: 40 },
+  text: { margin: 6, fontSize: 12 }
+});
 
 export default Pembayaran;
