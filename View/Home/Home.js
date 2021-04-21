@@ -143,20 +143,7 @@ class Home extends React.Component {
               justifyContent: "space-evenly",
             }}
           >
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "#93A5BA",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-people-outline"}
@@ -174,20 +161,7 @@ class Home extends React.Component {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "#93A5BA",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-book-outline"}
@@ -206,18 +180,7 @@ class Home extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
+              style={Style.cardFeature}
               onPress={() =>
                 navigation.navigate("guruStacks", { screen: "Guru" })
               }
@@ -247,20 +210,7 @@ class Home extends React.Component {
               justifyContent: "space-evenly",
             }}
           >
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-star"}
@@ -278,20 +228,7 @@ class Home extends React.Component {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 13, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-reader-outline"}
@@ -310,18 +247,7 @@ class Home extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
+              style={Style.cardFeature}
               onPress={() =>
                 navigation.navigate("pembayranStacks", { screen: "Pembayran" })
               }

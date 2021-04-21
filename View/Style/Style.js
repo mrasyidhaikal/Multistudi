@@ -10,7 +10,14 @@ export const greyBorder = "#E7E9F1";
 export const backgroundBlue = "#3FA2F7";
 export const greenDone = "#06BFAD";
 export const biru = "#3FA2F7";
+
 export const merah = "#FF3737";
+export const cream = "#FFAC7A";
+export const kuning = "#FFD671";
+export const ungu = "#7772D6";
+export const biruMuda = "#3797DB";
+export const biruTua = "#4951EC";
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -143,6 +150,29 @@ const styles = StyleSheet.create({
     top: 8,
     left: 10,
     paddingRight: 5,
+  },
+  cardFeature: {
+    padding: 5,
+    margin: 5,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    width: WIDTH / 3.7,
+    shadowColor: "#93A5BA",
+    shadowOpacity: 0.5,
+    elevation: 3,
+    shadowRadius: 35,
+    shadowOffset: { width: 1, height: 13 },
+  },
+  CardAddNotes: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    shadowColor: "#93A5BA",
+    shadowOpacity: 0.5,
+    elevation: 3,
+    shadowRadius: 35,
+    shadowOffset: { width: 1, height: 13 },
+    marginHorizontal: 20,
+    marginBottom: 25,
   },
 });
 
