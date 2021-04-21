@@ -29,7 +29,7 @@ class RegisPrestasi extends React.Component {
     this.state = {
       refreshing: false,
       jumlahHobi: [{ key: 1, textHobi: "asd" }],
-      counter: 0,
+      counterPrestasi: 0,
     };
   }
 
@@ -40,23 +40,29 @@ class RegisPrestasi extends React.Component {
     // }, 0);
   }
 
-  addTextView = () => {
-    var keys = this.state.jumlahHobi[this.state.counter].key + 1;
+  addTextViewPrestasi = () => {
+    var keys = this.state.jumlahHobi[this.state.counterPrestasi].key + 1;
     var joined = this.state.jumlahHobi.concat({ key: keys, textHobi: "ads" });
-    this.setState({ jumlahHobi: joined, counter: this.state.counter + 1 });
+    this.setState({
+      jumlahHobi: joined,
+      counterPrestasi: this.state.counterPrestasi + 1,
+    });
   };
-  removeTextView = (count) => {
-    if (this.state.counter <= 0) {
+  removeTextViewPrestasi = (count) => {
+    if (this.state.counterPrestasi <= 0) {
       console.log("gabisa hapus");
     } else {
       var array = this.state.jumlahHobi;
       var index = array.findIndex((obj) => obj.key === count);
       array.splice(index, 1);
-      this.setState({ jumlahHobi: array, counter: this.state.counter - 1 });
+      this.setState({
+        jumlahHobi: array,
+        counterPrestasi: this.state.counterPrestasi - 1,
+      });
     }
   };
 
-  _renderItem = ({ item, index }) => {
+  _renderItemPrestasi = ({ item, index }) => {
     if (item.key == 1) {
       return (
         <View style={Style.inputContainer}>
@@ -81,7 +87,7 @@ class RegisPrestasi extends React.Component {
           />
           <TouchableOpacity
             style={Style.btnRemove}
-            onPress={() => this.removeTextView(item.key)}
+            onPress={() => this.removeTextViewPrestasi(item.key)}
           >
             <Icon name={"ios-remove-circle"} size={26} color={"#FF3737"} />
           </TouchableOpacity>
@@ -115,24 +121,36 @@ class RegisPrestasi extends React.Component {
             </View>
 
             <View style={Style.ContainerViewHorizontal}>
-              <ScrollView 
+              <ScrollView
                 horizontal={true}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
               >
-                <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataSiswa')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisDataSiswa")}
+                >
                   <Text style={Style.textNormalGrey}>Data Siswa</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={Style.buttonBlank}  onPress={() => navigation.navigate('RegisDataWali')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisDataWali")}
+                >
                   <Text style={Style.textNormalGrey}>Data Wali</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={Style.buttonBlank}  onPress={() => navigation.navigate('RegisHobi')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisHobi")}
+                >
                   <Text style={Style.textNormalGrey}>Hobi/Minat</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={Style.buttonBlueActive}>
                   <Text style={Style.textNormalWhite}>Prestasi</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={Style.buttonBlank}  onPress={() => navigation.navigate('RegisDataFoto')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisDataFoto")}
+                >
                   <Text style={Style.textNormalGrey}>Dokumen</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={Style.buttonBlank}>
@@ -155,7 +173,7 @@ class RegisPrestasi extends React.Component {
                     borderWidth: 1,
                     borderRadius: 8,
                   }}
-                  onPress={this.addTextView}
+                  onPress={this.addTextViewPrestasi}
                 >
                   <View style={{ marginHorizontal: 1 }}>
                     <Icon name={"ios-add"} size={25} color={"#000"} />
@@ -168,13 +186,16 @@ class RegisPrestasi extends React.Component {
                 extraData={
                   this.state.selectedId // for single item
                 }
-                renderItem={this._renderItem}
+                renderItem={this._renderItemPrestasi}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={numColumn}
               />
             </View>
             <View style={Style.ContainerViewHorizontalSpace}>
-              <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate("RegisHobi")}>
+              <TouchableOpacity
+                style={Style.buttonBlank}
+                onPress={() => navigation.navigate("RegisHobi")}
+              >
                 <View style={{ flexDirection: "row" }}>
                   <Icon
                     name={"ios-chevron-back-sharp"}

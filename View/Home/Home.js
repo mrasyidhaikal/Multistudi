@@ -68,9 +68,7 @@ class Home extends React.Component {
           <ScrollView>
             <View style={[Style.NavBackContainer, { marginTop: 40 }]}>
               <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-                  <Image source={require("./../../assets/profile.png")} />
-                </TouchableOpacity>
+                <Image source={require("./../../assets/profile.png")} />
                 <View style={{ marginLeft: 15 }}>
                   <Text style={Style.textBold}>Jenny Willson</Text>
                   <Text style={Style.textNormalGrey}>
@@ -145,62 +143,36 @@ class Home extends React.Component {
               justifyContent: "space-evenly",
             }}
           >
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "#93A5BA",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-people-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Kehadiran
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "#93A5BA",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-book-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Jadwal Pel.
@@ -208,18 +180,7 @@ class Home extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
+              style={Style.cardFeature}
               onPress={() =>
                 navigation.navigate("guruStacks", { screen: "Guru" })
               }
@@ -228,13 +189,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-person-circle-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Guru
@@ -249,62 +210,36 @@ class Home extends React.Component {
               justifyContent: "space-evenly",
             }}
           >
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-star"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Nilai
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 13, height: 13 },
-              }}
-            >
+            <TouchableOpacity style={Style.cardFeature}>
               <Icon
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-reader-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Rapor
@@ -312,18 +247,7 @@ class Home extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{
-                padding: 5,
-                margin: 5,
-                backgroundColor: "#fff",
-                borderRadius: 20,
-                width: WIDTH / 3.7,
-                shadowColor: "rgba(0, 0, 0, 0.1)",
-                shadowOpacity: 0.8,
-                elevation: 3,
-                shadowRadius: 35,
-                shadowOffset: { width: 1, height: 13 },
-              }}
+              style={Style.cardFeature}
               onPress={() =>
                 navigation.navigate("pembayranStacks", { screen: "Pembayran" })
               }
@@ -332,13 +256,13 @@ class Home extends React.Component {
                 style={{ alignSelf: "center", marginVertical: 7 }}
                 name={"ios-wallet-outline"}
                 size={48}
-                color={"#FF5B7E"}
+                color={"#FF3737"}
               />
               <Text
                 style={{
                   alignSelf: "center",
                   marginBottom: 10,
-                  color: "#FF5B7E",
+                  color: "#FF3737",
                 }}
               >
                 Pembayaran

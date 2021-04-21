@@ -38,6 +38,29 @@ const PembayranStyle = StyleSheet.create({
     width: 121,
     height: 50,
   },
+  buttonLunas:{
+    borderRadius: 7, 
+    backgroundColor: '#F6F6FA', 
+    alignItems: 'center', 
+    width: WIDTH - 300
+  },
+  buttonBayar:{
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: '#FF3737',
+    alignItems: 'center', 
+    width: WIDTH - 300
+  },
+  buttonMetodeBank:{
+    flexDirection: 'row', 
+    marginTop: 10, 
+    marginLeft: 20, 
+    alignItems: 'center', 
+    paddingBottom:25 , 
+    width: '85%' ,
+    borderBottomWidth: 1, 
+    borderBottomColor: '#F6F6FA'
+  },
 });
 
 export default PembayranStyle;

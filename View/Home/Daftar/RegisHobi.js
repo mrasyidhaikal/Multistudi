@@ -8,9 +8,7 @@ import moment from 'moment';
 import Style from './../../Style/Style'
 
 const numColumn = 1
-const jumlahHobi = [
-    {key:1,textHobi:"asdas"},
-]
+
 class RegisHobi extends React.Component{
     
     constructor() {
@@ -21,36 +19,31 @@ class RegisHobi extends React.Component{
         this.state = {
             refreshing: false,
             jumlahHobi : [{key:1,textHobi:"asd"}],
-            counter : 0
+            counterHobi : 0
            
         }
     }
-    addTextView = () =>{ 
+    addTextViewHobi = () =>{ 
        
-        var keys = this.state.jumlahHobi[this.state.counter].key+1
+        var keys = this.state.jumlahHobi[this.state.counterHobi].key+1
         var joined = this.state.jumlahHobi.concat({key:keys,textHobi:"ads"})
-        this.setState({jumlahHobi:joined,counter:this.state.counter+1})
+        this.setState({jumlahHobi:joined,counterHobi:this.state.counterHobi+1})
         
     }
-    removeTextView = (count) =>{
-     
-
-        if (this.state.counter <= 0) {
+    removeTextViewHobi = (count) =>{
+        if (this.state.counterHobi <= 0) {
             console.log("gabisa hapus")
         }else{
- 
             var array = this.state.jumlahHobi
             var index = array.findIndex(obj => obj.key === count)
             array.splice(index,1)
-            this.setState({jumlahHobi:array,counter:this.state.counter-1})
-
-           
+            this.setState({jumlahHobi:array,counterHobi:this.state.counterHobi-1})
         }
        
     }
 
 
-    _renderItem =({item,index}) =>{
+    _renderItemHobi =({item,index}) =>{
         if (item.key == 1) {
             return(
                 <View style={Style.inputContainer}>
@@ -74,7 +67,7 @@ class RegisHobi extends React.Component{
                         underlineColorAndroid='transparent'
                        // onChangeText={val => this.setState({email:val})}
                     />
-                       <TouchableOpacity style={Style.btnRemove} onPress={() => this.removeTextView(item.key)}>
+                       <TouchableOpacity style={Style.btnRemove} onPress={() => this.removeTextViewHobi(item.key)}>
                         <Icon name={'ios-remove-circle'} size={26} color={'#FF3737'}/>
                     </TouchableOpacity>
                 </View>
@@ -130,7 +123,7 @@ class RegisHobi extends React.Component{
         <View style={Style.ContainerViewBiasa}>
             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={Style.textBold}>Hobi/Minat</Text>
-                <TouchableOpacity style={{borderColor:'#000',borderWidth:1,borderRadius:8}} onPress={this.addTextView}>
+                <TouchableOpacity style={{borderColor:'#000',borderWidth:1,borderRadius:8}} onPress={this.addTextViewHobi}>
                     <View style={{marginHorizontal:1}}>
                     <Icon name={'ios-add'} size={25} color={'#000'}/>
                     </View>
@@ -144,7 +137,7 @@ class RegisHobi extends React.Component{
               extraData={
                 this.state.selectedId     // for single item
               }
-              renderItem = {this._renderItem}
+              renderItem = {this._renderItemHobi}
               keyExtractor={(item, index)=> index.toString()}
               numColumns = {numColumn}
               
