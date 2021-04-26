@@ -1,65 +1,54 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { Component } from "react";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { Component } from 'react';
+const processResponse = async (response) => {
+  const statusCode = response.status;
+  const data = response.json();
+  return Promise.all([statusCode, data]).then((res) => ({
+    statusCode: res[0],
+    data: res[1],
+  }));
+};
+class CallAPI extends React.Component {
+  getAPI = async (url, isiBody) => {
+    let API = await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: isiBody,
+    });
+    let res = await processResponse(API);
 
+    return res;
+  };
+  postAPIFormData = async (url, isiBody) => {
+    let API = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: isiBody,
+    });
+    let res = await processResponse(API);
 
-const processResponse = async(response)=> {
-    const statusCode = response.status;
-    const data = response.json();
-    return Promise.all([statusCode, data]).then(res => ({
-      statusCode: res[0],
-      data: res[1]
-    }));
-  }
-class CallAPI extends React.Component{
-   
-    getAPI = async(url,isiBody) => {
-     
-      let API = await fetch(url, {
-          
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: isiBody
-            })
-            let res = await processResponse(API)
-        
-            return res   
-    }
-    postAPIToken = async(url,isiBody,token) => {
-     
-      let API = await fetch(url, {
-          
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            body: isiBody
-            })
-            let res = await processResponse(API)
-        
-            return res   
-    }
-    getData = async(url) => {
-      
-      let API = await fetch(url, {
-          
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-            })
-            let res = await processResponse(API)
-        
-            return res   
-    }
-    
+    return res;
+  };
+
+  getData = async (url) => {
+    let API = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    let res = await processResponse(API);
+
+    return res;
+  };
 }
-const callAPI = new CallAPI()
+const callAPI = new CallAPI();
 
-export default callAPI
+export default callAPI;

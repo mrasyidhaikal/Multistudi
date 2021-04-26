@@ -20,35 +20,99 @@ import { Picker } from "@react-native-community/picker";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import * as ImagePicker from "expo-image-picker";
 import Style from "./../../Style/Style";
-
+import CallAPIData from "./../../../Controller/CallAPI";
 const numColumn = 1;
+
 class RegisDataSiswa extends React.Component {
   constructor() {
     super();
 
     this.state = {
       refreshing: false,
-      kodeJurusan: "",
-      Agama: "",
+
       display: 1,
       displayFormat: "DD MMM YYYY",
-      DateDisplay: "",
-      DateDisplay2: "",
-      DateDisplay3: "",
-      Wali1: "Ayah",
-      Wali2: "Ibu",
-      agamaWali1: "Islam",
+      dataSiswa: [],
+      // Siswa
+      nameSiswa: "",
+      nickname: "",
+      birthplace: "",
+      BirthDateSiswa: "",
+      Agama: "",
+      kodeJurusan: "",
+      jenisKelaminSiswa: "",
+      address: "",
+      mobileno: "",
+
+      lastschool: "",
+      addresslastschool: "",
+      childno: "",
+      totalsiblings: "",
+      //wali 1
+      DateBirthWali1: "",
+      Wali1: "",
+      agamaWali1: "",
+      LastEdWali1: "",
+      mguardname: "",
+      mguardmobile: "",
+      mguardaddress: "",
+      mguardbirthplace: "",
+      mguardoccupation: "",
+      mguardoccupationaddress: "",
+      //Wali 2
+      DateBirthWali2: "",
+      Wali2: "",
       agamaWali2: "Islam",
-      jumlahHobi: [{ key: 1, textHobi: "asd" }],
+      LastEdWali2: "",
+      fguardname: "",
+      fguardmobile: "",
+      fguardaddress: "",
+      fguardbirthplace: "",
+      fguardoccupation: "",
+      fguardoccupationaddress: "",
+      // hobi
+      jumlahHobi: [{ hobbyid: 1, studentid: "", description: "" }],
       counterHobi: 0,
-      jumlahPrestasi: [{ key: 1, textHobi: "asd" }],
+      // prestasi
+      jumlahPrestasi: [
+        { achievementid: 1, studentid: "", description: "", year: 0 },
+      ],
       counterPrestasi: 0,
+      // dokumen
+      imageAyah: null,
+      imageIbu: null,
+      imageKK: null,
+      imageIjazah: null,
+      imageSkhun: null,
+      // account
+      reginfo_origin: "",
+      pwd: "",
+      repw: "",
+      studentemail: "",
+
+      //
+      warnacheckAyah: "#B2B5BF",
+      warnacheckIbu: "#B2B5BF",
+      warnacheckKK: "#B2B5BF",
+      warnacheckIjazah: "#B2B5BF",
+      warnacheckSkhun: "#B2B5BF",
+      ukuranstate: 25,
+      dialogvisible: false,
+      //List data
+      majorlist: [],
+      religionlist: [],
+      genderlist: [],
+      lasteducation: [],
+      mrelationshiplist: [],
+      activeGelombang: [],
+      reginfo_originlist: [],
     };
   }
 
   _renderItemHobi = ({ item, index }) => {
-    if (item.key == 1) {
+    if (item.hobbyid == 1) {
       return (
         <View style={Style.inputContainer}>
           <TextInput
@@ -56,7 +120,9 @@ class RegisDataSiswa extends React.Component {
             placeholder={"Tambah Minat/Hobimu"}
             placeholderTextColor={"#B2B5BF"}
             underlineColorAndroid="transparent"
-            // onChangeText={val => this.setState({email:val})}
+            onChangeText={(val) =>
+              this.addArrayDescriptionHobi(val, item.hobbyid)
+            }
           />
         </View>
       );
@@ -68,11 +134,13 @@ class RegisDataSiswa extends React.Component {
             placeholder={"Tambah Minat/Hobimu"}
             placeholderTextColor={"#B2B5BF"}
             underlineColorAndroid="transparent"
-            // onChangeText={val => this.setState({email:val})}
+            onChangeText={(val) =>
+              this.addArrayDescriptionHobi(val, item.hobbyid)
+            }
           />
           <TouchableOpacity
             style={Style.btnRemove}
-            onPress={() => this.removeTextViewHobi(item.key)}
+            onPress={() => this.removeTextViewHobi(item.hobbyid)}
           >
             <Icon name={"ios-remove-circle"} size={26} color={"#FF3737"} />
           </TouchableOpacity>
@@ -81,7 +149,7 @@ class RegisDataSiswa extends React.Component {
     }
   };
   _renderItemPrestasi = ({ item, index }) => {
-    if (item.key == 1) {
+    if (item.achievementid == 1) {
       return (
         <View style={Style.inputContainer}>
           <TextInput
@@ -89,7 +157,9 @@ class RegisDataSiswa extends React.Component {
             placeholder={"Tambah Prestasimu"}
             placeholderTextColor={"#B2B5BF"}
             underlineColorAndroid="transparent"
-            // onChangeText={val => this.setState({email:val})}
+            onChangeText={(val) =>
+              this.addArrayDescriptionPrestasi(val, item.achievementid)
+            }
           />
         </View>
       );
@@ -101,11 +171,13 @@ class RegisDataSiswa extends React.Component {
             placeholder={"Tambah Prestasimu"}
             placeholderTextColor={"#B2B5BF"}
             underlineColorAndroid="transparent"
-            // onChangeText={val => this.setState({email:val})}
+            onChangeText={(val) =>
+              this.addArrayDescriptionPrestasi(val, item.achievementid)
+            }
           />
           <TouchableOpacity
             style={Style.btnRemove}
-            onPress={() => this.removeTextViewPrestasi(item.key)}
+            onPress={() => this.removeTextViewPrestasi(item.achievementid)}
           >
             <Icon name={"ios-remove-circle"} size={26} color={"#FF3737"} />
           </TouchableOpacity>
@@ -115,8 +187,12 @@ class RegisDataSiswa extends React.Component {
   };
 
   addTextViewPrestasi = () => {
-    var keys = this.state.jumlahHobi[this.state.counterPrestasi].key + 1;
-    var joined = this.state.jumlahHobi.concat({ key: keys, textHobi: "ads" });
+    var keys =
+      this.state.jumlahHobi[this.state.counterPrestasi].achievementid + 1;
+    var joined = this.state.jumlahHobi.concat({
+      achievementid: keys,
+      description: "",
+    });
     this.setState({
       jumlahHobi: joined,
       counterPrestasi: this.state.counterPrestasi + 1,
@@ -127,7 +203,7 @@ class RegisDataSiswa extends React.Component {
       console.log("gabisa hapus");
     } else {
       var array = this.state.jumlahHobi;
-      var index = array.findIndex((obj) => obj.key === count);
+      var index = array.findIndex((obj) => obj.achievementid === count);
       array.splice(index, 1);
       this.setState({
         jumlahHobi: array,
@@ -137,8 +213,11 @@ class RegisDataSiswa extends React.Component {
   };
 
   addTextViewHobi = () => {
-    var keys = this.state.jumlahHobi[this.state.counterHobi].key + 1;
-    var joined = this.state.jumlahHobi.concat({ key: keys, textHobi: "ads" });
+    var keys = this.state.jumlahHobi[this.state.counterHobi].hobbyid + 1;
+    var joined = this.state.jumlahHobi.concat({
+      hobbyid: keys,
+      description: "",
+    });
     this.setState({
       jumlahHobi: joined,
       counterHobi: this.state.counterHobi + 1,
@@ -149,7 +228,7 @@ class RegisDataSiswa extends React.Component {
       console.log("gabisa hapus");
     } else {
       var array = this.state.jumlahHobi;
-      var index = array.findIndex((obj) => obj.key === count);
+      var index = array.findIndex((obj) => obj.hobbyid === count);
       array.splice(index, 1);
       this.setState({
         jumlahHobi: array,
@@ -157,17 +236,63 @@ class RegisDataSiswa extends React.Component {
       });
     }
   };
+  addArrayDescriptionHobi = (text, id) => {
+    var array = this.state.jumlahHobi;
+    var index = array.findIndex((obj) => obj.hobbyid === id);
+    array[index] = { ...array[index], description: text };
+    this.setState({ jumlahHobi: array });
+  };
+  addArrayDescriptionPrestasi = (text, id) => {
+    var array = this.state.jumlahPrestasi;
+    var index = array.findIndex((obj) => obj.achievementid === id);
+    array[index] = { ...array[index], description: text };
+    this.setState({ jumlahPrestasi: array });
+  };
+
   handleConfirm = (date) => {
-    this.setState({ DateDisplay: date });
+    this.setState({ BirthDateSiswa: date });
     this.setState({ visibility: false });
     this.setState({ TextInputDisableStatus: true });
   };
+  handleConfirmWali1 = (date) => {
+    this.setState({ DateBirthWali1: date });
+    this.setState({ visibilityWali1: false });
+    this.setState({ TextInputDisableStatus: true });
+    console.log(date);
+    console.log(this.state.DateBirthWali1);
+  };
+  handleConfirmWali2 = (date) => {
+    this.setState({ DateBirthWali2: date });
+    this.setState({ visibilityWali2: false });
+    this.setState({ TextInputDisableStatus: true });
+    console.log(date);
+    console.log(this.state.DateBirthWali2);
+  };
+
   onPressCancel = () => {
     this.setState({ visibility: false });
     this.setState({ TextInputDisableStatus: true });
   };
+
+  onPressCancelWali1 = () => {
+    this.setState({ visibilityWali1: false });
+    this.setState({ TextInputDisableStatus: true });
+  };
+
+  onPressCancelWali2 = () => {
+    this.setState({ visibilityWali2: false });
+    this.setState({ TextInputDisableStatus: true });
+  };
   onPressButton = () => {
     this.setState({ visibility: true });
+    this.setState({ TextInputDisableStatus: false });
+  };
+  onPressButtonWali1 = () => {
+    this.setState({ visibilityWali1: true });
+    this.setState({ TextInputDisableStatus: false });
+  };
+  onPressButtonWali2 = () => {
+    this.setState({ visibilityWali2: true });
     this.setState({ TextInputDisableStatus: false });
   };
   handleTitle = (display) => {
@@ -176,6 +301,7 @@ class RegisDataSiswa extends React.Component {
     if (display === 3) return "Hobi/Minat";
     if (display === 4) return "Prestasi";
     if (display === 5) return "Dokumen";
+    if (display === 6) return "Silahkan Lengkapi informasi login anda";
   };
 
   handlePress = (e) => {
@@ -184,10 +310,232 @@ class RegisDataSiswa extends React.Component {
     }
     this.setState({ display: this.state.display + 1 });
   };
+  showDialog = () => {
+    this.setState({ dialogvisible: true });
+  };
 
+  handleCancel = () => {
+    this.setState({ dialogvisible: false });
+  };
+  pickImage = async (type) => {
+    //File
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    });
+
+    if (!result.cancelled) {
+      if (type === "Ayah") {
+        this.setState({ imageAyah: result.uri });
+        this.setState({ warnacheckAyah: "#06BFAD" });
+      }
+      if (type === "Ibu") {
+        this.setState({ imageIbu: result.uri });
+        this.setState({ warnacheckIbu: "#06BFAD" });
+      }
+      if (type === "KK") {
+        this.setState({ imageKK: result.uri });
+        this.setState({ warnacheckKK: "#06BFAD" });
+      }
+      if (type === "Ijazah") {
+        this.setState({ imageIjazah: result.uri });
+        this.setState({ warnacheckIjazah: "#06BFAD" });
+      }
+      if (type === "SKHUN") {
+        this.setState({ imageSkhun: result.uri });
+        this.setState({ warnacheckSkhun: "#06BFAD" });
+      }
+    }
+  };
+
+  componentWillUnmount = async () => {
+    if (Platform.OS !== "web") {
+      const {
+        status,
+      } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    }
+  };
+  componentDidMount = async () => {
+    this.getRegistrationData();
+  };
+  // API
+
+  getRegistrationData = async () => {
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/GetDataRegister`;
+    const response = await CallAPIData.getData(url);
+    const { data } = response;
+
+    this.setState({
+      dataSiswa: data,
+      majorlist: data.majorlist,
+      religionlist: data.religionlist,
+      genderlist: data.genderlist,
+      lasteducation: data.meducationlist,
+      mrelationshiplist: data.mrelationshiplist,
+      activeGelombang: data.activeGelombang,
+      reginfo_originlist: data.reginfo_originlist,
+    });
+    //console.log(this.state.dataSiswa.majorlist);
+  };
+
+  onSubmitData = async () => {
+    let url = "http://104.248.156.113:8025/api/v1/AppAccount/SaveRegister";
+    let docsupportlist = [
+      {
+        docsupportid: "11",
+        studentid: "MHSDEFAULT",
+        prstudentid: null,
+        description: "KTP AYAH",
+        docfile: this.state.imageAyah,
+      },
+      {
+        docsupportid: "12",
+        studentid: "MHSDEFAULT",
+        prstudentid: null,
+        description: "KTP IBU",
+        docfile: this.state.imageIbu,
+      },
+      {
+        docsupportid: "13",
+        studentid: "MHSDEFAULT",
+        prstudentid: null,
+        description: "KARTU KELUARGA",
+        docfile: this.state.imageKK,
+      },
+      {
+        docsupportid: "14",
+        studentid: "MHSDEFAULT",
+        prstudentid: null,
+        description: "IJAZAH SD",
+        docfile: this.state.imageIjazah,
+      },
+      {
+        docsupportid: "15",
+        studentid: "MHSDEFAULT",
+        prstudentid: null,
+        description: "SHUN SD",
+        docfile: this.state.imageSkhun,
+      },
+    ];
+
+    console.log(this.state.jumlahHobi);
+    let formData = new FormData();
+    formData.append("prstudentid", "");
+    formData.append("studentid", "");
+    formData.append("roomid", "");
+    formData.append("nisn", "");
+    formData.append("nrs", "");
+    formData.append("majorid", this.state.kodeJurusan);
+    formData.append("name", this.state.nameSiswa);
+    formData.append("nickname", this.state.nickname);
+    formData.append("gender", this.state.jenisKelaminSiswa);
+    formData.append("birthplace", this.state.birthplace);
+    formData.append("birthdate", this.state.BirthDateSiswa);
+    formData.append("registerdate", "");
+    formData.append("birthdate_tgl", 0);
+    formData.append("birthdate_month", "");
+    formData.append("birthdate_year", 0);
+    formData.append("religionid", this.state.Agama);
+    formData.append("address", this.state.address);
+    formData.append("mobileno", this.state.mobileno);
+    formData.append("lastschool", this.state.lastschool);
+    formData.append("addresslastschool", this.state.addresslastschool);
+    formData.append("childno", this.state.childno);
+    formData.append("totalsiblings", this.state.totalsiblings);
+    formData.append("uniformsize", "");
+    formData.append("homedistance", 0);
+    formData.append("transport", "");
+
+    // wali 1
+    formData.append("mguardname", this.state.mguardname);
+    formData.append("mguardreligion", this.state.agamaWali1);
+    formData.append("mguardbirthplace", this.state.mguardbirthplace);
+    formData.append("mguardbirthdate", this.state.DateBirthWali1);
+    formData.append("mguardbirthdate_tgl", 0);
+    formData.append("mguardbirthdate_month", "");
+    formData.append("mguardbirthdate_year", 0);
+    formData.append("mguardeducationid", this.state.LastEdWali1);
+    formData.append("mguardoccupation", this.state.mguardoccupation);
+    formData.append(
+      "mguardoccupationaddress",
+      this.state.mguardoccupationaddress
+    );
+    formData.append("mguardaddress", this.state.mguardaddress);
+    formData.append("mguardmobile", this.state.mguardmobile);
+    formData.append("mguardrelationshipid", this.state.Wali1);
+
+    //wali 2
+    formData.append("mguardname", this.state.fguardname);
+    formData.append("mguardreligion", this.state.agamaWali2);
+    formData.append("mguardbirthplace", this.state.fguardbirthplace);
+    formData.append("mguardbirthdate", this.state.DateBirthWali2);
+    formData.append("mguardbirthdate_tgl", 0);
+    formData.append("mguardbirthdate_month", "");
+    formData.append("mguardbirthdate_year", 0);
+    formData.append("mguardeducationid", this.state.LastEdWali2);
+    formData.append("mguardoccupation", this.state.fguardoccupation);
+    formData.append(
+      "mguardoccupationaddress",
+      this.state.fguardoccupationaddress
+    );
+    formData.append("mguardaddress", this.state.fguardaddress);
+    formData.append("mguardmobile", this.state.fguardmobile);
+    formData.append("mguardrelationshipid", this.state.Wali2);
+    //
+    formData.append("uname", this.state.studentemail);
+    formData.append("pwd", this.state.pwd);
+    formData.append("repw", this.state.repw);
+    formData.append("reginfo_origin", this.state.reginfo_origin);
+    formData.append("reginfo_originlist", this.state.reginfo_originlist);
+    formData.append("reginfo_origin_other", "");
+    formData.append("hobbies", this.state.jumlahHobi);
+    formData.append("achievement", this.state.jumlahPrestasi);
+    formData.append("roomlist", []);
+    formData.append("majorlist", this.state.majorlist);
+    formData.append("genderlist", this.state.genderlist);
+    formData.append("religionlist", this.state.religionlist);
+    formData.append("meducationlist", this.state.lasteducation);
+    formData.append("mrelationshiplist", this.state.mrelationshiplist);
+    formData.append("mreligionlist", this.state.religionlist);
+    formData.append("feducationlist", this.state.lasteducation);
+    formData.append("frelationshiplist", this.state.mrelationshiplist);
+    formData.append("freligionlist", this.state.religionlist);
+    formData.append("monthList", []);
+    formData.append("uniformList", []);
+    formData.append("schoolyearid", this.state.dataSiswa.schoolyearid);
+    formData.append("gelombangdetailid", "");
+    formData.append(
+      "activeGelombang.gelombangdetailid",
+      this.state.activeGelombang.gelombangdetailid
+    );
+    formData.append(
+      "activeGelombang.gelombangcode",
+      this.state.activeGelombang.gelombangcode
+    );
+    formData.append(
+      "activeGelombang.gelombangname",
+      this.state.activeGelombang.gelombangname
+    );
+    formData.append(
+      "activeGelombang.schoolyearid",
+      this.state.activeGelombang.schoolyearid
+    );
+    formData.append(
+      "activeGelombang.tahunajaran",
+      this.state.activeGelombang.tahunajaran
+    );
+    formData.append("docsupportlist", docsupportlist);
+
+    const data = CallAPIData.postAPIFormData(url, formData);
+    console.log(data);
+    //console.log(formData);
+  };
   render() {
-    const layer = 5;
+    const layer = 6;
     const { navigation } = this.props;
+
     return (
       <View style={Style.container}>
         <SafeAreaView>
@@ -326,8 +674,7 @@ class RegisDataSiswa extends React.Component {
                   editable={false}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  value="MHS-08729021"
-                  // onChangeText={val => this.setState({email:val})}
+                  value={this.state.dataSiswa.studentid}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -343,24 +690,20 @@ class RegisDataSiswa extends React.Component {
                       this.setState({ kodeJurusan: itemValue })
                     }
                   >
-                    <Picker.Item label="Rekayasa Perangkat Lunak" value="rpl" />
-                    <Picker.Item
-                      label="Teknik Komputer dan Jaringan"
-                      value="tkj"
-                    />
-                    <Picker.Item label="Akuntansi" value="akuntansi" />
-                    <Picker.Item label="Seni Tari" value="senitari" />
-                    <Picker.Item label="Multimedia" value="multimedia" />
+                    {this.state.majorlist.map((item, index) => (
+                      <Picker.Item label={item.text} value={item.value} />
+                    ))}
                   </Picker>
                 </View>
               </View>
+
               <View style={Style.inputContainer}>
                 <TextInput
                   style={Style.input}
                   placeholder={"Nama Lengkap"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ nameSiswa: val })}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -369,27 +712,28 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Nama Panggilan"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ nickname: val })}
                 />
               </View>
-              <View style={Style.inputContainer}>
-                <TextInput
-                  style={Style.input}
-                  placeholder={"Jenis Kelamin"}
+
+              <View style={[Style.input, Style.inputContainer]}>
+                <Picker
+                  mode="dropdown"
+                  style={{ margin: -4 }}
+                  selectedValue={this.state.jenisKelaminSiswa}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
-                />
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({ jenisKelaminSiswa: itemValue })
+                  }
+                >
+                  {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
+                  {this.state.genderlist.map((item, index) => (
+                    <Picker.Item label={item.text} value={item.value} />
+                  ))}
+                </Picker>
               </View>
               <View style={Style.inputContainer}>
-                {/* <TextInput
-                    style={Style.input}
-                    placeholder={'Agama'}
-                    placeholderTextColor={'#B2B5BF'}
-                    underlineColorAndroid='transparent'
-                   // onChangeText={val => this.setState({email:val})}
-                /> */}
-
                 <View style={Style.input}>
                   <Picker
                     mode="dropdown"
@@ -402,11 +746,9 @@ class RegisDataSiswa extends React.Component {
                     }
                   >
                     {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
-                    <Picker.Item label="Islam" value="islam" />
-                    <Picker.Item label="Kristen" value="kristen" />
-                    <Picker.Item label="Katolik" value="katolik" />
-                    <Picker.Item label="Buddha" value="buddhas" />
-                    <Picker.Item label="Hindu" value="hindu" />
+                    {this.state.religionlist.map((item, index) => (
+                      <Picker.Item label={item.text} value={item.value} />
+                    ))}
                   </Picker>
                 </View>
               </View>
@@ -416,7 +758,7 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Tempat Lahir"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ birthplace: val })}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -430,8 +772,8 @@ class RegisDataSiswa extends React.Component {
                   selectTextOnFocus={false}
                   onTouchStart={this.onPressButton}
                   value={
-                    this.state.DateDisplay
-                      ? moment(this.state.DateDisplay).format(
+                    this.state.BirthDateSiswa
+                      ? moment(this.state.BirthDateSiswa).format(
                           this.state.displayFormat
                         )
                       : ""
@@ -451,7 +793,7 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Alamat"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ address: val })}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -462,25 +804,17 @@ class RegisDataSiswa extends React.Component {
                   maxLength={13}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ mobileno: val })}
                 />
               </View>
-              <View style={Style.inputContainer}>
-                <TextInput
-                  style={Style.input}
-                  placeholder={"Email"}
-                  placeholderTextColor={"#B2B5BF"}
-                  underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
-                />
-              </View>
+
               <View style={Style.inputContainer}>
                 <TextInput
                   style={Style.input}
                   placeholder={"Sekolah Asal"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ lastschool: val })}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -489,7 +823,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Alamat Sekolah Asal"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ addresslastschool: val })
+                  }
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -500,7 +836,7 @@ class RegisDataSiswa extends React.Component {
                   maxLength={2}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ childno: val })}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -511,7 +847,7 @@ class RegisDataSiswa extends React.Component {
                   keyboardType="number-pad"
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ totalsiblings: val })}
                 />
               </View>
             </View>
@@ -538,13 +874,9 @@ class RegisDataSiswa extends React.Component {
                     }
                   >
                     {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
-                    <Picker.Item label="Ayah" value="ayah" />
-                    <Picker.Item label="Ibu" value="ibu" />
-                    <Picker.Item label="Kakak" value="kakak" />
-                    <Picker.Item label="Adik" value="adik" />
-                    <Picker.Item label="Paman" value="paman" />
-                    <Picker.Item label="Bibi" value="hindu" />
-                    <Picker.Item label="Orang Tua Asuh" value="orangtuaasuh" />
+                    {this.state.mrelationshiplist.map((item, index) => (
+                      <Picker.Item label={item.text} value={item.value} />
+                    ))}
                   </Picker>
                 </View>
               </View>
@@ -554,7 +886,7 @@ class RegisDataSiswa extends React.Component {
                   style={{ marginTop: 7, fontSize: 16 }}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ mguardname: val })}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -565,7 +897,7 @@ class RegisDataSiswa extends React.Component {
                   keyboardType="number-pad"
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ mguardmobile: val })}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -574,7 +906,7 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Alamat Tempat Tinggal"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ mguardaddress: val })}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -583,7 +915,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Tempat Lahir"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ mguardbirthplace: val })
+                  }
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -595,10 +929,10 @@ class RegisDataSiswa extends React.Component {
                   editable={this.state.TextInputDisableStatus}
                   pointerEvents="none"
                   selectTextOnFocus={false}
-                  onTouchStart={this.onPressButton}
+                  onTouchStart={this.onPressButtonWali1}
                   value={
-                    this.state.DateDisplay3
-                      ? moment(this.state.DateDisplay3).format(
+                    this.state.DateBirthWali1
+                      ? moment(this.state.DateBirthWali1).format(
                           this.state.displayFormat
                         )
                       : ""
@@ -607,19 +941,27 @@ class RegisDataSiswa extends React.Component {
 
                 <DateTimePickerModal
                   mode="date"
-                  isVisible={this.state.visibility}
-                  onConfirm={this.handleConfirm}
-                  onCancel={this.onPressCancel}
+                  isVisible={this.state.visibilityWali1}
+                  onConfirm={this.handleConfirmWali1}
+                  onCancel={this.onPressCancelWali1}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
-                <TextInput
-                  style={{ marginTop: 7, fontSize: 16 }}
-                  placeholder={"Pendidikan"}
+                <Picker
+                  mode="dropdown"
+                  style={{ margin: -4 }}
+                  selectedValue={this.state.LastEdWali1}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
-                />
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({ LastEdWali1: itemValue })
+                  }
+                >
+                  {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
+                  {this.state.lasteducation.map((item, index) => (
+                    <Picker.Item label={item.text} value={item.value} />
+                  ))}
+                </Picker>
               </View>
               <View style={Style.inputContainer}>
                 <View style={Style.input}>
@@ -634,11 +976,9 @@ class RegisDataSiswa extends React.Component {
                     }
                   >
                     {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
-                    <Picker.Item label="Islam" value="islam" />
-                    <Picker.Item label="Kristen" value="kristen" />
-                    <Picker.Item label="Katolik" value="katolik" />
-                    <Picker.Item label="Buddha" value="buddhas" />
-                    <Picker.Item label="Hindu" value="hindu" />
+                    {this.state.religionlist.map((item, index) => (
+                      <Picker.Item label={item.text} value={item.value} />
+                    ))}
                   </Picker>
                 </View>
               </View>
@@ -648,7 +988,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Pekerjaan"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ mguardoccupation: val })
+                  }
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -657,7 +999,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Alamat Pekerjaan"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ mguardoccupationaddress: val })
+                  }
                 />
               </View>
 
@@ -677,13 +1021,9 @@ class RegisDataSiswa extends React.Component {
                     }
                   >
                     {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
-                    <Picker.Item label="Ayah" value="ayah" />
-                    <Picker.Item label="Ibu" value="ibu" />
-                    <Picker.Item label="Kakak" value="kakak" />
-                    <Picker.Item label="Adik" value="adik" />
-                    <Picker.Item label="Paman" value="paman" />
-                    <Picker.Item label="Bibi" value="hindu" />
-                    <Picker.Item label="Orang Tua Asuh" value="orangtuaasuh" />
+                    {this.state.mrelationshiplist.map((item, index) => (
+                      <Picker.Item label={item.text} value={item.value} />
+                    ))}
                   </Picker>
                 </View>
               </View>
@@ -693,7 +1033,7 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Nama Wali"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ fguardname: val })}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -704,7 +1044,7 @@ class RegisDataSiswa extends React.Component {
                   keyboardType="number-pad"
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ fguardmobile: val })}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -713,7 +1053,7 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Alamat Tempat Tinggal"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) => this.setState({ fguardaddress: val })}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -722,7 +1062,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Tempat Lahir"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ fguardbirthplace: val })
+                  }
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -734,10 +1076,10 @@ class RegisDataSiswa extends React.Component {
                   editable={this.state.TextInputDisableStatus}
                   pointerEvents="none"
                   selectTextOnFocus={false}
-                  onTouchStart={this.onPressButton2}
+                  onTouchStart={this.onPressButtonWali2}
                   value={
-                    this.state.DateDisplay2
-                      ? moment(this.state.DateDisplay2).format(
+                    this.state.DateBirthWali2
+                      ? moment(this.state.DateBirthWali2).format(
                           this.state.displayFormat
                         )
                       : ""
@@ -746,19 +1088,27 @@ class RegisDataSiswa extends React.Component {
 
                 <DateTimePickerModal
                   mode="date"
-                  isVisible={this.state.visibility2}
-                  onConfirm={this.handleConfirm2}
-                  onCancel={this.onPressCancel2}
+                  isVisible={this.state.visibilityWali2}
+                  onConfirm={this.handleConfirmWali2}
+                  onCancel={this.onPressCancelWali1}
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
-                <TextInput
-                  style={{ marginTop: 7, fontSize: 16 }}
-                  placeholder={"Pendidikan"}
+                <Picker
+                  mode="dropdown"
+                  style={{ margin: -4 }}
+                  selectedValue={this.state.LastEdWali2}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
-                />
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({ LastEdWali2: itemValue })
+                  }
+                >
+                  {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
+                  {this.state.lasteducation.map((item, index) => (
+                    <Picker.Item label={item.text} value={item.value} />
+                  ))}
+                </Picker>
               </View>
               <View style={Style.inputContainer}>
                 <View style={Style.input}>
@@ -773,11 +1123,9 @@ class RegisDataSiswa extends React.Component {
                     }
                   >
                     {/* <Picker.Item label="-Pilih Jurusan-" value="" enabled={false} /> */}
-                    <Picker.Item label="Islam" value="islam" />
-                    <Picker.Item label="Kristen" value="kristen" />
-                    <Picker.Item label="Katolik" value="katolik" />
-                    <Picker.Item label="Buddha" value="buddhas" />
-                    <Picker.Item label="Hindu" value="hindu" />
+                    {this.state.religionlist.map((item, index) => (
+                      <Picker.Item label={item.text} value={item.value} />
+                    ))}
                   </Picker>
                 </View>
               </View>
@@ -787,7 +1135,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Pekerjaan"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ fguardoccupation: val })
+                  }
                 />
               </View>
               <View style={[Style.inputContainer, Style.input]}>
@@ -796,7 +1146,9 @@ class RegisDataSiswa extends React.Component {
                   placeholder={"Alamat Pekerjaan"}
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
-                  // onChangeText={val => this.setState({email:val})}
+                  onChangeText={(val) =>
+                    this.setState({ fguardoccupationaddress: val })
+                  }
                 />
               </View>
             </View>
@@ -872,6 +1224,356 @@ class RegisDataSiswa extends React.Component {
             {
               // Layer 5
             }
+            <View
+              style={[
+                Style.ContainerViewBiasa,
+                { display: this.state.display === 5 ? "flex" : "none" },
+              ]}
+            >
+              <View style={Style.inputContainer}>
+                <TouchableOpacity
+                  style={Style.buttonDokumen}
+                  onPress={() => this.pickImage("Ayah")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View style={Style.ContainerViewHorizontal}>
+                      <View>
+                        {this.state.imageAyah ? (
+                          <View>
+                            <Image
+                              source={{ uri: this.state.imageAyah }}
+                              style={{
+                                width: 70,
+                                height: 50,
+                                borderRadius: 5,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <Icon
+                            name={"images-outline"}
+                            size={26}
+                            color={"#B2B5BF"}
+                          />
+                        )}
+                      </View>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
+                        <Text style={Style.textNormalBlack}>KTP Ayah</Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Icon
+                        name={"ios-checkmark-circle-sharp"}
+                        size={26}
+                        color={this.state.warnacheckAyah}
+                        // color={"#06BFAD"}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+
+                {/* KTP IBU */}
+                <TouchableOpacity
+                  style={Style.buttonDokumen}
+                  onPress={() => this.pickImage("Ibu")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View style={Style.ContainerViewHorizontal}>
+                      <View>
+                        {this.state.imageIbu ? (
+                          <View>
+                            <Image
+                              source={{ uri: this.state.imageIbu }}
+                              style={{
+                                width: 70,
+                                height: 50,
+                                borderRadius: 5,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <Icon
+                            name={"images-outline"}
+                            size={25}
+                            color={"#B2B5BF"}
+                          />
+                        )}
+                      </View>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
+                        <Text style={Style.textNormalBlack}>KTP Ibu</Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Icon
+                        name={"ios-checkmark-circle-sharp"}
+                        size={26}
+                        color={this.state.warnacheckIbu}
+                        // color={"#06BFAD"}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Kartu Keluarga */}
+                <TouchableOpacity
+                  style={Style.buttonDokumen}
+                  onPress={() => this.pickImage("KK")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View style={Style.ContainerViewHorizontal}>
+                      <View>
+                        {this.state.imageKK ? (
+                          <View>
+                            <Image
+                              source={{ uri: this.state.imageKK }}
+                              style={{
+                                width: 70,
+                                height: 50,
+                                borderRadius: 5,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <Icon
+                            name={"images-outline"}
+                            size={25}
+                            color={"#B2B5BF"}
+                          />
+                        )}
+                      </View>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
+                        <Text style={Style.textNormalBlack}>
+                          Kartu Keluarga
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Icon
+                        name={"ios-checkmark-circle-sharp"}
+                        size={26}
+                        color={this.state.warnacheckKK}
+                        // color={"#06BFAD"}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Ijazah */}
+                <TouchableOpacity
+                  style={Style.buttonDokumen}
+                  onPress={() => this.pickImage("Ijazah")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View style={Style.ContainerViewHorizontal}>
+                      <View>
+                        {this.state.imageIjazah ? (
+                          <View>
+                            <Image
+                              source={{ uri: this.state.imageIjazah }}
+                              style={{
+                                width: 70,
+                                height: 50,
+                                borderRadius: 5,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <Icon
+                            name={"images-outline"}
+                            size={25}
+                            color={"#B2B5BF"}
+                          />
+                        )}
+                      </View>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
+                        <Text style={Style.textNormalBlack}>Ijazah</Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Icon
+                        name={"ios-checkmark-circle-sharp"}
+                        size={26}
+                        color={this.state.warnacheckIjazah}
+                        // color={"#06BFAD"}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+
+                {/* SKHUN */}
+                <TouchableOpacity
+                  style={Style.buttonDokumen}
+                  onPress={() => this.pickImage("SKHUN")}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View style={Style.ContainerViewHorizontal}>
+                      <View>
+                        {this.state.imageSkhun ? (
+                          <View>
+                            <Image
+                              source={{ uri: this.state.imageSkhun }}
+                              style={{
+                                width: 70,
+                                height: 50,
+                                borderRadius: 5,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <Icon
+                            name={"images-outline"}
+                            size={25}
+                            color={"#B2B5BF"}
+                          />
+                        )}
+                      </View>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
+                        <Text style={Style.textNormalBlack}>SKHUN</Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Icon
+                        name={"ios-checkmark-circle-sharp"}
+                        size={26}
+                        color={this.state.warnacheckSkhun}
+                        // color={"#06BFAD"}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {
+              // Layer 6
+            }
+            <View
+              style={[
+                Style.ContainerViewBiasa,
+                { display: this.state.display === 6 ? "flex" : "none" },
+              ]}
+            >
+              <TouchableOpacity onPress={() => this.onSubmitData()}>
+                <Text style={Style.textBold}>asd</Text>
+              </TouchableOpacity>
+              <View style={Style.inputContainer}>
+                <Text style={Style.textNormalBlack}>Email</Text>
+                <View style={Style.input}>
+                  <TextInput
+                    style={{ marginTop: 7, fontSize: 16 }}
+                    placeholder={"Email"}
+                    placeholderTextColor={"#B2B5BF"}
+                    underlineColorAndroid="transparent"
+                    onChangeText={(val) => this.setState({ studentemail: val })}
+                  />
+                </View>
+              </View>
+              <View style={Style.inputContainer}>
+                <Text style={Style.textNormalBlack}>Kata Sandi</Text>
+                <View style={Style.input}>
+                  <TextInput
+                    style={{ marginTop: 7, fontSize: 16 }}
+                    placeholder={"Sandi"}
+                    placeholderTextColor={"#B2B5BF"}
+                    underlineColorAndroid="transparent"
+                    secureTextEntry={true}
+                    onChangeText={(val) => this.setState({ pwd: val })}
+                  />
+                </View>
+              </View>
+              <View style={Style.inputContainer}>
+                <Text style={Style.textNormalBlack}>Ketik ulang Sandi</Text>
+                <View style={Style.input}>
+                  <TextInput
+                    style={{ marginTop: 7, fontSize: 16 }}
+                    placeholder={"Konfirmasi Sandi"}
+                    placeholderTextColor={"#B2B5BF"}
+                    underlineColorAndroid="transparent"
+                    secureTextEntry={true}
+                    onChangeText={(val) => this.setState({ repw: val })}
+                  />
+                </View>
+              </View>
+              <View style={Style.inputContainer}>
+                <Text style={Style.textBold}>
+                  Silahkan Masukkan Informasi pendukung disini
+                </Text>
+              </View>
+              <View style={Style.inputContainer}>
+                <Text style={Style.textNormalBlack}>
+                  Sekolah SMK MHS diketahui dari
+                </Text>
+              </View>
+              <View style={[Style.inputContainer, Style.input]}>
+                <Picker
+                  mode="dropdown"
+                  style={{ margin: -4 }}
+                  selectedValue={this.state.reginfo_origin}
+                  placeholderTextColor={"#B2B5BF"}
+                  underlineColorAndroid="transparent"
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({ reginfo_origin: itemValue })
+                  }
+                >
+                  {this.state.reginfo_originlist.map((item, index) => (
+                    <Picker.Item
+                      label={item.description}
+                      value={item.reginfo_originid}
+                    />
+                  ))}
+                </Picker>
+              </View>
+            </View>
 
             <View style={[Style.ContainerViewHorizontalSpace]}>
               <TouchableOpacity

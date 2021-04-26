@@ -32,7 +32,7 @@ const slider = [
     key: 2,
     image: require("./../../assets/banner2.png"),
     linkStack: "RegisterNewSiswa",
-    linkScren: "RegisDataSiswa",
+    linkScren: "RegisDataWali",
   },
   {
     key: 3,
@@ -113,15 +113,15 @@ class Home extends React.Component {
               </View>
             </ScrollView>
             <View style={Style.paging}>
-              {slider.map((i, k) => (
+              {slider.map((item, index) => (
                 <View style={{ marginHorizontal: 3 }}>
                   <Text
                     style={
-                      k == this.state.active
+                      index == this.state.active
                         ? Style.textNormalBlack
                         : Style.textNormalGrey
                     }
-                    key={k}
+                    key={item.key}
                   >
                     ⬤
                   </Text>

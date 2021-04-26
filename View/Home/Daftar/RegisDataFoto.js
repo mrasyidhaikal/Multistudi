@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
-import ModalSelector from 'react-native-modal-selector'
+import ModalSelector from "react-native-modal-selector";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
@@ -37,13 +37,13 @@ class RegisDataFoto extends React.Component {
       imageKK: null,
       imageIjazah: null,
       imageSkhun: null,
-      warnacheckAyah: '#B2B5BF',
-      warnacheckIbu: '#B2B5BF',
-      warnacheckKK: '#B2B5BF',
-      warnacheckIjazah: '#B2B5BF',
-      warnacheckSkhun: '#B2B5BF',
+      warnacheckAyah: "#B2B5BF",
+      warnacheckIbu: "#B2B5BF",
+      warnacheckKK: "#B2B5BF",
+      warnacheckIjazah: "#B2B5BF",
+      warnacheckSkhun: "#B2B5BF",
       ukuranstate: 25,
-      textInputValue: '',
+      textInputValue: "",
       dialogvisible: false,
     };
   }
@@ -56,132 +56,37 @@ class RegisDataFoto extends React.Component {
     this.setState({ dialogvisible: false });
   };
 
-  pickImageAyah = async () => {
+  pickImage = async (type) => {
     //File
-    let resultAyah = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
 
       aspect: [4, 3],
       quality: 1,
     });
 
-    if (!resultAyah.cancelled) {
-      this.setState({ imageAyah: resultAyah.uri });
-      this.setState({ warnacheckAyah: '#06BFAD' });
+    if (!result.cancelled) {
+      if (type === "Ayah") {
+        this.setState({ imageAyah: result.uri });
+        this.setState({ warnacheckAyah: "#06BFAD" });
+      }
+      if (type === "Ibu") {
+        this.setState({ imageIbu: result.uri });
+        this.setState({ warnacheckIbu: "#06BFAD" });
+      }
+      if (type === "KK") {
+        this.setState({ imageKK: result.uri });
+        this.setState({ warnacheckKK: "#06BFAD" });
+      }
+      if (type === "Ijazah") {
+        this.setState({ imageIjazah: result.uri });
+        this.setState({ warnacheckIjazah: "#06BFAD" });
+      }
+      if (type === "SKHUN") {
+        this.setState({ imageSkhun: result.uri });
+        this.setState({ warnacheckSkhun: "#06BFAD" });
+      }
     }
-
-    //Camera
-    // let Camera = await ImagePicker.launchCameraAsync();
-    // if (!Camera.cancelled) {
-    //   this.setState({ image: Camera.uri });
-    // }
-  };
-
-  pickImageAyahCam = async () => {
-    // //File
-    // let resultAyah = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-
-    // if (!resultAyah.cancelled) {
-    //   this.setState({ imageAyah: resultAyah.uri });
-    //   this.setState({ warnacheckAyah: '#06BFAD' });
-    // }
-
-    // Camera
-    let Camera = await ImagePicker.launchCameraAsync();
-    if (!Camera.cancelled) {
-      this.setState({ imageAyah: Camera.uri });
-      this.setState({ warnacheckAyah: '#06BFAD' });
-
-    }
-  };
-
-  pickImageIbu = async () => {
-    //File
-    let resultIbu = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!resultIbu.cancelled) {
-      this.setState({ imageIbu: resultIbu.uri });
-      this.setState({ warnacheckIbu: '#06BFAD' });
-    }
-
-    //Camera
-    // let Camera = await ImagePicker.launchCameraAsync();
-    // if (!Camera.cancelled) {
-    //   this.setState({ image: Camera.uri });
-    // }
-  };
-
-  pickImageKK = async () => {
-    //File
-    let resultKK = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!resultKK.cancelled) {
-      this.setState({ imageKK: resultKK.uri });
-      this.setState({ warnacheckKK: '#06BFAD' });
-    }
-
-    //Camera
-    // let Camera = await ImagePicker.launchCameraAsync();
-    // if (!Camera.cancelled) {
-    //   this.setState({ image: Camera.uri });
-    // }
-  };
-
-  pickImageIjazah = async () => {
-    //File
-    let resultIjazah = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!resultIjazah.cancelled) {
-      this.setState({ imageIjazah: resultIjazah.uri });
-      this.setState({ warnacheckIjazah: '#06BFAD' });
-    }
-
-    //Camera
-    // let Camera = await ImagePicker.launchCameraAsync();
-    // if (!Camera.cancelled) {
-    //   this.setState({ image: Camera.uri });
-    // }
-  };
-
-  pickImageSkhun = async () => {
-    //File
-    let resultSkhun = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!resultSkhun.cancelled) {
-      this.setState({ imageSkhun: resultSkhun.uri });
-      this.setState({ warnacheckSkhun: '#06BFAD' });
-    }
-
-    //Camera
-    // let Camera = await ImagePicker.launchCameraAsync();
-    // if (!Camera.cancelled) {
-    //   this.setState({ image: Camera.uri });
-    // }
   };
 
   componentWillUnmount = async () => {
@@ -197,18 +102,6 @@ class RegisDataFoto extends React.Component {
   };
 
   render() {
-
-    // let index = 0;
-    //     const data = [
-    //         { key: index++, section: true, label: 'Fruits' },
-    //         { key: index++, label: 'Red Apples' },
-    //         { key: index++, label: 'Cherries' },
-    //         { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-    //         // etc...
-    //         // Can also add additional custom keys which are passed to the onChange callback
-    //         { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
-    //     ];
-
     const { navigation } = this.props;
     return (
       <View style={Style.container}>
@@ -238,16 +131,28 @@ class RegisDataFoto extends React.Component {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
               >
-               <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisDataSiswa')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisDataSiswa")}
+                >
                   <Text style={Style.textNormalGrey}>Data Siswa</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={Style.buttonBlank}  onPress={() => navigation.navigate('RegisDataWali')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisDataWali")}
+                >
                   <Text style={Style.textNormalGrey}>Data Wali</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={Style.buttonBlank}  onPress={() => navigation.navigate('RegisHobi')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisHobi")}
+                >
                   <Text style={Style.textNormalGrey}>Hobi/Minat</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={Style.buttonBlank} onPress={() => navigation.navigate('RegisPrestasi')}>
+                <TouchableOpacity
+                  style={Style.buttonBlank}
+                  onPress={() => navigation.navigate("RegisPrestasi")}
+                >
                   <Text style={Style.textNormalGrey}>Prestasi</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={Style.buttonBlueActive}>
@@ -263,23 +168,9 @@ class RegisDataFoto extends React.Component {
               <Text style={Style.textBold}>Dokumen</Text>
 
               <View style={Style.inputContainer}>
-
-                {/* <Button title="Show dialog" onPress={this.showDialogAyah} /> */}
-                {/* <Dialog.Container visible={this.state.dialogvisible} onBackdropPress={this.handleCancel}>
-                  <Dialog.Title>Document Upload</Dialog.Title>
-                  <Dialog.Description>
-                    Select File Source
-                  </Dialog.Description>
-                  <Dialog.Button label="Camera" onPress={this.pickImageAyahCam} />
-                  <Dialog.Button label="Gallery" onPress={this.pickImageAyah} />
-                </Dialog.Container> */}
-
-                
-                {/* KTP AYAH */}
                 <TouchableOpacity
                   style={Style.buttonDokumen}
-                  // onPress={this.showDialog}
-                  onPress={() => this.pickImageAyah()}
+                  onPress={() => this.pickImage("Ayah")}
                 >
                   <View
                     style={{
@@ -303,16 +194,21 @@ class RegisDataFoto extends React.Component {
                         ) : (
                           <Icon
                             name={"images-outline"}
-                            size={25}
+                            size={26}
                             color={"#B2B5BF"}
                           />
                         )}
                       </View>
-                      <View style={{ marginLeft: 20 }}>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
                         <Text style={Style.textNormalBlack}>KTP Ayah</Text>
                       </View>
                     </View>
-                    <View style={{margin: this.state.ukuranstate}}>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
                       <Icon
                         name={"ios-checkmark-circle-sharp"}
                         size={26}
@@ -321,13 +217,12 @@ class RegisDataFoto extends React.Component {
                       />
                     </View>
                   </View>
-
                 </TouchableOpacity>
 
                 {/* KTP IBU */}
                 <TouchableOpacity
                   style={Style.buttonDokumen}
-                  onPress={() => this.pickImageIbu()}
+                  onPress={() => this.pickImage("Ibu")}
                 >
                   <View
                     style={{
@@ -356,11 +251,16 @@ class RegisDataFoto extends React.Component {
                           />
                         )}
                       </View>
-                      <View style={{ marginLeft: 20 }}>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
                         <Text style={Style.textNormalBlack}>KTP Ibu</Text>
                       </View>
                     </View>
-                    <View style={{margin: this.state.ukuranstate}}>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
                       <Icon
                         name={"ios-checkmark-circle-sharp"}
                         size={26}
@@ -369,13 +269,12 @@ class RegisDataFoto extends React.Component {
                       />
                     </View>
                   </View>
-
                 </TouchableOpacity>
 
                 {/* Kartu Keluarga */}
                 <TouchableOpacity
                   style={Style.buttonDokumen}
-                  onPress={() => this.pickImageKK()}
+                  onPress={() => this.pickImage("KK")}
                 >
                   <View
                     style={{
@@ -404,11 +303,18 @@ class RegisDataFoto extends React.Component {
                           />
                         )}
                       </View>
-                      <View style={{ marginLeft: 20 }}>
-                        <Text style={Style.textNormalBlack}>Kartu Keluarga</Text>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
+                        <Text style={Style.textNormalBlack}>
+                          Kartu Keluarga
+                        </Text>
                       </View>
                     </View>
-                    <View style={{margin: this.state.ukuranstate}}>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
                       <Icon
                         name={"ios-checkmark-circle-sharp"}
                         size={26}
@@ -417,13 +323,12 @@ class RegisDataFoto extends React.Component {
                       />
                     </View>
                   </View>
-
                 </TouchableOpacity>
 
                 {/* Ijazah */}
                 <TouchableOpacity
                   style={Style.buttonDokumen}
-                  onPress={() => this.pickImageIjazah()}
+                  onPress={() => this.pickImage("Ijazah")}
                 >
                   <View
                     style={{
@@ -452,11 +357,16 @@ class RegisDataFoto extends React.Component {
                           />
                         )}
                       </View>
-                      <View style={{ marginLeft: 20 }}>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
                         <Text style={Style.textNormalBlack}>Ijazah</Text>
                       </View>
                     </View>
-                    <View style={{margin: this.state.ukuranstate}}>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
                       <Icon
                         name={"ios-checkmark-circle-sharp"}
                         size={26}
@@ -465,13 +375,12 @@ class RegisDataFoto extends React.Component {
                       />
                     </View>
                   </View>
-
                 </TouchableOpacity>
 
                 {/* SKHUN */}
                 <TouchableOpacity
                   style={Style.buttonDokumen}
-                  onPress={() => this.pickImageSkhun()}
+                  onPress={() => this.pickImage("SKHUN")}
                 >
                   <View
                     style={{
@@ -500,11 +409,16 @@ class RegisDataFoto extends React.Component {
                           />
                         )}
                       </View>
-                      <View style={{ marginLeft: 20 }}>
+                      <View style={{ marginLeft: 20, alignSelf: "center" }}>
                         <Text style={Style.textNormalBlack}>SKHUN</Text>
                       </View>
                     </View>
-                    <View style={{margin: this.state.ukuranstate}}>
+                    <View
+                      style={{
+                        margin: this.state.ukuranstate,
+                        alignSelf: "center",
+                      }}
+                    >
                       <Icon
                         name={"ios-checkmark-circle-sharp"}
                         size={26}
@@ -513,25 +427,15 @@ class RegisDataFoto extends React.Component {
                       />
                     </View>
                   </View>
-
                 </TouchableOpacity>
-
-
-
-                {/* <View style={{flex:1, justifyContent:'space-around', padding:50}}>
-                  <ModalSelector
-                      data={data}
-                      initValue="Select something yummy!"
-                      onChange={(option)=>{ alert(`${option.label} (${option.key}) nom nom nom`) }} />
-                </View> */}
-
               </View>
-
             </View>
 
             <View style={Style.ContainerViewHorizontalSpace}>
-              <TouchableOpacity style={Style.buttonBlank} 
-                onPress={() => navigation.navigate("RegisPrestasi")}>
+              <TouchableOpacity
+                style={Style.buttonBlank}
+                onPress={() => navigation.navigate("RegisPrestasi")}
+              >
                 <View style={{ flexDirection: "row" }}>
                   <Icon
                     name={"ios-chevron-back-sharp"}
@@ -555,7 +459,6 @@ class RegisDataFoto extends React.Component {
                 </View>
               </TouchableOpacity>
             </View>
-            
           </ScrollView>
         </SafeAreaView>
       </View>
