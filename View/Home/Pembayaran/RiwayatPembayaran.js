@@ -55,9 +55,95 @@ class RiwayatPembayaran extends React.Component {
               </Text>
             </View>
 
-            <View style={[PembayaranStyle.CardPembayaran]}>
-              <Text></Text>
+
+            {/* Content */}
+            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginVertical: 20}]}>
+
+              <View style={{ flexDirection: "row", margin: 20, justifyContent: "space-between", width: WIDTH-80}}>
+                <View style={{ flexDirection: "row"}}>
+                  <Icon name="ios-calendar-outline" size={20} color={black} />
+                  <Text
+                    style={[
+                      Style.textNormalBlack,
+                      {marginLeft: 10,fontSize: 14, },
+                    ]}
+                  >
+                    15 Maret 2021
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row"}}>
+                  <Text style={{color: '#06BFAD', fontWeight: "bold"}}>
+                    Sudah Terbayar
+                  </Text>
+                  <Icon name="ios-checkmark-circle" style={{color: '#06BFAD', marginLeft: 7}} size={20} />
+                </View>
+              </View>
+              
+              <Text style={{fontSize: 14, marginLeft: 20}}>Nomor Pembayaran : PS2021-03-19399</Text>
+              
+              <View style={PembayaranStyle.containerMetodePembayaran}>
+                    <Text style={{fontWeight: 'bold'}}>Metode Pembayaran</Text>
+                    <Text> VA BCA </Text>
+              </View>
+              
+              <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 20, alignItems: 'center'}}>
+                <View>
+                  <Text>Jumlah</Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 2}}>Rp. 550.000</Text>      
+                </View>
+                <TouchableOpacity onPress={() => navigation.navigate('DetailPembayaran')}>
+                  <View style={{flexDirection: 'row',}}>
+                      <Text style={{fontSize: 16, color: '#FF3737', fontWeight: 'bold'}}>Lihat Detail</Text>
+                      <Icon name="ios-chevron-forward" style={{color: '#FF3737', marginLeft: 5}} size={20} />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
+
+
+            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginVertical: 20}]}>
+
+              <View style={{ flexDirection: "row", margin: 20, justifyContent: "space-between", width: WIDTH-80}}>
+                <View style={{ flexDirection: "row"}}>
+                  <Icon name="ios-calendar-outline" size={20} color={black} />
+                  <Text
+                    style={[
+                      Style.textNormalBlack,
+                      {marginLeft: 10,fontSize: 14, },
+                    ]}
+                  >
+                    15 April 2021
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row"}}>
+                  <Text style={{color: '#F15A23', fontWeight: "bold"}}>
+                    Menunggu Konfirmasi
+                  </Text>
+                  <Icon name="ios-time-outline" style={{color: '#F15A23', marginLeft: 7}} size={20} />
+                </View>
+              </View>
+              
+              <Text style={{fontSize: 14, marginLeft: 20}}>Nomor Pembayaran : PS2021-03-19399</Text>
+              
+              <View style={PembayaranStyle.containerMetodePembayaran}>
+                    <Text style={{fontWeight: 'bold'}}>Metode Pembayaran</Text>
+                    <Text> VA BCA </Text>
+              </View>
+              
+              <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 20, alignItems: 'center'}}>
+                <View>
+                  <Text>Jumlah</Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 2}}>Rp. 550.000</Text>      
+                </View>
+                <TouchableOpacity onPress={() => navigation.navigate('DetailPembayaran')}>
+                  <View style={{flexDirection: 'row',}}>
+                      <Text style={{fontSize: 16, color: '#FF3737', fontWeight: 'bold'}}>Lihat Detail</Text>
+                      <Icon name="ios-chevron-forward" style={{color: '#FF3737', marginLeft: 5}} size={20} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+
 
           </ScrollView>
         </SafeAreaView>
@@ -66,11 +152,5 @@ class RiwayatPembayaran extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-  head: { height: 40 },
-  text: { margin: 6, fontSize: 12 }
-});
 
 export default RiwayatPembayaran;

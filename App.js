@@ -6,7 +6,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 
+import CallAsyncData from './Controller/CallAsyncData';
+
 import HomeScreen from "./View/Home/Home";
+
+import WelcomeScreen from "./View/Home/Welcome";
+import LoginScreen from "./View/Home/Login";
+
 
 // Screen Register Siswa Baru
 import RegisDataSiswa from "./View/Home/Daftar/RegisDataSiswa";
@@ -22,13 +28,16 @@ import Pembayaran from "./View/Home/Pembayaran/Pembayaran";
 import Tagihan from "./View/Home/Pembayaran/Tagihan";
 import MetodePembayaran from "./View/Home/Pembayaran/MetodePembayaran";
 import RiwayatPembayaran from "./View/Home/Pembayaran/RiwayatPembayaran";
+import DetailPembayaran from "./View/Home/Pembayaran/DetailPembayaran";
 import Profil from "./View/Home/Profil/Profil";
 import InfoAplikasi from "./View/Home/Profil/InfoAplikasi";
 import TentangKami from "./View/Home/Profil/TentangKami";
 
+
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
 const Main = createStackNavigator();
+const Login = createStackNavigator();
 const RegisterNewSiswa = createStackNavigator();
 const guruStack = createStackNavigator();
 const pembayaranStack = createStackNavigator();
@@ -62,6 +71,16 @@ const MainStack = () => {
   );
 };
 
+const LoginStack = () => {
+  return(
+    <Login.Navigator screenOptions={{headerShown : false}}>
+      <Login.Screen name="Welcome" component={WelcomeScreen}/>
+      <Login.Screen name="Login" component={LoginScreen}/>
+      <Login.Screen name="MainStack" component={MainStack}/>
+    </Login.Navigator>
+  )
+}
+
 const guruStacks = () => {
   return (
     <guruStack.Navigator screenOptions={{ headerShown: false }}>
@@ -78,6 +97,7 @@ const pembayranStacks = () => {
       <pembayaranStack.Screen name="Tagihan" component={Tagihan} />
       <pembayaranStack.Screen name="MetodePembayaran" component={MetodePembayaran} />
       <pembayaranStack.Screen name="RiwayatPembayaran" component={RiwayatPembayaran} />
+      <pembayaranStack.Screen name="DetailPembayaran" component={DetailPembayaran} />
     </pembayaranStack.Navigator>
   );
 };
@@ -88,6 +108,7 @@ const profilStacks = () => {
       <profilStack.Screen name="Profil" component={Profil} />
       <profilStack.Screen name="InfoAplikasi" component={InfoAplikasi} />
       <profilStack.Screen name="TentangKami" component={TentangKami} />
+      <profilStack.Screen name="LoginProfile" component={LoginStack} />
     </profilStack.Navigator>
   );
 };
@@ -132,7 +153,7 @@ const AppTabs = () => {
         name="ProfilScreen"
         component={Profil}
         options={{
-          tabBarLabel: "Profil",
+          tabBarLabel: "Profie",
 
           tabBarIcon: ({ color }) => (
             <Icon name="ios-person-circle-outline" color={color} size={26} />
@@ -143,14 +164,46 @@ const AppTabs = () => {
   );
 };
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-        <AuthStack.Screen name="Main" component={MainStack} />
-      </AuthStack.Navigator>
-    </NavigationContainer>
-  );
+export default class App extends React.Component {
+
+  constructor() {
+    super()
+
+    this.UserData()
+    this.state = {
+      tokenUser : "",
+        tokenExpire : "",
+      }
+    }
+
+  UserData = async() => {
+    const tokenUser = await CallAsyncData.getData('token')
+    const tokenExpire = await CallAsyncData.getData('tokenExpire')
+    this.setState({tokenExpire: tokenExpire,tokenUser:tokenUser})
+    
+  }
+
+  render(){
+    return (
+      <NavigationContainer>
+        <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+
+        {this.state.tokenUser ?(
+       <AuthStack.Screen
+       name="HomeStackScreen"
+       component={MainStack}
+     />
+    ): (
+      <AuthStack.Screen
+      name="login"
+      component={LoginStack}
+    />
+    )}
+
+        </AuthStack.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

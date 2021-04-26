@@ -14,6 +14,7 @@ import {
   RefreshControl,
   ImageBackground,
   FlatList,
+  ToastAndroid,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -70,7 +71,7 @@ class NotesView extends React.Component {
       bodyText: "",
       counter: 0,
       DateDisplay: "",
-      displayFormat: "HH:mm",
+      displayFormat: "HH:mm A",
       press: true,
       showColor: false,
       colorCard: "",
@@ -100,10 +101,15 @@ class NotesView extends React.Component {
     if (this.state.press == false) {
       this.setState({ showColor: false, press: true });
     } else {
-      console.log("1");
+      // console.log("1");
       this.setState({ showColor: true, press: false });
     }
   };
+  clearAsyncStorage = async() => {
+    AsyncStorage.clear();
+    this.setRefreshing();
+    console.log("Async Storage Cleared !")
+  }
   addNotes = async () => {
     try {
       let waktu = moment(
@@ -127,11 +133,18 @@ class NotesView extends React.Component {
         this.setState({ notesData: c });
 
         AsyncStorage.setItem("cardCore", JSON.stringify(c));
+        this.showToast('Note Saved !');
+        this.clearTextInput()
       });
     } catch (e) {
       console.log(e);
     }
   };
+  clearTextInput = () => {
+      this.textInput.clear()
+      this.notetextInput.clear()
+      this.hourtextInput.clear()
+  }
   addColor = async () => {
     try {
       const value = await AsyncStorage.getItem("warnaInputCard");
@@ -143,10 +156,28 @@ class NotesView extends React.Component {
       // error reading value
     }
   };
-  componentDidMount = async () => {
+
+  getDataCard = async () => {
     const card = await AsyncStorage.getItem("cardCore");
 
+    // if (this.setState({ notesData: JSON.parse(card) })){
     this.setState({ notesData: JSON.parse(card) });
+    this.setState({ refreshing: false })
+    // }
+
+  }
+
+  setRefreshing = () =>{
+    if(this.state.refreshing == false){
+       this.setState({ refreshing: true })
+       this.getDataCard()
+     }
+  }
+
+  componentDidMount = async () => {
+    this.getDataCard()
+
+    this.props.navigation.addListener('focus', this.getDataCard)
   };
 
   // getDataByDate = async (selectedDate) => {
@@ -158,31 +189,49 @@ class NotesView extends React.Component {
   //   return card;
   // };
 
+  showToast = (val) => {
+    ToastAndroid.show(val, ToastAndroid.SHORT);
+  };
+
+
   _renderItemNotes = ({ item, index }) => {
+    // console.log(item)
     return (
       <View style={[Style.CardAddNotes]}>
         <View style={{ padding: 20, flexDirection: "row" }}>
           <AddColorPick warna={item.warna} />
           <View>
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", width: WIDTH-100}}>
               <Text style={Style.textBold20}>{item.title}</Text>
               <TouchableOpacity
                 style={{
-                  borderColor: "#000",
+                  borderColor: "#FF3737",
                   borderWidth: 1,
                   borderRadius: 8,
                   height: 30,
-                  alignSelf: "flex-end",
+                  marginHorizontal: 10,
+                  // backgroundColor: 'black'
                 }}
+                onPress={()=>this.clearAsyncStorage()}
               >
                 <View style={{ marginHorizontal: 1 }}>
-                  <Icon name={"ios-add"} size={25} color={"#000"} />
+                  <Icon name={"ios-close"} size={25} color={"#FF3737"} />
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={{ marginTop: -10 }}>
+            <View style={{ marginTop: 10 }}>
               <Text style={Style.textNormalGrey}>{item.body}</Text>
-              <Text style={Style.textNormalGrey}>{item.waktu}</Text>
+              <Text style={Style.textNormalGrey}>{(moment(item.waktu).calendar(null, {
+                    sameDay: '[Today]',
+                    nextDay: '[Tomorrow]',
+                    nextWeek: 'dddd',
+                    lastDay: '[Yesterday]',
+                    lastWeek: '[Last] dddd',
+                    sameElse: 'ddd, DD MMMM YYYY"'
+                  }))
+                }
+              </Text>
+              <Text style={Style.textNormalGrey}>{moment(item.waktu).format("HH:MM A")}</Text>
             </View>
           </View>
         </View>
@@ -190,13 +239,34 @@ class NotesView extends React.Component {
     );
   };
 
+  _listEmptyComponent = () => {
+    return (
+        <View style={{marginVertical: 25 ,alignItems: 'center'}}>
+            <Icon
+              name={"ios-reader"}
+              size={64}
+              color={greyText}
+            />
+            <Text style={{color: '#B2B5BF', marginTop: 10, fontWeight: 'bold', fontSize: 20}}>Belum ada catatan</Text>
+            <Text style={{color: '#B2B5BF', }}>tambahkan catatan baru</Text>
+        </View>
+    )
+}
+
   render() {
     const { navigation } = this.props;
     this.addColor();
     return (
       <View style={Style.container}>
         <SafeAreaView>
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.setRefreshing}
+              />
+            }
+          >
             <View style={[Style.NavBackContainer, { marginTop: 40 }]}>
               <Text style={Style.headerText}>Notes</Text>
             </View>
@@ -215,10 +285,12 @@ class NotesView extends React.Component {
                 <View>
                   <View style={{ flexDirection: "row" }}>
                     <TextInput
-                      placeholder="Tittle"
+                      placeholder="Title"
                       placeholderTextColor={greyText}
                       style={{ width: WIDTH - 120, height: 50, fontSize: 24 }}
                       onChangeText={(val) => this.setState({ titleText: val })}
+                      clearButtonMode='always'
+                      ref={input => { this.textInput = input }}
                     />
                     <TouchableOpacity
                       style={{
@@ -237,9 +309,10 @@ class NotesView extends React.Component {
                   <View style={{ marginTop: -10 }}>
                     <TextInput
                       placeholder="Your Note Here"
-                      placeholderTextColor={black}
+                      placeholderTextColor={greyText}
                       style={{ width: WIDTH - 55, height: 50, fontSize: 16 }}
                       onChangeText={(val) => this.setState({ bodyText: val })}
+                      ref={input => { this.notetextInput = input }}
                     />
                   </View>
 
@@ -249,7 +322,7 @@ class NotesView extends React.Component {
                         backgroundColor: greyBorder,
                         borderRadius: 10,
                         padding: 8,
-                        width: 100,
+                        width: 120,
                         paddingLeft: 45,
                       }}
                       placeholder={"Waktu"}
@@ -266,6 +339,7 @@ class NotesView extends React.Component {
                             )
                           : ""
                       }
+                      ref={input => { this.hourtextInput = input }}
                     />
                     <Icon
                       name={"ios-time-outline"}
@@ -334,6 +408,7 @@ class NotesView extends React.Component {
             <FlatList
               data={this.state.notesData}
               renderItem={this._renderItemNotes}
+              ListEmptyComponent={this._listEmptyComponent}
               keyExtractor={(item, index) => index.toString()}
               numColumns={numColumn}
             />

@@ -14,10 +14,13 @@ import {
   RefreshControl,
   ImageBackground,
   Linking,
+  ToastAndroid,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CallAsyncData from '../../../Controller/CallAsyncData';
+
 import moment from "moment";
 import Style from "../../Style/Style";
 import { abs } from "react-native-reanimated";
@@ -31,6 +34,7 @@ class Profile extends React.Component {
     this.state = {
       refreshing: false,
       active: 0,
+      dataprofile:[],
       whatsappUrl: 'https://api.whatsapp.com/send/?phone=628117099959',
     };
   }
@@ -39,6 +43,68 @@ class Profile extends React.Component {
   handleWhatsapp = () => {
     Linking.openURL(this.state.whatsappUrl).catch(err => console.error("Couldn't load page", err));
   };
+
+  showToast = (val) => {
+    ToastAndroid.show(val, ToastAndroid.SHORT);
+  };
+
+  onLogout = async() =>{
+    // console.log('masuk logout')
+    const { navigation } = this.props;
+    try{
+      await AsyncStorage.clear()
+        this.showToast('Logout Berhasil');
+        navigation.push('Welcome')
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  loadFallBack(){
+    // console.log('masuk loadFallBack')
+    var dataprofile2 = this.state.dataprofile
+    dataprofile2['Picture'] =  dataprofile2['Picture2']
+    
+    this.setState({dataprofile : dataprofile2})
+    
+    // console.log(dataprofile2)
+  }
+
+  getProfile = async() =>{
+    const token = await CallAsyncData.getData('token')
+    const emailUser = await CallAsyncData.getData('email')
+    const userName = await CallAsyncData.getData('name')
+    const userMajor = await CallAsyncData.getData('major')
+    const userClass = await CallAsyncData.getData('kelas')
+    const userPhone = await CallAsyncData.getData('phone')
+    const userBirth = await CallAsyncData.getData('tgllahir')
+    const userAddress = await CallAsyncData.getData('address')
+    const userStatus = await CallAsyncData.getData('status')
+    const userPicture = await CallAsyncData.getData('fotoprofile')
+    const userPicture2 = await CallAsyncData.getData('fotoprofile2')
+
+    // Profile Data
+    const profile = {
+      'Email': emailUser,
+      'Nama': userName,
+      'Jurusan': userMajor,
+      'Kelas': userClass,
+      'Alamat': userAddress,
+      'Handphone': userPhone,
+      'Tgllahir': moment(userBirth).format('DD MMM YYYY'),
+      'Status': userStatus,
+      'Picture': userPicture,
+      'Picture2': userPicture2
+    }
+      
+      this.setState({dataprofile: profile})
+      // console.log(this.state.dataprofile)
+  }
+
+  componentDidMount(){
+    this.getProfile()
+  }
+
 
 
   change = ({ nativeEvent }) => {
@@ -68,19 +134,23 @@ class Profile extends React.Component {
                 </TouchableOpacity>
 
                 <View style={{marginTop:30,marginRight:20,alignItems:"center"}}>
-                    <Image style={{width:120,height:120}} source={require("../../../assets/profile.png")} />
-                    <Text style={[Style.textBold,{marginTop:20}]}>Jenny Wilson</Text>
-                    <Text style={{color:'#B2B5BF',marginTop:5}}>Kelas XI • Teknik Komputer Jaringan</Text>
+                    <View style={{width: 120, height: 120, overflow: 'hidden', borderRadius: 60}}>
+                      <Image style={{width: '100%', height: '125%'}} source={{uri: this.state.dataprofile['Picture'] }} onError={() => this.loadFallBack()} />
+                    </View>
+                    <Text style={[Style.textBold,{marginTop:20}]}>{this.state.dataprofile['Nama']}</Text>
+                    <Text style={{color:'#B2B5BF',marginTop:5}}>{this.state.dataprofile['Kelas']} • {this.state.dataprofile['Jurusan']}</Text>
 
-                    <View style={{flexDirection:"row", marginTop: 30, paddingBottom: 15, borderBottomWidth:1, borderBottomColor:'#E7E9F1'}}>
-                    <View style={{flexDirection:"row"}}>
-                        <Icon name="md-call-outline" style={{paddingRight:10}} color={'#B2B5BF'} size={24} />
-                        <Text style={{paddingRight:15}}>+62812 1234 5678</Text>
-                    </View>
-                    <View style={{flexDirection:"row"}}>
-                        <Icon name="ios-mail-outline" style={{paddingRight:10}} color={'#B2B5BF'} size={24} />
-                        <Text style={{paddingRight:10}} >jennywilson@gmail.com</Text>
-                    </View>
+                    <View style={{flexDirection:"row", marginTop: 20, paddingBottom: 15, borderBottomWidth:1, borderBottomColor:'#E7E9F1'}}>
+                    <View style={{flexDirection:"row" , maxWidth: WIDTH-20, flexWrap: 'wrap', justifyContent: 'center'}}>
+                        <View style={{flexDirection:"row"}}>
+                            <Icon name="md-call-outline" style={{paddingRight:10}} color={'#B2B5BF'} size={24} />
+                            <Text style={{paddingRight:15}}>{this.state.dataprofile['Handphone']}</Text>
+                        </View>
+                        <View style={{flexDirection:"row"}}>
+                            <Icon name="ios-mail-outline" style={{paddingRight:10}} color={'#B2B5BF'} size={24} />
+                            <Text style={{paddingRight:10}} >{this.state.dataprofile['Email']}</Text>
+                        </View>
+                      </View>
                     </View>
                 </View>
 
@@ -115,7 +185,7 @@ class Profile extends React.Component {
                 </View>
 
                 <View style={{paddingTop: 75, paddingBottom: 10}}>
-                  <TouchableOpacity style={{marginTop: 20}}>
+                  <TouchableOpacity style={{marginTop: 20}} onPress={this.onLogout}>
                     <View style={{flexDirection: "row"}}>
                       <Icon name="ios-exit-outline" style={{paddingRight:10}} color={'#EB3C3C'} size={28} />
                       <Text style={{margin: 5, fontSize: 14, color: '#EB3C3C'}}>Logout</Text>
