@@ -49,6 +49,13 @@ class Tagihan extends React.Component {
                   color={"#000"}
                 />
               </TouchableOpacity>
+              <TouchableOpacity style={{position: 'absolute', left: WIDTH-85}} onPress={() => navigation.navigate('RiwayatPembayaran')}>
+                <Icon
+                  name={"ios-timer-outline"}
+                  size={25}
+                  color={"#000"}
+                />
+              </TouchableOpacity>
               <Text style={[Style.headerText, { marginVertical: 10 }]}>
                 Informasi Tagihan
               </Text>
@@ -94,33 +101,33 @@ class Tagihan extends React.Component {
             <View style={{borderRadius: 20, borderWidth: 1, borderColor: '#E7E9F1', margin: 25,}}>
                 <View style={{margin:25, flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Text>Jul 2020</Text>
-                  <Text style={{fontWeight: 'bold', color: '#3FA2F7'}}>Rp. 550.000</Text>
+                  <Text style={PembayaranStyle.TextTagihanSPP}>Rp. 550.000</Text>
                   <TouchableOpacity style={PembayaranStyle.buttonLunas}>
-                    <Text style={{color: '#B2B5BF', marginVertical: 10,}}>Lunas</Text>
+                    <Text style={PembayaranStyle.buttonLunasText}>Lunas</Text>
                   </TouchableOpacity>
                 </View>
 
                 <View style={{margin:25, flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Text>Agu 2020</Text>
-                  <Text style={{fontWeight: 'bold', color: '#3FA2F7'}}>Rp. 550.000</Text>
+                  <Text style={PembayaranStyle.TextTagihanSPP}>Rp. 550.000</Text>
                   <TouchableOpacity style={PembayaranStyle.buttonLunas}>
-                    <Text style={{color: '#B2B5BF', marginVertical: 10,}}>Lunas</Text>
+                    <Text style={PembayaranStyle.buttonLunasText}>Lunas</Text>
                   </TouchableOpacity>
                 </View>
                
                 <View style={{margin:25, flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Text>Agu 2020</Text>
-                  <Text style={{fontWeight: 'bold', color: '#3FA2F7'}}>Rp. 550.000</Text>
+                  <Text style={PembayaranStyle.TextTagihanSPP}>Rp. 550.000</Text>
                   <TouchableOpacity style={PembayaranStyle.buttonLunas}>
-                    <Text style={{color: '#B2B5BF', marginVertical: 10,}}>Lunas</Text>
+                    <Text style={PembayaranStyle.buttonLunasText}>Lunas</Text>
                   </TouchableOpacity>
                 </View>
                 
                 <View style={{margin:25, flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Text>Sep 2020</Text>
-                  <Text style={{fontWeight: 'bold', color: '#3FA2F7'}}>Rp. 550.000</Text>
+                  <Text style={PembayaranStyle.TextTagihanSPP}>Rp. 550.000</Text>
                   <TouchableOpacity style={PembayaranStyle.buttonBayar} onPress={() => navigation.navigate('MetodePembayaran')}>
-                    <Text style={{color: '#FF3737', marginVertical: 10,}}>Bayar</Text>
+                    <Text style={PembayaranStyle.buttonBayarText}>Bayar</Text>
                   </TouchableOpacity>
                 </View>
             </View>

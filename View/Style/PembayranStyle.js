@@ -38,11 +38,20 @@ const PembayranStyle = StyleSheet.create({
     width: 121,
     height: 50,
   },
+  TextTagihanSPP:{
+    fontWeight: 'bold',
+    color: '#3FA2F7'
+  },
   buttonLunas:{
     borderRadius: 7, 
     backgroundColor: '#F6F6FA', 
     alignItems: 'center', 
     width: WIDTH - 300
+  },
+  buttonLunasText:{
+    color: '#B2B5BF',
+    marginVertical: 10,
+    fontWeight: "bold"
   },
   buttonBayar:{
     borderRadius: 7,
@@ -50,6 +59,11 @@ const PembayranStyle = StyleSheet.create({
     borderColor: '#FF3737',
     alignItems: 'center', 
     width: WIDTH - 300
+  },
+  buttonBayarText:{
+    color: '#FF3737', 
+    marginVertical: 10, 
+    fontWeight: "bold"
   },
   buttonMetodeBank:{
     flexDirection: 'row', 
@@ -60,6 +74,16 @@ const PembayranStyle = StyleSheet.create({
     width: '85%' ,
     borderBottomWidth: 1, 
     borderBottomColor: '#F6F6FA'
+  },
+  containerMetodePembayaran:{
+    flexDirection: "row", 
+    marginTop: 10, 
+    padding: 12, 
+    borderRadius: 10, 
+    backgroundColor: '#E7E9F1', 
+    width: WIDTH-80, 
+    alignSelf:"center", 
+    justifyContent: "space-between"
   },
 });
 

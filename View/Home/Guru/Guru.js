@@ -73,10 +73,12 @@ class Guru extends React.Component {
             width: WIDTH - 50,
           }}
         >
-          <Image
-            style={{ margin: 10, width: 60, height: 60, borderRadius: 30 }}
-            source={{uri:item.picture}}
-          />
+          <View style={{margin: 10, width: 60, height: 60, overflow: 'hidden', borderRadius: 30}}>
+            <Image
+              style={{  width: '100%', height: '120%'}}
+              source={{uri:item.picture}}
+            />
+          </View>
           <View style={{ margin: 10,flexDirection:'column'}}>
             <Text style={[Style.textBold,{fontSize: 16, width: 250, flexWrap: 'wrap'}]}>{item.name}</Text>
             <Text style={{ color: "#B2B5BF" }}>{item.title}</Text>

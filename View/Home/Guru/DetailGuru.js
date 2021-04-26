@@ -95,10 +95,12 @@ class DetailGuru extends React.Component {
             <View
               style={{ marginTop: 30, marginRight: 20, alignItems: "center" }}
             >
-              <Image
-                style={{ width: 120, height: 120, borderRadius: 60 }}
-                source={{uri:this.state.dataTeacher['picture']}}
-              />
+              <View style={{width: 120, height: 120, overflow: 'hidden', borderRadius: 60}}>
+                <Image
+                  style={{ width: '100%', height: '120%' }}
+                  source={{uri:this.state.dataTeacher['picture']}}
+                />
+              </View>
               <Text style={[Style.textBold, { marginTop: 20 }]}>
                 {this.state.dataTeacher['name']}
               </Text>
