@@ -31,6 +31,7 @@ class RegisDataSiswa extends React.Component {
     super();
 
     this.state = {
+      isiFormData : [],
       refreshing: false,
 
       display: 1,
@@ -382,133 +383,142 @@ class RegisDataSiswa extends React.Component {
   };
 
   onSubmitData = async () => {
-    let url = "http://104.248.156.113:8025/api/v1/AppAccount/TestFile";
+    let url = "https://104.248.156.113:8025/api/v1/AppAccount/SaveRegister";
 
     let formData = new FormData();
-    // formData.append("prstudentid", "");
-    // formData.append("studentid", "");
-    // formData.append("roomid", "");
-    // formData.append("nisn", "");
-    // formData.append("nrs", "");
-    // formData.append("majorid", this.state.kodeJurusan);
-    // formData.append("name", this.state.nameSiswa);
-    // formData.append("nickname", this.state.nickname);
-    // formData.append("gender", this.state.jenisKelaminSiswa);
-    // formData.append("birthplace", this.state.birthplace);
-    // formData.append("birthdate", this.state.BirthDateSiswa);
-    // formData.append("registerdate", "");
-    // formData.append("birthdate_tgl", 0);
-    // formData.append("birthdate_month", "");
-    // formData.append("birthdate_year", 0);
-    // formData.append("religionid", this.state.Agama);
-    // formData.append("address", this.state.address);
-    // formData.append("mobileno", this.state.mobileno);
-    // formData.append("lastschool", this.state.lastschool);
-    // formData.append("addresslastschool", this.state.addresslastschool);
-    // formData.append("childno", this.state.childno);
-    // formData.append("totalsiblings", this.state.totalsiblings);
-    // formData.append("uniformsize", "");
-    // formData.append("homedistance", 0);
-    // formData.append("transport", "");
+    formData.append("prstudentid", "");
+    formData.append("studentid", "");
+    formData.append("roomid", "");
+    formData.append("nisn", "");
+    formData.append("nrs", "");
+    formData.append("majorid", this.state.kodeJurusan);
+    formData.append("name", this.state.nameSiswa);
+    formData.append("nickname", this.state.nickname);
+    formData.append("gender", this.state.jenisKelaminSiswa);
+    formData.append("birthplace", this.state.birthplace);
+    formData.append("birthdate", this.state.BirthDateSiswa);
+    formData.append("registerdate", "");
+    formData.append("birthdate_tgl", 0);
+    formData.append("birthdate_month", "");
+    formData.append("birthdate_year", 0);
+    formData.append("religionid", this.state.Agama);
+    formData.append("address", this.state.address);
+    formData.append("mobileno", this.state.mobileno);
+    formData.append("lastschool", this.state.lastschool);
+    formData.append("addresslastschool", this.state.addresslastschool);
+    formData.append("childno", this.state.childno);
+    formData.append("totalsiblings", this.state.totalsiblings);
+    formData.append("uniformsize", "");
+    formData.append("homedistance", 0);
+    formData.append("transport", "");
 
-    // // wali 1
-    // formData.append("mguardname", this.state.mguardname);
-    // formData.append("mguardreligion", this.state.agamaWali1);
-    // formData.append("mguardbirthplace", this.state.mguardbirthplace);
-    // formData.append("mguardbirthdate", this.state.DateBirthWali1);
-    // formData.append("mguardbirthdate_tgl", 0);
-    // formData.append("mguardbirthdate_month", "");
-    // formData.append("mguardbirthdate_year", 0);
-    // formData.append("mguardeducationid", this.state.LastEdWali1);
-    // formData.append("mguardoccupation", this.state.mguardoccupation);
-    // formData.append(
-    //   "mguardoccupationaddress",
-    //   this.state.mguardoccupationaddress
-    // );
-    // formData.append("mguardaddress", this.state.mguardaddress);
-    // formData.append("mguardmobile", this.state.mguardmobile);
-    // formData.append("mguardrelationshipid", this.state.Wali1);
+    // wali 1
+    formData.append("mguardname", this.state.mguardname);
+    formData.append("mguardreligion", this.state.agamaWali1);
+    formData.append("mguardbirthplace", this.state.mguardbirthplace);
+    formData.append("mguardbirthdate", this.state.DateBirthWali1);
+    formData.append("mguardbirthdate_tgl", 0);
+    formData.append("mguardbirthdate_month", "");
+    formData.append("mguardbirthdate_year", 0);
+    formData.append("mguardeducationid", this.state.LastEdWali1);
+    formData.append("mguardoccupation", this.state.mguardoccupation);
+    formData.append(
+      "mguardoccupationaddress",
+      this.state.mguardoccupationaddress
+    );
+    formData.append("mguardaddress", this.state.mguardaddress);
+    formData.append("mguardmobile", this.state.mguardmobile);
+    formData.append("mguardrelationshipid", this.state.Wali1);
 
-    // //wali 2
-    // formData.append("mguardname", this.state.fguardname);
-    // formData.append("mguardreligion", this.state.agamaWali2);
-    // formData.append("mguardbirthplace", this.state.fguardbirthplace);
-    // formData.append("mguardbirthdate", this.state.DateBirthWali2);
-    // formData.append("mguardbirthdate_tgl", 0);
-    // formData.append("mguardbirthdate_month", "");
-    // formData.append("mguardbirthdate_year", 0);
-    // formData.append("mguardeducationid", this.state.LastEdWali2);
-    // formData.append("mguardoccupation", this.state.fguardoccupation);
-    // formData.append(
-    //   "mguardoccupationaddress",
-    //   this.state.fguardoccupationaddress
-    // );
-    // formData.append("mguardaddress", this.state.fguardaddress);
-    // formData.append("mguardmobile", this.state.fguardmobile);
-    // formData.append("mguardrelationshipid", this.state.Wali2);
-    // //
-    // formData.append("uname", this.state.studentemail);
-    // formData.append("pwd", this.state.pwd);
-    // formData.append("repw", this.state.repw);
-    // formData.append("reginfo_origin", this.state.reginfo_origin);
-    // formData.append("reginfo_originlist", this.state.reginfo_originlist);
-    // formData.append("reginfo_origin_other", "");
-    // formData.append("hobbies", this.state.jumlahHobi);
-    // formData.append("achievement", this.state.jumlahPrestasi);
-    // formData.append("roomlist", []);
-    // formData.append("majorlist", this.state.majorlist);
-    // formData.append("genderlist", this.state.genderlist);
-    // formData.append("religionlist", this.state.religionlist);
-    // formData.append("meducationlist", this.state.lasteducation);
-    // formData.append("mrelationshiplist", this.state.mrelationshiplist);
-    // formData.append("mreligionlist", this.state.religionlist);
-    // formData.append("feducationlist", this.state.lasteducation);
-    // formData.append("frelationshiplist", this.state.mrelationshiplist);
-    // formData.append("freligionlist", this.state.religionlist);
-    // formData.append("monthList", []);
-    // formData.append("uniformList", []);
-    // formData.append("schoolyearid", this.state.dataSiswa.schoolyearid);
-    // formData.append("gelombangdetailid", "");
-    // formData.append(
-    //   "activeGelombang.gelombangdetailid",
-    //   this.state.activeGelombang.gelombangdetailid
-    // );
-    // formData.append(
-    //   "activeGelombang.gelombangcode",
-    //   this.state.activeGelombang.gelombangcode
-    // );
-    // formData.append(
-    //   "activeGelombang.gelombangname",
-    //   this.state.activeGelombang.gelombangname
-    // );
-    // formData.append(
-    //   "activeGelombang.schoolyearid",
-    //   this.state.activeGelombang.schoolyearid
-    // );
-    // formData.append(
-    //   "activeGelombang.tahunajaran",
-    //   this.state.activeGelombang.tahunajaran
-    // );
-    let coba = {
-      uri: this.state.imageKK,
-      type: "image/jpeg",
-      name: "imagename.jpg",
-    };
-    const base64 = await FileSystem.readAsStringAsync(this.state.imageKK, {
-      encoding: "base64",
-    });
-    console.log(base64);
-    formData.append("docsupportid", null);
-    formData.append("studentid", this.state.dataSiswa.studentid);
-    formData.append("prstudentid", null);
-    formData.append("description", null);
-    formData.append("docfile", base64);
-    formData.append("filedata", base64);
+    //wali 2
+    formData.append("fguardname", this.state.fguardname);
+    formData.append("fguardreligion", this.state.agamaWali2);
+    formData.append("fguardbirthplace", this.state.fguardbirthplace);
+    formData.append("fguardbirthdate", this.state.DateBirthWali2);
+    formData.append("fguardbirthdate_tgl", 0);
+    formData.append("fguardbirthdate_month", "");
+    formData.append("fguardbirthdate_year", 0);
+    formData.append("fguardeducationid", this.state.LastEdWali2);
+    formData.append("fguardoccupation", this.state.fguardoccupation);
+    formData.append(  
+      "fguardoccupationaddress",
+      this.state.fguardoccupationaddress
+    );
+    formData.append("fguardaddress", this.state.fguardaddress);
+    formData.append("fguardmobile", this.state.fguardmobile);
+    formData.append("fguardrelationshipid", this.state.Wali2);
+    //
+    formData.append("spp", null);
+    formData.append("studentemail", this.state.studentemail);
+    // 
+    formData.append("uname", this.state.studentemail);
+    formData.append("pwd", this.state.pwd);
+    formData.append("repw", this.state.repw);
+    formData.append("reginfo_origin", this.state.reginfo_origin);
+    formData.append("reginfo_originlist", this.state.reginfo_originlist);
+    formData.append("reginfo_origin_other", "");
+    formData.append("hobbies", this.state.jumlahHobi);
+    formData.append("achievement", this.state.jumlahPrestasi);
+    formData.append("roomlist", []);
+    formData.append("majorlist", this.state.majorlist);
+    formData.append("genderlist", this.state.genderlist);
+    formData.append("religionlist", this.state.religionlist);
+    formData.append("meducationlist", this.state.lasteducation);
+    formData.append("mrelationshiplist", this.state.mrelationshiplist);
+    formData.append("mreligionlist", this.state.religionlist);
+    formData.append("feducationlist", this.state.lasteducation);
+    formData.append("frelationshiplist", this.state.mrelationshiplist);
+    formData.append("freligionlist", this.state.religionlist);
+    formData.append("monthList", []);
+    formData.append("uniformList", []);
+    formData.append("schoolyearid", this.state.dataSiswa.schoolyearid);
+    formData.append("gelombangdetailid", "");
+    formData.append(
+      "activeGelombang.gelombangdetailid",
+      this.state.activeGelombang.gelombangdetailid
+    );
+    formData.append(
+      "activeGelombang.gelombangcode",
+      this.state.activeGelombang.gelombangcode
+    );
+    formData.append(
+      "activeGelombang.gelombangname",
+      this.state.activeGelombang.gelombangname
+    );
+    formData.append(
+      "activeGelombang.schoolyearid",
+      this.state.activeGelombang.schoolyearid
+    );
+    formData.append(
+      "activeGelombang.tahunajaran",
+      this.state.activeGelombang.tahunajaran
+    );
 
-    //formData.append("docsupportlist", "");
+    // //Image
+    // let coba = {
+    //   uri: this.state.imageKK,
+    //   type: "image/jpeg",
+    //   name: "imagename.jpg",
+    // };
+    // const base64 = await FileSystem.readAsStringAsync(this.state.imageKK, {
+    //   encoding: "base64",
+    // });
+    // console.log(base64);
+    formData.append("docsupport", null);
+    // formData.append("studentid", this.state.dataSiswa.studentid);
+    // formData.append("prstudentid", null);
+    // formData.append("description", null);
+    // formData.append("docfile", base64);
+    // formData.append("filedata", base64);
 
-    // const data = await callAPI.postAPIFormData(url, formData);
+    formData.append("docsupportlist", "");
+
+    const data = await callAPI.postAPIFormData(url, formData);
+    this.setState({ isiFormData: formData });
     // console.log(data);
+    
+    console.log(JSON.stringify(isiFormData));
+
   };
   render() {
     const layer = 6;
@@ -653,6 +663,14 @@ class RegisDataSiswa extends React.Component {
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
                   value={this.state.dataSiswa.studentid}
+                />
+                <TextInput
+                  style={Style.input}
+                  placeholder={"isi form data"}
+                  editable={false}
+                  placeholderTextColor={"#B2B5BF"}
+                  underlineColorAndroid="transparent"
+                  value={this.state.isiFormData.toString()}
                 />
               </View>
               <View style={Style.inputContainer}>
