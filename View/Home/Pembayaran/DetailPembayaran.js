@@ -13,6 +13,7 @@ import {
   ScrollView,
   RefreshControl,
   ImageBackground,
+  FlatList,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -21,9 +22,9 @@ import moment from "moment";
 import Style, { black, WIDTH } from "../../Style/Style";
 import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
-import { Table, Row, Rows } from 'react-native-table-component';
+import { Table, Row, Rows } from "react-native-table-component";
 import Pembayaran from "./Pembayaran";
-
+const numColumn = 1;
 class DetailPembayaran extends React.Component {
   constructor() {
     super();
@@ -31,13 +32,18 @@ class DetailPembayaran extends React.Component {
     this.state = {
       refreshing: false,
       active: 0,
-    }
+    };
   }
 
-  
-
   render() {
-    const { navigation } = this.props;
+    const { navigation, route } = this.props;
+    const {
+      billid: billid,
+      billvalue: billvalue,
+      schoolyearid: schoolyearid,
+      studentid: studentid,
+    } = route.params;
+
     return (
       <View style={Style.container}>
         <SafeAreaView>
@@ -55,40 +61,39 @@ class DetailPembayaran extends React.Component {
               </Text>
             </View>
 
-            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginVertical: 20}]}>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', margin:20}}>
-                <Text style={{fontSize: 12}}>Nomor Pembayaran : PS2021-03-19399</Text>
-                <Text style={{fontSize: 12}}>15 Mar 2021</Text>
+            <View
+              style={[
+                PembayaranStyle.CardPembayaran,
+                { flexDirection: "column", marginVertical: 20 },
+              ]}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  margin: 20,
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>
+                  Nomor Pembayaran : {billid}
+                </Text>
+                <Text style={{ fontSize: 12 }}>15 Mar 2021</Text>
               </View>
 
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal:20, marginTop: 20}}>
-                <Text style={{fontSize: 14}}>SPP</Text>
-                <Text style={{fontSize: 14}}>Rp. 500.000</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginHorizontal: 20,
+                  marginVertical: 30,
+                }}
+              >
+                <Text style={{ fontSize: 14, fontWeight: "bold" }}>Total</Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                  Rp. 550.000
+                </Text>
               </View>
-
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal:20, marginTop: 20}}>
-                <Text style={{fontSize: 14}}>LABOR</Text>
-                <Text style={{fontSize: 14}}>Rp. 0</Text>
-              </View>
-
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal:20, marginTop: 20}}>
-                <Text style={{fontSize: 14}}>KOMITE</Text>
-                <Text style={{fontSize: 14}}>Rp. 50.000</Text>
-              </View>
-
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal:20, marginTop: 20}}>
-                <Text style={{fontSize: 14}}>OSIS</Text>
-                <Text style={{fontSize: 14}}>Rp. 0</Text>
-              </View>
-
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal:20, marginVertical: 30}}>
-                <Text style={{fontSize: 14, fontWeight: 'bold'}}>Total</Text>
-                <Text style={{fontSize: 20, fontWeight: 'bold'}}>Rp. 550.000</Text>
-              </View>
-
-
             </View>
-
           </ScrollView>
         </SafeAreaView>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
