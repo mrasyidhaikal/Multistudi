@@ -24,11 +24,27 @@ class CallAPI extends React.Component {
     return res;
   };
   postAPIFormData = async (url, isiBody) => {
+  
     let API = await fetch(url, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
+      },
+      body: isiBody,
+    });
+
+    let res = await processResponse(API);
+
+    return res;
+  };
+
+  postAPI = async (url, isiBody) => {
+    let API = await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: isiBody,
     });

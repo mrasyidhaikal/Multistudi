@@ -39,10 +39,11 @@ class Tagihan extends React.Component {
   }
 
   getDataPembayaran = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBill/MHS0001418/`;
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001418/`;
     const response = await callAPI.getData(url);
     const { data } = response;
-    this.setState({ contentData: data.content, headerData: data.header });
+
+    this.setState({ contentData: data });
   };
 
   DetailPembayaran = (id, billvalue, schoolyearid, studentid) => {
