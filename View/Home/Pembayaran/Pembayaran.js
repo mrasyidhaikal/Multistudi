@@ -13,6 +13,7 @@ import {
   ScrollView,
   RefreshControl,
   ImageBackground,
+  FlatList,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -22,23 +23,94 @@ import Style, { black, WIDTH } from "./../../Style/Style";
 import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "./../../Style/PembayranStyle";
 import { Table, Row, Rows } from 'react-native-table-component';
+import callAPI from "./../../../Controller/CallAPI";
 
+
+const numColumn = 1;
 class Pembayaran extends React.Component {
   constructor() {
     super();
+    this.getDataRegistrasi();
 
     this.state = {
       refreshing: false,
       active: 0,
-      tableHead: ['Kategori', 'Jml. Tagihan', 'Sisa/Status', 'Keterangan'],
-      tableData: [
-        ['MOS', 'Rp. 440.000', 'Rp. 440.000', 'Lunas'],
-        ['Perlengkapan', 'Rp. 2.664.000', 'Rp. 2.664.000', 'Lunas'],
-        ['Pembangunan', 'Rp. 2.574.000', 'Rp. 2.574.000', 'Lunas'],
-        ['SPP', 'Rp. 550.000', 'Rp. 550.000', 'Lunas'],
-      ]
+      regisData: [],
+      // tableHead: ['Kategori', 'Jml. Tagihan', 'Sisa/Status', 'Keterangan'],
+      // tableData: [
+      //   ['MOS', 'Rp. 440.000', 'Rp. 440.000', 'Lunas'],
+      //   ['Perlengkapan', 'Rp. 2.664.000', 'Rp. 2.664.000', 'Lunas'],
+      //   ['Pembangunan', 'Rp. 2.574.000', 'Rp. 2.574.000', 'Lunas'],
+      //   ['SPP', 'Rp. 550.000', 'Rp. 550.000', 'Lunas'],
+      // ]
     }
   }
+
+  checkStatus(billvalue , pendingvalue){
+    if (pendingvalue == 0){
+      return ' Lunas'
+    }else{
+      return ' '+this.currencyFormat(pendingvalue)
+    }
+  }
+  
+  currencyFormat(num) {
+    return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+  }
+
+  getDataRegistrasi = async() => {
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/MHS0001932`;
+    const response = await callAPI.getData(url);
+    const { data } = response;
+    this.setState({ regisData: data.detail });
+
+    console.log(this.state.regisData)
+  }
+
+   
+  _renderItem = ({ item, index }) => {
+    if (item.isfirstpay === 1) {
+      return (
+        <View
+          style={{
+            margin: 25,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems:"baseline"
+          }}
+        >
+          <Text>{item.description}</Text>
+          <Text>{this.currencyFormat(item.billvalue)}</Text>
+          <View style={{flexDirection: "row", borderRadius: 50, borderWidth: 1, padding: 6, borderColor: '#06BFAD'}}>
+              <Icon name={"ios-checkmark-circle"} size={18} color={"#06BFAD"}/>
+              <Text style={{color: '#06BFAD'}}>{this.checkStatus(this.currencyFormat(item.billvalue),item.pendingvalue)}</Text>
+          </View>
+        </View>
+      );
+    }
+  };
+
+  _renderItemCicil = ({ item, index }) => {
+    if (item.isfirstpay === 0) {
+      return (
+        <View
+          style={{
+            margin: 25,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems:"baseline"
+          }}
+        >
+          <Text>{item.description}</Text>
+          <Text>{this.currencyFormat(item.billvalue)}</Text>
+            <View style={{flexDirection: "row", borderRadius: 50, borderWidth: 1, padding: 6, borderColor: '#F07031'}}>
+              <Icon name={"ios-alert-circle"} size={18} color={"#F07031"}/>
+              <Text style={{color: '#F07031'}}>{this.checkStatus(item.billvalue,item.pendingvalue)}</Text>
+            </View>
+        </View>
+      );
+    }
+  };
 
   
 
@@ -173,14 +245,80 @@ class Pembayaran extends React.Component {
               </View>
             </View>
 
-            <View style={{}}>
-              <View style={[styles.container,{borderWidth:1, margin: 25, borderRadius: 20, borderColor:'#E7E9F1'}]}>
-                <Table>
+            <Text style={{marginLeft: 25, marginVertical: 15}}>
+              Pembayaran Pertama
+            </Text>
+
+            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginBottom: 20}]}>
+              <View>
+                {/* <Table>
                   <Row data={this.state.tableHead} style={styles.head} textStyle={[styles.text,{color:'#B2B5BF'}]}/>
                   <Rows data={this.state.tableData} textStyle={styles.text}/>
-                </Table>
+                </Table> */}
+                <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop: 20 }}>
+                  <Text style={{color : '#55769F', fontSize: 14, fontWeight: "bold"}}>Kategori</Text>
+                  <Text style={{color : '#55769F', fontSize: 14, fontWeight: "bold"}}>Jml Tagihan</Text>
+                  <Text style={{color : '#55769F', fontSize: 14, fontWeight: "bold"}}>Status</Text>
+                </View>
+                <View>
+                  <FlatList
+                  data={this.state.regisData}
+                  extraData={
+                    this.state.selectedId // for single item
+                  }
+                  renderItem={this._renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  numColumns={numColumn}
+                />
+                </View>
               </View>
             </View>
+
+              <TouchableOpacity style={{marginRight: 28, alignSelf: "flex-end"}}>
+                <View style={{flexDirection:"row"}}>
+                  <Text style={{color : '#B2B5BF'}}>Bayar</Text>
+                  <Icon name={"chevron-forward"} style={{marginLeft: 8,}} size={20} color={"#B2B5BF"}/>
+                </View>
+              </TouchableOpacity>
+
+
+            <Text style={{marginLeft: 25, marginVertical: 15}}>
+              Pembayaran dapat di cicil
+            </Text>
+
+            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginBottom: 20}]}>
+              <View>
+                {/* <Table>
+                  <Row data={this.state.tableHead} style={styles.head} textStyle={[styles.text,{color:'#B2B5BF'}]}/>
+                  <Rows data={this.state.tableData} textStyle={styles.text}/>
+                </Table> */}
+                <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop: 20 }}>
+                  <Text style={{color : '#55769F', fontSize: 14, fontWeight: "bold"}}>Kategori</Text>
+                  <Text style={{color : '#55769F', fontSize: 14, fontWeight: "bold"}}>Jml Tagihan</Text>
+                  <Text style={{color : '#55769F', fontSize: 14, fontWeight: "bold"}}>Status</Text>
+                </View>
+                <View>
+                  <FlatList
+                  data={this.state.regisData}
+                  extraData={
+                    this.state.selectedId // for single item
+                  }
+                  renderItem={this._renderItemCicil}
+                  keyExtractor={(item, index) => index.toString()}
+                  numColumns={numColumn}
+                />
+                </View>
+
+              </View>
+            </View>
+
+            <TouchableOpacity style={{marginRight: 28, marginBottom: 20, alignSelf: "flex-end"}}>
+                <View style={{flexDirection:"row"}}>
+                  <Text style={{color : '#FF3737'}}>Bayar</Text>
+                  <Icon name={"chevron-forward"} style={{marginLeft: 8,}} size={20} color={"#FF3737"}/>
+                </View>
+              </TouchableOpacity>
+
 
             <View style={{backgroundColor: '#06BFAD', flexDirection: 'row', alignItems: 'center', marginHorizontal: 25, padding:7, borderRadius: 15}}>
               <Icon name={"md-checkmark-circle"} size={20} color={"#fff"}/>

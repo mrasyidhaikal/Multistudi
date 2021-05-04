@@ -24,6 +24,7 @@ import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
 import { Table, Row, Rows } from "react-native-table-component";
 import Pembayaran from "./Pembayaran";
+
 const numColumn = 1;
 class DetailPembayaran extends React.Component {
   constructor() {
