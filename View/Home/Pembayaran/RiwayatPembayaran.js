@@ -23,17 +23,28 @@ import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
 import { Table, Row, Rows } from 'react-native-table-component';
 import Pembayaran from "./Pembayaran";
-
+import callAPI from "./../../../Controller/CallAPI";
 class RiwayatPembayaran extends React.Component {
   constructor() {
     super();
-
+    this.getDataStatusPembayaran()
     this.state = {
       refreshing: false,
       active: 0,
+      contentData:[],
     }
   }
 
+  getDataStatusPembayaran = async () => {
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillHeader/MHS0001418/`;
+    const response = await callAPI.getData(url);
+    const { data } = response;
+   
+    this.setState({ contentData: data });
+  };
+  currencyFormat(num) {
+    return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+ }
   
 
   render() {
@@ -57,49 +68,6 @@ class RiwayatPembayaran extends React.Component {
 
 
             {/* Content */}
-            <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginVertical: 20}]}>
-
-              <View style={{ flexDirection: "row", margin: 20, justifyContent: "space-between", width: WIDTH-80}}>
-                <View style={{ flexDirection: "row"}}>
-                  <Icon name="ios-calendar-outline" size={20} color={black} />
-                  <Text
-                    style={[
-                      Style.textNormalBlack,
-                      {marginLeft: 10,fontSize: 14, },
-                    ]}
-                  >
-                    15 Maret 2021
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row"}}>
-                  <Text style={{color: '#06BFAD', fontWeight: "bold"}}>
-                    Sudah Terbayar
-                  </Text>
-                  <Icon name="ios-checkmark-circle" style={{color: '#06BFAD', marginLeft: 7}} size={20} />
-                </View>
-              </View>
-              
-              <Text style={{fontSize: 14, marginLeft: 20}}>Nomor Pembayaran : PS2021-03-19399</Text>
-              
-              <View style={PembayaranStyle.containerMetodePembayaran}>
-                    <Text style={{fontWeight: 'bold'}}>Metode Pembayaran</Text>
-                    <Text> VA BCA </Text>
-              </View>
-              
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 20, alignItems: 'center'}}>
-                <View>
-                  <Text>Jumlah</Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 2}}>Rp. 550.000</Text>      
-                </View>
-                <TouchableOpacity onPress={() => navigation.navigate('DetailPembayaran')}>
-                  <View style={{flexDirection: 'row',}}>
-                      <Text style={{fontSize: 16, color: '#FF3737', fontWeight: 'bold'}}>Lihat Detail</Text>
-                      <Icon name="ios-chevron-forward" style={{color: '#FF3737', marginLeft: 5}} size={20} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-
 
             <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", marginVertical: 20}]}>
 
@@ -112,28 +80,28 @@ class RiwayatPembayaran extends React.Component {
                       {marginLeft: 10,fontSize: 14, },
                     ]}
                   >
-                    15 April 2021
+                   {moment(this.state.contentData.duedate).format("Do MMMM YYYY, HH:mm")} WIB
                   </Text>
                 </View>
                 <View style={{ flexDirection: "row"}}>
                   <Text style={{color: '#F15A23', fontWeight: "bold"}}>
-                    Menunggu Konfirmasi
+                   {this.state.contentData.payment_status}
                   </Text>
                   <Icon name="ios-time-outline" style={{color: '#F15A23', marginLeft: 7}} size={20} />
                 </View>
               </View>
               
-              <Text style={{fontSize: 14, marginLeft: 20}}>Nomor Pembayaran : PS2021-03-19399</Text>
+              <Text style={{fontSize: 14, marginLeft: 20}}>Metode Pembayaran : {this.state.contentData.banklogo} Virtual Account </Text>
               
-              <View style={PembayaranStyle.containerMetodePembayaran}>
-                    <Text style={{fontWeight: 'bold'}}>Metode Pembayaran</Text>
-                    <Text> VA BCA </Text>
-              </View>
+              <TouchableOpacity style={PembayaranStyle.containerMetodePembayaran}>
+                    <Text style={{fontWeight: 'bold'}}>Nomor Pembayaran :</Text>
+                    <Text> {this.state.contentData.virtualaccount_full} </Text>
+              </TouchableOpacity>
               
               <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 20, alignItems: 'center'}}>
                 <View>
                   <Text>Jumlah</Text>
-                  <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 2}}>Rp. 550.000</Text>      
+                  <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 2}}>{this.currencyFormat(Number(this.state.contentData.strtotal))}</Text>      
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('DetailPembayaran')}>
                   <View style={{flexDirection: 'row',}}>

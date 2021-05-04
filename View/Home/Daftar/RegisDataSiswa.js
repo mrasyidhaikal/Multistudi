@@ -24,6 +24,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Style from "./../../Style/Style";
 import callAPI from "./../../../Controller/CallAPI";
+import { cos } from "react-native-reanimated";
 const numColumn = 1;
 
 class RegisDataSiswa extends React.Component {
@@ -31,7 +32,6 @@ class RegisDataSiswa extends React.Component {
     super();
 
     this.state = {
-      isiFormData : [],
       refreshing: false,
 
       display: 1,
@@ -190,13 +190,15 @@ class RegisDataSiswa extends React.Component {
 
   addTextViewPrestasi = () => {
     var keys =
-      this.state.jumlahHobi[this.state.counterPrestasi].achievementid + 1;
-    var joined = this.state.jumlahHobi.concat({
+      this.state.jumlahPrestasi[this.state.counterPrestasi].achievementid + 1;
+    var joined = this.state.jumlahPrestasi.concat({
       achievementid: keys,
       description: "",
+      studentid: "",
+      year: 0,
     });
     this.setState({
-      jumlahHobi: joined,
+      jumlahPrestasi: joined,
       counterPrestasi: this.state.counterPrestasi + 1,
     });
   };
@@ -210,6 +212,7 @@ class RegisDataSiswa extends React.Component {
       this.setState({
         jumlahHobi: array,
         counterPrestasi: this.state.counterPrestasi - 1,
+        studentid: "",
       });
     }
   };
@@ -223,6 +226,7 @@ class RegisDataSiswa extends React.Component {
     this.setState({
       jumlahHobi: joined,
       counterHobi: this.state.counterHobi + 1,
+      studentid: "",
     });
   };
   removeTextViewHobi = (count) => {
@@ -383,142 +387,243 @@ class RegisDataSiswa extends React.Component {
   };
 
   onSubmitData = async () => {
-    let url = "https://104.248.156.113:8025/api/v1/AppAccount/SaveRegister";
+    let url = "http://104.248.156.113:8025/api/v1/AppAccount/SaveRegister";
+     //Image
 
-    let formData = new FormData();
-    formData.append("prstudentid", "");
-    formData.append("studentid", "");
-    formData.append("roomid", "");
-    formData.append("nisn", "");
-    formData.append("nrs", "");
-    formData.append("majorid", this.state.kodeJurusan);
-    formData.append("name", this.state.nameSiswa);
-    formData.append("nickname", this.state.nickname);
-    formData.append("gender", this.state.jenisKelaminSiswa);
-    formData.append("birthplace", this.state.birthplace);
-    formData.append("birthdate", this.state.BirthDateSiswa);
-    formData.append("registerdate", "");
-    formData.append("birthdate_tgl", 0);
-    formData.append("birthdate_month", "");
-    formData.append("birthdate_year", 0);
-    formData.append("religionid", this.state.Agama);
-    formData.append("address", this.state.address);
-    formData.append("mobileno", this.state.mobileno);
-    formData.append("lastschool", this.state.lastschool);
-    formData.append("addresslastschool", this.state.addresslastschool);
-    formData.append("childno", this.state.childno);
-    formData.append("totalsiblings", this.state.totalsiblings);
-    formData.append("uniformsize", "");
-    formData.append("homedistance", 0);
-    formData.append("transport", "");
+    const base64 = await FileSystem.readAsStringAsync(this.state.imageKK, {
+      encoding: "base64",
+    });
+    let body = JSON.stringify( {
+      "prstudentid": "",
+      "studentid": "",
+      "roomid": "",
+      "nisn": "",
+      "nrs": "",
+      "majorid": this.state.kodeJurusan,
+      "name": this.state.nameSiswa,
+      "nickname": this.state.nickname,
+      "gender": this.state.jenisKelaminSiswa,
+      "birthplace": this.state.birthplace,
+      "birthdate":this.state.BirthDateSiswa,
+      "registerdate":moment().format("YYYY-MM-DD"),
+      "birthdate_tgl": 0,
+      "birthdate_month": "",
+      "birthdate_year": 0,
+      "religionid": this.state.Agama,
+      "address": this.state.address,
+      "mobileno": this.state.mobileno,
+      "lastschool": this.state.lastschool,
+      "addresslastschool": this.state.addresslastschool,
+      "childno": this.state.childno,
+      "totalsiblings": this.state.totalsiblings,
+      "uniformsize": "",
+      "homedistance": 0,
+      "transport": "",
+      "mguardname": this.state.mguardname,
+      "mguardreligion": this.state.agamaWali1,
+      "mguardbirthplace": this.state.mguardbirthplace,
+      "mguardbirthdate": this.state.DateBirthWali1,
+      "mguardbirthdate_tgl": 0,
+      "mguardbirthdate_month": "",
+      "mguardbirthdate_year": 0,
+      "mguardeducationid": this.state.LastEdWali1,
+      "mguardoccupation": this.state.mguardoccupation,
+      "mguardoccupationaddress":  this.state.mguardoccupationaddress,
+      "mguardaddress": this.state.mguardaddress,
+      "mguardmobile": this.state.mguardmobile,
+      "mguardrelationshipid": this.state.Wali1,
+      "fguardname": this.state.fguardname,
+      "fguardreligion": this.state.agamaWali2,
+      "fguardbirthplace": this.state.fguardbirthplace,
+      "fguardbirthdate": this.state.DateBirthWali2,
+      "fguardbirthdate_tgl": 0,
+      "fguardbirthdate_month": "",
+      "fguardbirthdate_year": 0,
+      "fguardeducationid": this.state.LastEdWali2,
+      "fguardoccupation": this.state.fguardoccupation,
+      "fguardoccupationaddress": this.state.fguardoccupationaddress,
+      "fguardmobile":this.state.fguardmobile,
+      "fguardrelationshipid": this.state.Wali2,
+      "fguardaddress": this.state.fguardaddress,
 
-    // wali 1
-    formData.append("mguardname", this.state.mguardname);
-    formData.append("mguardreligion", this.state.agamaWali1);
-    formData.append("mguardbirthplace", this.state.mguardbirthplace);
-    formData.append("mguardbirthdate", this.state.DateBirthWali1);
-    formData.append("mguardbirthdate_tgl", 0);
-    formData.append("mguardbirthdate_month", "");
-    formData.append("mguardbirthdate_year", 0);
-    formData.append("mguardeducationid", this.state.LastEdWali1);
-    formData.append("mguardoccupation", this.state.mguardoccupation);
-    formData.append(
-      "mguardoccupationaddress",
-      this.state.mguardoccupationaddress
-    );
-    formData.append("mguardaddress", this.state.mguardaddress);
-    formData.append("mguardmobile", this.state.mguardmobile);
-    formData.append("mguardrelationshipid", this.state.Wali1);
+      "picture": "",
+      "spp": 0,
+      "docsupport": "string",
 
-    //wali 2
-    formData.append("fguardname", this.state.fguardname);
-    formData.append("fguardreligion", this.state.agamaWali2);
-    formData.append("fguardbirthplace", this.state.fguardbirthplace);
-    formData.append("fguardbirthdate", this.state.DateBirthWali2);
-    formData.append("fguardbirthdate_tgl", 0);
-    formData.append("fguardbirthdate_month", "");
-    formData.append("fguardbirthdate_year", 0);
-    formData.append("fguardeducationid", this.state.LastEdWali2);
-    formData.append("fguardoccupation", this.state.fguardoccupation);
-    formData.append(  
-      "fguardoccupationaddress",
-      this.state.fguardoccupationaddress
-    );
-    formData.append("fguardaddress", this.state.fguardaddress);
-    formData.append("fguardmobile", this.state.fguardmobile);
-    formData.append("fguardrelationshipid", this.state.Wali2);
-    //
-    formData.append("spp", null);
-    formData.append("studentemail", this.state.studentemail);
-    // 
-    formData.append("uname", this.state.studentemail);
-    formData.append("pwd", this.state.pwd);
-    formData.append("repw", this.state.repw);
-    formData.append("reginfo_origin", this.state.reginfo_origin);
-    formData.append("reginfo_originlist", this.state.reginfo_originlist);
-    formData.append("reginfo_origin_other", "");
-    formData.append("hobbies", this.state.jumlahHobi);
-    formData.append("achievement", this.state.jumlahPrestasi);
-    formData.append("roomlist", []);
-    formData.append("majorlist", this.state.majorlist);
-    formData.append("genderlist", this.state.genderlist);
-    formData.append("religionlist", this.state.religionlist);
-    formData.append("meducationlist", this.state.lasteducation);
-    formData.append("mrelationshiplist", this.state.mrelationshiplist);
-    formData.append("mreligionlist", this.state.religionlist);
-    formData.append("feducationlist", this.state.lasteducation);
-    formData.append("frelationshiplist", this.state.mrelationshiplist);
-    formData.append("freligionlist", this.state.religionlist);
-    formData.append("monthList", []);
-    formData.append("uniformList", []);
-    formData.append("schoolyearid", this.state.dataSiswa.schoolyearid);
-    formData.append("gelombangdetailid", "");
-    formData.append(
-      "activeGelombang.gelombangdetailid",
-      this.state.activeGelombang.gelombangdetailid
-    );
-    formData.append(
-      "activeGelombang.gelombangcode",
-      this.state.activeGelombang.gelombangcode
-    );
-    formData.append(
-      "activeGelombang.gelombangname",
-      this.state.activeGelombang.gelombangname
-    );
-    formData.append(
-      "activeGelombang.schoolyearid",
-      this.state.activeGelombang.schoolyearid
-    );
-    formData.append(
-      "activeGelombang.tahunajaran",
-      this.state.activeGelombang.tahunajaran
-    );
+      "studentemail": this.state.studentemail,
+      "uname": this.state.studentemail,
+      "pwd": this.state.pwd,
+      "repw": this.state.repw,
+      "reginfo_origin": this.state.reginfo_origin,
+      "reginfo_originlist": this.state.reginfo_originlist,
+      "reginfo_origin_other": "",
+      "hobbies": this.state.jumlahHobi,
+      "achievement": this.state.jumlahPrestasi,
+      "roomlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "majorlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "genderlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "religionlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "meducationlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "mrelationshiplist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "mreligionlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "feducationlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "frelationshiplist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "freligionlist": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "monthList": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "uniformList": [
+        {
+          "disabled": true,
+          "group": {
+            "disabled": true,
+            "name": "string"
+          },
+          "selected": true,
+          "text": "string",
+          "value": "string"
+        }
+      ],
+      "schoolyearid": this.state.dataSiswa.schoolyearid,
+      "gelombangdetailid": "",
+      "activeGelombang": this.state.activeGelombang,
+      "docsupportlist": [
+        {
+          "docsupportid": "",
+          "studentid": "",
+          "prstudentid": "",
+          "description": "",
+          "docfile": "",
+          "filedata": base64,
+          "filename": ""
+        }
 
-    // //Image
-    // let coba = {
-    //   uri: this.state.imageKK,
-    //   type: "image/jpeg",
-    //   name: "imagename.jpg",
-    // };
-    // const base64 = await FileSystem.readAsStringAsync(this.state.imageKK, {
-    //   encoding: "base64",
-    // });
-    // console.log(base64);
-    formData.append("docsupport", null);
-    // formData.append("studentid", this.state.dataSiswa.studentid);
-    // formData.append("prstudentid", null);
-    // formData.append("description", null);
-    // formData.append("docfile", base64);
-    // formData.append("filedata", base64);
+      ]
 
-    formData.append("docsupportlist", "");
+    });
 
-    const data = await callAPI.postAPIFormData(url, formData);
-    this.setState({ isiFormData: formData });
-    // console.log(data);
-    
-    console.log(JSON.stringify(isiFormData));
-
+   
+    const response = await callAPI.postAPI(url, body);
+    console.log(response);
   };
   render() {
     const layer = 6;
@@ -663,14 +768,6 @@ class RegisDataSiswa extends React.Component {
                   placeholderTextColor={"#B2B5BF"}
                   underlineColorAndroid="transparent"
                   value={this.state.dataSiswa.studentid}
-                />
-                <TextInput
-                  style={Style.input}
-                  placeholder={"isi form data"}
-                  editable={false}
-                  placeholderTextColor={"#B2B5BF"}
-                  underlineColorAndroid="transparent"
-                  value={this.state.isiFormData.toString()}
                 />
               </View>
               <View style={Style.inputContainer}>
@@ -1199,7 +1296,7 @@ class RegisDataSiswa extends React.Component {
                   borderRadius: 8,
                   alignSelf: "flex-end",
                 }}
-                onPress={this.addTextViewHobi}
+                onPress={this.addTextViewPrestasi}
               >
                 <View style={{ marginHorizontal: 1 }}>
                   <Icon name={"ios-add"} size={25} color={"#000"} />
@@ -1207,11 +1304,11 @@ class RegisDataSiswa extends React.Component {
               </TouchableOpacity>
 
               <FlatList
-                data={this.state.jumlahHobi}
+                data={this.state.jumlahPrestasi}
                 extraData={
                   this.state.selectedId // for single item
                 }
-                renderItem={this._renderItemHobi}
+                renderItem={this._renderItemPrestasi}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={numColumn}
               />
