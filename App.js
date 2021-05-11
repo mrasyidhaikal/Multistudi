@@ -32,6 +32,7 @@ import DetailPembayaran from "./View/Home/Pembayaran/DetailPembayaran";
 import Profil from "./View/Home/Profil/Profil";
 import InfoAplikasi from "./View/Home/Profil/InfoAplikasi";
 import TentangKami from "./View/Home/Profil/TentangKami";
+import RegistrasiBill from "./View/Home/Pembayaran/RegistrasiBill"
 
 
 const Tab = createBottomTabNavigator();
@@ -98,6 +99,7 @@ const pembayranStacks = () => {
       <pembayaranStack.Screen name="MetodePembayaran" component={MetodePembayaran} />
       <pembayaranStack.Screen name="RiwayatPembayaran" component={RiwayatPembayaran} />
       <pembayaranStack.Screen name="DetailPembayaran" component={DetailPembayaran} />
+      <pembayaranStack.Screen name="RegistrasiBill" component={RegistrasiBill} />
     </pembayaranStack.Navigator>
   );
 };

@@ -89,14 +89,14 @@ const styles = StyleSheet.create({
   buttonBlank: {
     padding: 10,
   },
-  buttonRed : {
+  buttonRed: {
     borderRadius: 10,
     backgroundColor: merah,
     height: 50,
     width: WIDTH - 55,
     marginVertical: 10,
     justifyContent: "center",
-    alignSelf:'center',
+    alignSelf: "center",
   },
   inputContainer: {
     marginTop: 10,
