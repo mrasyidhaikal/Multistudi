@@ -38,45 +38,11 @@ class Tagihan extends React.Component {
     };
   }
 
-  currencyFormat(num) {
-    return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-  }
-
-  checkbulan(month){
-    switch (month){
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'Mei';
-      case 6:
-        return 'Jun';
-      case 7:
-        return 'Jul';
-      case 8:
-        return 'Agu';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Okt';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'Des';
-      default:
-        return '-';
-    }
-  }
-
   getDataPembayaran = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001418/`;
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001332/`;
     const response = await callAPI.getData(url);
     const { data } = response;
+ 
     this.setState({ contentData: data });
   };
 
@@ -102,9 +68,9 @@ class Tagihan extends React.Component {
           }}
         >
           <Text>
-            {this.checkbulan(item.nmonth)} {item.nyear}
+            {item.nmonth} {item.nyear}
           </Text>
-          <Text style={PembayaranStyle.TextTagihanSPP}>{this.currencyFormat(item.billvalue)}</Text>
+          <Text style={PembayaranStyle.TextTagihanSPP}>{item.billvalue}</Text>
           <TouchableOpacity disabled={true} style={PembayaranStyle.buttonLunas}>
             <Text style={PembayaranStyle.buttonLunasText}>Lunas</Text>
           </TouchableOpacity>
@@ -122,9 +88,9 @@ class Tagihan extends React.Component {
           }}
         >
           <Text>
-            {this.checkbulan(item.nmonth)} {item.nyear}
+            {item.nmonth} {item.nyear}
           </Text>
-          <Text style={PembayaranStyle.TextTagihanSPP}>{this.currencyFormat(item.billvalue)}</Text>
+          <Text style={PembayaranStyle.TextTagihanSPP}>{item.billvalue}</Text>
           <TouchableOpacity
             style={PembayaranStyle.buttonBayar}
             onPress={() =>
