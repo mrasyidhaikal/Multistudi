@@ -46,15 +46,16 @@ class Tagihan extends React.Component {
     this.setState({ contentData: data });
   };
 
-  DetailPembayaran = (id, billvalue, schoolyearid, studentid) => {
+  MetodePembayaran = (id, billvalue, schoolyearid, studentid) => {
     const { navigation } = this.props;
-    navigation.navigate("DetailPembayaran", {
+    navigation.navigate("MetodePembayaran", {
       billid: id,
       billvalue: billvalue,
       schoolyearid: schoolyearid,
       studentid: studentid,
     });
   };
+
   _renderItem = ({ item, index }) => {
     if (item.costid === "MHS001" && item.ispaid === 1) {
       return (
@@ -93,7 +94,7 @@ class Tagihan extends React.Component {
           <TouchableOpacity
             style={PembayaranStyle.buttonBayar}
             onPress={() =>
-              this.DetailPembayaran(
+              this.MetodePembayaran(
                 item.billid,
                 item.billvalue,
                 item.schoolyearid,

@@ -176,28 +176,13 @@ class Pembayaran extends React.Component {
             alignItems: "baseline",
           }}
         >
-          <Text>{item.description}</Text>
-          <Text>{this.currencyFormat(item.billvalue)}</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              borderRadius: 50,
-              borderWidth: 1,
-              padding: 6,
-              borderColor: this.state.colorText1,
-            }}
-          >
-            <Icon
-              name={this.state.iconPembayaran1}
-              size={18}
-              color={this.state.colorText1}
-            />
-            <Text style={{ color: this.state.colorText1 }}>
-              {this.checkStatus(
-                this.currencyFormat(item.billvalue),
-                item.pendingvalue
-              )}
-            </Text>
+
+          <Text style={{fontsize: 12,}}>{item.description}</Text>
+          <Text style={{fontsize: 12,}} >{this.currencyFormat(item.billvalue)}</Text>
+          <View style={{flexDirection: "row", borderRadius: 50, borderWidth: 1, padding: 6, borderColor: '#06BFAD'}}>
+              <Icon name={"ios-checkmark-circle"} size={18} color={"#06BFAD"}/>
+              <Text style={{color: '#06BFAD'}}>{this.checkStatus(this.currencyFormat(item.billvalue),item.pendingvalue)}</Text>
+
           </View>
         </View>
       );
