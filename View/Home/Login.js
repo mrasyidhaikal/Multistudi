@@ -69,6 +69,7 @@ class Welcome extends React.Component {
               ])
 
               this.showToast('Selamat Datang, ' + data.name);
+              console.log(data);
 
               navigation.navigate('MainStack',{
                 token : data.token

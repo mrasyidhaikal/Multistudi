@@ -14,6 +14,8 @@ import {
   RefreshControl,
   ImageBackground,
   FlatList,
+  Alert,
+  Linking,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -40,12 +42,14 @@ class DetailPembayaran extends React.Component {
     return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
  }
  submitSPP = async() =>{
+  //  console.log('masuk')
   const { navigation, route } = this.props;
   const {
     billid: billid,
     billvalue: billvalue,
     schoolyearid: schoolyearid,
     studentid: studentid,
+    paymentmethod : paymentmethod,
   } = route.params;
 
   let url = "http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillPay";
@@ -53,12 +57,39 @@ class DetailPembayaran extends React.Component {
     "schoolyearid": schoolyearid,
     "studentid": studentid,
     "billid": billid,
-    "bank_code": "OVO",
+    "bank_code": paymentmethod,
     "nohp": this.state.nohp
   }
   const response = await callAPI.postAPI(url,JSON.stringify(body));
-  console.log(response)
+  // console.log(response)
+  const {data,statusCode} = response
+
+  if (data.success == false){
+      Alert.alert('Generate Kode Gagal',data.responseText,[
+        {text: 'Oke',onPress:() => console.log("closed")}
+      ])
+    }else{
+      navigation.navigate('RiwayatPembayaran')
+  }
  }
+
+ checkPaymentMethod(payMethod) {
+    switch(payMethod){
+      case 'ovo':
+        return require('./../../../assets/pembayaran/ovo.png');
+      case 'mandiri':
+        return require('./../../../assets/pembayaran/mandiri.png');
+      case 'alfamart':
+        return require('./../../../assets/pembayaran/alfamart.png');
+      case 'bca':
+        return require('./../../../assets/pembayaran/bca.png');
+      case 'bni':
+        return require('./../../../assets/pembayaran/bni.png');
+      case 'permata':
+        return require('./../../../assets/pembayaran/permata.png');
+    }
+ }
+
   render() {
     const { navigation, route } = this.props;
     const {
@@ -66,6 +97,7 @@ class DetailPembayaran extends React.Component {
       billvalue: billvalue,
       schoolyearid: schoolyearid,
       studentid: studentid,
+      paymentmethod : paymentmethod,
     } = route.params;
 
     return (
@@ -169,25 +201,33 @@ class DetailPembayaran extends React.Component {
                  Metode Pembayaran
                 </Text>
                 <View style={{flexDirection:'row'}}>
-                  <Image source={require('./../../../assets/pembayaran/mandiri.png')} style={{width:40,height:40,marginRight:20}} />
-                  <Text style={[Style.textNormalBlack,{marginTop:8}]}>Mandiri</Text>
+                  <Image source={this.checkPaymentMethod(paymentmethod)} style={{width:40,height:40,marginRight:20}} />
+                  <Text style={[Style.textNormalBlack,{marginTop:8}]}>{paymentmethod.toUpperCase()}</Text>
                 </View>
               </View>
-                  <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 20,
-                }}
-              >
-                <Text style={{ fontSize: 12,marginTop:8 }}>
-                 No Handphone
-                </Text>
-                <TextInput style={[Style.input,{width:'50%',height:35}]} onChangeText={(val)=> this.setState({nohp:val})} />
+                 
+                {paymentmethod.toUpperCase() == "OVO"  ? 
+                      <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      margin: 20,
+                    }}>
+                      <Text style={{ fontSize: 12,marginTop:8 }}>
+                      No Handphone
+                      </Text>
+                      <TextInput style={[Style.input,{width:'50%',height:35}]} onChangeText={(val)=> this.setState({nohp:val})} keyboardType={"number-pad"} />
+                    </View>
+                : 
+                // Buat yang kosong
+                <View></View>
+
+                }
+               
+             
               </View>
-              </View>
-              <TouchableOpacity style={Style.buttonRed} onPress={() => this.submitSPP()}>
-                <Text style={[Style.textNormalWhite,{textAlign:'center'}]}>Bayar</Text>
+              <TouchableOpacity style={Style.buttonRed} onPress={this.submitSPP}>
+                <Text style={[Style.textNormalWhite,{textAlign:'center'}]}>Generate Kode Bayar</Text>
               </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>

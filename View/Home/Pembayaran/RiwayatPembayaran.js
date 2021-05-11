@@ -13,6 +13,7 @@ import {
   ScrollView,
   RefreshControl,
   ImageBackground,
+  ToastAndroid,
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -24,6 +25,8 @@ import PembayaranStyle from "../../Style/PembayranStyle";
 import { Table, Row, Rows } from 'react-native-table-component';
 import Pembayaran from "./Pembayaran";
 import callAPI from "./../../../Controller/CallAPI";
+import Clipboard from 'expo-clipboard';
+
 class RiwayatPembayaran extends React.Component {
   constructor() {
     super();
@@ -42,10 +45,20 @@ class RiwayatPembayaran extends React.Component {
    
     this.setState({ contentData: data });
   };
+
+
   currencyFormat(num) {
     return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
- }
+  }
+
+  showToast = (val) => {
+    ToastAndroid.show(val, ToastAndroid.SHORT);
+  };
   
+  copyToClipboard = () => {
+    Clipboard.setString(this.state.contentData.virtualaccount_full)
+    this.showToast('Text Copied !');
+  }
 
   render() {
     const { navigation } = this.props;
@@ -93,9 +106,12 @@ class RiwayatPembayaran extends React.Component {
               
               <Text style={{fontSize: 14, marginLeft: 20}}>Metode Pembayaran : {this.state.contentData.banklogo} Virtual Account </Text>
               
-              <TouchableOpacity style={PembayaranStyle.containerMetodePembayaran}>
-                    <Text style={{fontWeight: 'bold'}}>Nomor Pembayaran :</Text>
+              <TouchableOpacity style={PembayaranStyle.containerMetodePembayaran} onPress={this.copyToClipboard}>
+                    <Text style={{fontWeight: 'bold'}}>No. VA :</Text>
                     <Text> {this.state.contentData.virtualaccount_full} </Text>
+                    <View >
+                        <Icon name={'ios-copy-outline'} size={25} color={'#000'}/>
+                    </View>
               </TouchableOpacity>
               
               <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 20, alignItems: 'center'}}>
@@ -103,12 +119,13 @@ class RiwayatPembayaran extends React.Component {
                   <Text>Jumlah</Text>
                   <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 2}}>{this.currencyFormat(Number(this.state.contentData.strtotal))}</Text>      
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('DetailPembayaran')}>
+                {/* Tombol Detail di History */}
+                {/* <TouchableOpacity onPress={() => navigation.navigate('DetailPembayaran')}>
                   <View style={{flexDirection: 'row',}}>
                       <Text style={{fontSize: 16, color: '#FF3737', fontWeight: 'bold'}}>Lihat Detail</Text>
                       <Icon name="ios-chevron-forward" style={{color: '#FF3737', marginLeft: 5}} size={20} />
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
 

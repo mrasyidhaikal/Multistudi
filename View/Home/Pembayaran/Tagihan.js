@@ -38,57 +38,24 @@ class Tagihan extends React.Component {
     };
   }
 
-  currencyFormat(num) {
-    return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-  }
-
-  checkbulan(month){
-    switch (month){
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'Mei';
-      case 6:
-        return 'Jun';
-      case 7:
-        return 'Jul';
-      case 8:
-        return 'Agu';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Okt';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'Des';
-      default:
-        return '-';
-    }
-  }
-
   getDataPembayaran = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001418/`;
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001332/`;
     const response = await callAPI.getData(url);
     const { data } = response;
+ 
     this.setState({ contentData: data });
   };
 
-  DetailPembayaran = (id, billvalue, schoolyearid, studentid) => {
+  MetodePembayaran = (id, billvalue, schoolyearid, studentid) => {
     const { navigation } = this.props;
-    navigation.navigate("DetailPembayaran", {
+    navigation.navigate("MetodePembayaran", {
       billid: id,
       billvalue: billvalue,
       schoolyearid: schoolyearid,
       studentid: studentid,
     });
   };
+
   _renderItem = ({ item, index }) => {
     if (item.costid === "MHS001" && item.ispaid === 1) {
       return (
@@ -101,9 +68,9 @@ class Tagihan extends React.Component {
           }}
         >
           <Text>
-            {this.checkbulan(item.nmonth)} {item.nyear}
+            {item.nmonth} {item.nyear}
           </Text>
-          <Text style={PembayaranStyle.TextTagihanSPP}>{this.currencyFormat(item.billvalue)}</Text>
+          <Text style={PembayaranStyle.TextTagihanSPP}>{item.billvalue}</Text>
           <TouchableOpacity disabled={true} style={PembayaranStyle.buttonLunas}>
             <Text style={PembayaranStyle.buttonLunasText}>Lunas</Text>
           </TouchableOpacity>
@@ -121,13 +88,13 @@ class Tagihan extends React.Component {
           }}
         >
           <Text>
-            {this.checkbulan(item.nmonth)} {item.nyear}
+            {item.nmonth} {item.nyear}
           </Text>
-          <Text style={PembayaranStyle.TextTagihanSPP}>{this.currencyFormat(item.billvalue)}</Text>
+          <Text style={PembayaranStyle.TextTagihanSPP}>{item.billvalue}</Text>
           <TouchableOpacity
             style={PembayaranStyle.buttonBayar}
             onPress={() =>
-              this.DetailPembayaran(
+              this.MetodePembayaran(
                 item.billid,
                 item.billvalue,
                 item.schoolyearid,
