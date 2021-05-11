@@ -47,7 +47,7 @@ const datesWhitelist = [
   {
     start: moment(),
     end: moment().add(3, "days"),
-  },
+  }, 
 ];
 
 export const handleAddColor = async (warna) => {
@@ -272,12 +272,13 @@ class NotesView extends React.Component {
             </View>
             <View style={Style.ContainerViewBiasa}>
               <CalendarStrip
+                daySelectionAnimation={{type: 'background', duration: 200, borderWidth: 1, highlightColor: greyBorder}}
                 datesWhitelist={datesWhitelist}
                 scrollable={true}
                 onDateSelected={(val) => this.SelectedDate(val)}
               />
             </View>
-            <View style={[Style.CardAddNotes]}>
+            <View style={Style.CardAddNotes}>
               <View style={{ padding: 20, flexDirection: "row" }}>
                 <AddColorPick
                   warna={this.state.colorCard == "" ? "" : this.state.colorCard}

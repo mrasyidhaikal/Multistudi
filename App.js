@@ -24,6 +24,7 @@ import RegisSelesai from "./View/Home/Daftar/RegisSelesai";
 import Guru from "./View/Home/Guru/Guru";
 import DetailGuru from "./View/Home/Guru/DetailGuru";
 import NoteScreen from "./View/Notes/NotesView";
+import StatusScreen from "./View/Home/StatusRegistration";
 import Pembayaran from "./View/Home/Pembayaran/Pembayaran";
 import Tagihan from "./View/Home/Pembayaran/Tagihan";
 import MetodePembayaran from "./View/Home/Pembayaran/MetodePembayaran";
@@ -149,6 +150,18 @@ const AppTabs = () => {
           ),
         }}
       />
+      <Tab.Screen
+        name="Registration"
+        component={StatusScreen}
+        options={{
+          tabBarLabel: "Registration",
+
+          tabBarIcon: ({ color }) => (
+            <Icon name="ios-document-attach-outline" color={color} size={26} />
+          ),
+        }}
+      />
+
       <Tab.Screen
         name="ProfilScreen"
         component={Profil}
