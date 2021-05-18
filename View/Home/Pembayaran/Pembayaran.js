@@ -26,6 +26,9 @@ import { Table, Row, Rows } from "react-native-table-component";
 import callAPI from "./../../../Controller/CallAPI";
 import { sub } from "react-native-reanimated";
 
+const windowHeight = Dimensions.get('window').height;
+
+
 const numColumn = 1;
 class Pembayaran extends React.Component {
   constructor() {
@@ -62,6 +65,7 @@ class Pembayaran extends React.Component {
           remarks: "",
         },
       ],
+      refreshing: false,
       // tableHead: ['Kategori', 'Jml. Tagihan', 'Sisa/Status', 'Keterangan'],
       // tableData: [
       //   ['MOS', 'Rp. 440.000', 'Rp. 440.000', 'Lunas'],
@@ -83,6 +87,14 @@ class Pembayaran extends React.Component {
   currencyFormat(num) {
     return "Rp " + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
   }
+
+  setRefreshing = () =>{
+    if(this.state.refreshing == false){
+       this.setState({ refreshing: true })
+       this.getDataRegistrasi()
+     }
+  }
+
   checkWarna = (data) => {
     let array = [];
     array.push(data.detail);
@@ -128,11 +140,15 @@ class Pembayaran extends React.Component {
   getDataRegistrasi = async () => {
     const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/MHS0001932`;
     const response = await callAPI.getData(url);
-    const { data } = response;
+    const { data, statusCode } = response;
     this.checkWarna(data);
-
     this.setState({ regisData: data.detail });
+
+    if(statusCode == 200){
+      this.setState({ refreshing: false })
+    }
   };
+
   // addModelPembayaran = async (data) => {
   //   let array = [];
   //   array.push(data);
@@ -238,7 +254,14 @@ class Pembayaran extends React.Component {
     return (
       <View style={Style.container}>
         <SafeAreaView>
-          <ScrollView>
+          <ScrollView
+          style={{height:windowHeight}}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.setRefreshing}
+            />
+          }>
             <View style={Style.NavBackContainer}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Icon
