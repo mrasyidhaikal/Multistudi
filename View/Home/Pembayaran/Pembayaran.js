@@ -44,6 +44,7 @@ class Pembayaran extends React.Component {
       colorText2: "#06BFAD",
       iconPembayaran1: "ios-checkmark-circle",
       iconPembayaran2: "ios-checkmark-circle",
+      headerData: {},
       ModelArray: [
         {
           billid: "",
@@ -131,7 +132,7 @@ class Pembayaran extends React.Component {
     const { data } = response;
     this.checkWarna(data);
 
-    this.setState({ regisData: data.detail });
+    this.setState({ regisData: data.detail, headerData: data.header });
   };
   // addModelPembayaran = async (data) => {
   //   let array = [];
@@ -176,13 +177,26 @@ class Pembayaran extends React.Component {
             alignItems: "baseline",
           }}
         >
-
-          <Text style={{fontsize: 12,}}>{item.description}</Text>
-          <Text style={{fontsize: 12,}} >{this.currencyFormat(item.billvalue)}</Text>
-          <View style={{flexDirection: "row", borderRadius: 50, borderWidth: 1, padding: 6, borderColor: '#06BFAD'}}>
-              <Icon name={"ios-checkmark-circle"} size={18} color={"#06BFAD"}/>
-              <Text style={{color: '#06BFAD'}}>{this.checkStatus(this.currencyFormat(item.billvalue),item.pendingvalue)}</Text>
-
+          <Text style={{ fontsize: 12 }}>{item.description}</Text>
+          <Text style={{ fontsize: 12 }}>
+            {this.currencyFormat(item.billvalue)}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              borderRadius: 50,
+              borderWidth: 1,
+              padding: 6,
+              borderColor: "#06BFAD",
+            }}
+          >
+            <Icon name={"ios-checkmark-circle"} size={18} color={"#06BFAD"} />
+            <Text style={{ color: "#06BFAD" }}>
+              {this.checkStatus(
+                this.currencyFormat(item.billvalue),
+                item.pendingvalue
+              )}
+            </Text>
           </View>
         </View>
       );
@@ -455,6 +469,7 @@ class Pembayaran extends React.Component {
                 navigation.navigate("RegistrasiBill", {
                   params: this.state.regisData,
                   isfirstpay: true,
+                  headerData: this.state.headerData,
                 })
               }
             >
