@@ -130,7 +130,7 @@ class DetailPembayaran extends React.Component {
                 }}
             >
               <Text>Tanggal Pembayaran</Text>
-            <Text style={Style.textNormalBlack}>15 Maret 2020</Text>
+            <Text style={[Style.textNormalBlack,{fontSize: 14}]}>15 Maret 2020</Text>
             </View>
               </View>
             
@@ -149,10 +149,10 @@ class DetailPembayaran extends React.Component {
                   margin: 20,
                 }}
               >
-                <Text style={{ fontSize: 12 }}>
+                <Text>
                   Nomor Pembayaran : 
                 </Text>
-                <Text style={{ fontSize: 12 }}>{billid}</Text>
+                <Text style={{ fontSize: 14 }}>{billid}</Text>
               </View>
 
               <View
@@ -162,10 +162,10 @@ class DetailPembayaran extends React.Component {
                   margin: 20,
                 }}
               >
-                <Text style={{ fontSize: 12 }}>
+                <Text>
                  SPP
                 </Text>
-                <Text style={{ fontSize: 12 }}>{this.currencyFormat(billvalue)}</Text>
+                <Text style={{ fontSize: 14 }}>{this.currencyFormat(billvalue)}</Text>
               </View>
             
              
@@ -197,7 +197,7 @@ class DetailPembayaran extends React.Component {
                   margin: 20,
                 }}
               >
-                <Text style={{ fontSize: 12,marginTop:10 }}>
+                <Text style={{fontSize: 14, marginTop: 10}}>
                  Metode Pembayaran
                 </Text>
                 <View style={{flexDirection:'row'}}>
