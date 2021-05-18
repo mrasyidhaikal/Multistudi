@@ -31,6 +31,7 @@ import Style, {
 import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
 import { Table, Row, Rows } from "react-native-table-component";
+import callAPI from "../../../Controller/CallAPI";
 
 class RegistasiBill extends React.Component {
   constructor() {
@@ -40,6 +41,7 @@ class RegistasiBill extends React.Component {
       refreshing: false,
       active: 0,
       numberQuanity: null,
+      jumlahBayar: 0,
       dataSemua: [],
       dataContent: [
         {
@@ -78,13 +80,13 @@ class RegistasiBill extends React.Component {
     const parsedQty = Number.parseInt(value);
     const { navigation, route } = this.props;
     const { params: data } = route.params;
-
     var array = data;
     var stateArray = this.state.dataContent;
-
     var index = array.findIndex((obj) => obj.billid === billid);
+
     // console.log(index);
 
+    // Updated and Set new array
     stateArray[index] = {
       ...stateArray[index],
       billid: billid,
@@ -103,8 +105,22 @@ class RegistasiBill extends React.Component {
       remarks: "",
     };
     this.setState({ dataContent: stateArray });
-    console.log(this.state.dataContent);
+    //console.log(this.state.dataContent);
 
+    // Count Total Registration fee
+    let sum = 0;
+    let total = this.state.dataContent;
+    total.map((item, index) => {
+      if (isNaN(item.paymentvalue)) {
+        console.log("not number");
+      } else {
+        sum = sum + item.paymentvalue;
+      }
+    });
+
+    this.setState({ jumlahBayar: sum });
+
+    // Validate Check Max Input
     if (Number.isNaN(parsedQty)) {
       this.setState({ numberQuanity: 0 }); //setter for state
     } else if (parsedQty > pendingvalue) {
@@ -135,6 +151,7 @@ class RegistasiBill extends React.Component {
               <View>
                 <Text style={{ marginVertical: 10 }}>Jumlah Bayar</Text>
                 <TextInput
+                  defaultValue={0}
                   style={[
                     PembayaranStyle.containerCicilan,
                     {
@@ -191,6 +208,7 @@ class RegistasiBill extends React.Component {
               <View>
                 <Text style={{ marginVertical: 10 }}>Jumlah Bayar</Text>
                 <TextInput
+                  defaultValue={0}
                   style={[
                     PembayaranStyle.containerCicilan,
                     {
@@ -227,8 +245,28 @@ class RegistasiBill extends React.Component {
   };
 
   submitBayar = async () => {
+    const { navigation, route } = this.props;
+    const { params: data, headerData: headerData } = route.params;
+
     let url =
       "http://104.248.156.113:8025/api/v1/AppAccount/RegistrationPayment";
+    let body = {
+      header: {
+        prstudentid: headerData.prstudentid,
+        schoolyearid: headerData.schoolyearid,
+        nopendaftaran: headerData.nopendaftaran,
+        paymentdate: moment().format(),
+        total: this.state.jumlahBayar,
+        paidby: "OVO",
+        nama_bank: "OVO",
+        paymethodtitle: "string",
+        logoname: "string",
+        nohp: "081373231812",
+      },
+      content: this.state.dataContent,
+    };
+    const res = await callAPI.postAPI(url, JSON.stringify(body));
+    console.log(res);
   };
 
   render() {
@@ -292,8 +330,8 @@ class RegistasiBill extends React.Component {
             width: WIDTH,
             height: 150,
             backgroundColor: "#23243B",
-            position: "absolute", //Here is the trick
-            bottom: 0, //Here is the trick
+            position: "absolute",
+            bottom: 0,
           }}
         >
           <View
@@ -313,7 +351,7 @@ class RegistasiBill extends React.Component {
                 Total Pembayaran
               </Text>
               <Text style={[Style.textBold20, { color: white }]}>
-                Rp.440.000
+                {this.currencyFormat(this.state.jumlahBayar)}
               </Text>
             </View>
             <TouchableOpacity

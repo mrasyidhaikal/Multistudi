@@ -17,7 +17,7 @@ import {
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CallAsyncData from '../../Controller/CallAsyncData';
+import CallAsyncData from "../../Controller/CallAsyncData";
 
 import moment from "moment";
 import Style from "./../Style/Style";
@@ -55,48 +55,48 @@ class Home extends React.Component {
     };
   }
 
-  getProfile = async() =>{
-    const token = await CallAsyncData.getData('token')
-    const emailUser = await CallAsyncData.getData('email')
-    const userName = await CallAsyncData.getData('name')
-    const userMajor = await CallAsyncData.getData('major')
-    const userClass = await CallAsyncData.getData('kelas')
-    const userPhone = await CallAsyncData.getData('phone')
-    const userBirth = await CallAsyncData.getData('tgllahir')
-    const userAddress = await CallAsyncData.getData('address')
-    const userStatus = await CallAsyncData.getData('status')
-    const userPicture = await CallAsyncData.getData('fotoprofile')
-    const userPicture2 = await CallAsyncData.getData('fotoprofile2')
+  getProfile = async () => {
+    const token = await CallAsyncData.getData("token");
+    const emailUser = await CallAsyncData.getData("email");
+    const userName = await CallAsyncData.getData("name");
+    const userMajor = await CallAsyncData.getData("major");
+    const userClass = await CallAsyncData.getData("kelas");
+    const userPhone = await CallAsyncData.getData("phone");
+    const userBirth = await CallAsyncData.getData("tgllahir");
+    const userAddress = await CallAsyncData.getData("address");
+    const userStatus = await CallAsyncData.getData("status");
+    const userPicture = await CallAsyncData.getData("fotoprofile");
+    const userPicture2 = await CallAsyncData.getData("fotoprofile2");
 
     // Profile Data
     const profile = {
-      'Email': emailUser,
-      'Nama': userName,
-      'Jurusan': userMajor,
-      'Kelas': userClass,
-      'Alamat': userAddress,
-      'Handphone': userPhone,
-      'Tgllahir': moment(userBirth).format('DD MMM YYYY'),
-      'Status': userStatus,
-      'Picture': userPicture,
-      'Picture2': userPicture2
-    }
-      
-      this.setState({dataprofile: profile})
-      // console.log(this.state.dataprofile['Picture'])
+      Email: emailUser,
+      Nama: userName,
+      Jurusan: userMajor,
+      Kelas: userClass,
+      Alamat: userAddress,
+      Handphone: userPhone,
+      Tgllahir: moment(userBirth).format("DD MMM YYYY"),
+      Status: userStatus,
+      Picture: userPicture,
+      Picture2: userPicture2,
+    };
+
+    this.setState({ dataprofile: profile });
+    // console.log(this.state.dataprofile['Picture'])
+  };
+
+  componentDidMount() {
+    this.getProfile();
   }
 
-  componentDidMount(){
-    this.getProfile()
-  }
-
-  loadFallBack(){
+  loadFallBack() {
     // console.log('masuk loadFallBack')
-    var dataprofile2 = this.state.dataprofile
-    dataprofile2['Picture'] =  dataprofile2['Picture2']
-    
-    this.setState({dataprofile : dataprofile2})
-    
+    var dataprofile2 = this.state.dataprofile;
+    dataprofile2["Picture"] = dataprofile2["Picture2"];
+
+    this.setState({ dataprofile: dataprofile2 });
+
     // console.log(dataprofile2)
   }
 
@@ -116,13 +116,27 @@ class Home extends React.Component {
           <ScrollView>
             <View style={[Style.NavBackContainer, { marginTop: 40 }]}>
               <View style={{ flexDirection: "row" }}>
-                <View style={{width: 50, height: 50, overflow: 'hidden', borderRadius: 25}}>
-                  <Image style={{width: '100%', height: '125%'}} source={{uri : this.state.dataprofile['Picture']}} onError={() => this.loadFallBack()} />
+                <View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    overflow: "hidden",
+                    borderRadius: 25,
+                  }}
+                >
+                  <Image
+                    style={{ width: "100%", height: "125%" }}
+                    source={{ uri: this.state.dataprofile["Picture"] }}
+                    onError={() => this.loadFallBack()}
+                  />
                 </View>
                 <View style={{ marginLeft: 15 }}>
-                  <Text style={Style.textBold}>{this.state.dataprofile['Nama']}</Text>
-                  <Text style={[Style.textNormalGrey,{fontSize: 14}]}>
-                    {this.state.dataprofile['Kelas']} • {this.state.dataprofile['Jurusan']}
+                  <Text style={Style.textBold}>
+                    {this.state.dataprofile["Nama"]}
+                  </Text>
+                  <Text style={[Style.textNormalGrey, { fontSize: 14 }]}>
+                    {this.state.dataprofile["Kelas"]} •{" "}
+                    {this.state.dataprofile["Jurusan"]}
                   </Text>
                 </View>
               </View>
