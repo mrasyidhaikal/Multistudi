@@ -137,7 +137,7 @@ class RegisDataWali extends React.Component {
                   <Picker
                     mode="dropdown"
                     style={{ margin: -4 }}
-                    selectedValue={this.state.kodeJurusan}
+                    selectedValue={this.state.Agama}
                     placeholderTextColor={"#B2B5BF"}
                     underlineColorAndroid="transparent"
                     onValueChange={(itemValue, itemIndex) =>

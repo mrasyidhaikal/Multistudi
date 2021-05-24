@@ -15,8 +15,10 @@ import {
   ImageBackground,
   Touchable,
   FlatList,
+  Alert,
 } from "react-native";
 
+import { Picker } from "@react-native-community/picker";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
@@ -32,6 +34,7 @@ import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
 import { Table, Row, Rows } from "react-native-table-component";
 import callAPI from "../../../Controller/CallAPI";
+import { NavigationHelpersContext } from "@react-navigation/core";
 
 class RegistasiBill extends React.Component {
   constructor() {
@@ -43,6 +46,8 @@ class RegistasiBill extends React.Component {
       numberQuanity: null,
       jumlahBayar: 0,
       dataSemua: [],
+      nama_bank: "",
+      nohp: 0,
       dataContent: [
         {
           billid: "",
@@ -65,6 +70,9 @@ class RegistasiBill extends React.Component {
   }
   currencyFormat(num) {
     return "Rp " + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+  }
+  setDefaultValue(){
+    this.setState({ numberQuanity: 0 }); //setter for state
   }
   onCheckLimit = (
     value,
@@ -113,6 +121,7 @@ class RegistasiBill extends React.Component {
     total.map((item, index) => {
       if (isNaN(item.paymentvalue)) {
         console.log("not number");
+        this.setState({ numberQuanity: 0 }); //setter for state
       } else {
         sum = sum + item.paymentvalue;
       }
@@ -124,11 +133,14 @@ class RegistasiBill extends React.Component {
     if (Number.isNaN(parsedQty)) {
       this.setState({ numberQuanity: 0 }); //setter for state
     } else if (parsedQty > pendingvalue) {
-      console.log("lebih");
+        Alert.alert('Transaksi Gagal','Jumlah Bayar Melebihi Jumlah Tagihan !',[
+          {text: 'Oke',onPress:() => console.log('closed')}
+        ]);
     } else {
       this.setState({ numberQuanity: parsedQty });
     }
   };
+  
   _renderFirstPay1 = ({ item, index }) => {
     if (item.isfirstpay === 1) {
       return (
@@ -163,7 +175,7 @@ class RegistasiBill extends React.Component {
                   ]}
                   placeholder={"Rp.440.000"}
                   placeholderTextColor={greyBorder}
-                  keyboardType={"number-pad"}
+                  keyboardType={"numeric"}
                   onChangeText={(val) =>
                     this.onCheckLimit(
                       val,
@@ -220,7 +232,7 @@ class RegistasiBill extends React.Component {
                   ]}
                   placeholder={"Rp.440.000"}
                   placeholderTextColor={greyBorder}
-                  keyboardType={"number-pad"}
+                  keyboardType={"numeric"}
                   onChangeText={(val) =>
                     this.onCheckLimit(
                       val,
@@ -244,9 +256,26 @@ class RegistasiBill extends React.Component {
     }
   };
 
+  // MetodePembayaran = (prstudentid, schoolyearid, nopendaftaran, billValue) => {
+  //   const { navigation } = this.props;
+  //   navigation.navigate("MetodePembayaranRegis", {
+  //     prstudentid: prstudentid,
+  //     nopendaftaran: nopendaftaran,
+  //     schoolyearid: schoolyearid,
+  //     billValue : billValue,
+  //   });
+  // };
+  
+
   submitBayar = async () => {
+    
     const { navigation, route } = this.props;
-    const { params: data, headerData: headerData } = route.params;
+    const { params: data, paymentmethod: paymentMethod, headerData: headerData } = route.params;
+
+    console.log(paymentMethod);
+    if(route.params.paymentmethod == undefined){
+      console.log('blm pilih metode pembayaran')
+    }
 
     let url =
       "http://104.248.156.113:8025/api/v1/AppAccount/RegistrationPayment";
@@ -257,21 +286,63 @@ class RegistasiBill extends React.Component {
         nopendaftaran: headerData.nopendaftaran,
         paymentdate: moment().format(),
         total: this.state.jumlahBayar,
-        paidby: "OVO",
-        nama_bank: "OVO",
+        paidby: paymentMethod,
+        nama_bank: paymentMethod,
         paymethodtitle: "string",
         logoname: "string",
-        nohp: "081373231812",
+        nohp: this.state.nohp,
       },
       content: this.state.dataContent,
     };
     const res = await callAPI.postAPI(url, JSON.stringify(body));
-    console.log(res);
+    console.log(res.data['success']);
+    if(res.data['success'] == false){
+      Alert.alert('Transaksi Gagal',res.data['responseText'],[
+        {text: 'Oke',onPress:() => console.log('closed')}
+      ]);
+    }
+
   };
+
+  checkMethod(method){
+    switch(method){
+      case 'OVO':
+        return "OVO";
+      case 'mandiri':
+        return "BANK MANDIRI";
+      case 'alfamart':
+        return "ALFAMART";
+      case 'bca':
+        return "BANK CENTRAL ASIA";
+      case 'bni':
+        return "BANK NEGARA INDONESIA";
+      case 'permata':
+        return "PERMATA BANK";
+    }
+  }
+
+  checkMethodImg(payMethod){
+    switch(payMethod){
+      case 'OVO':
+        return require('./../../../assets/pembayaran/ovo.png');
+      case 'mandiri':
+        return require('./../../../assets/pembayaran/mandiri.png');
+      case 'alfamart':
+        return require('./../../../assets/pembayaran/alfamart.png');
+      case 'bca':
+        return require('./../../../assets/pembayaran/bca.png');
+      case 'bni':
+        return require('./../../../assets/pembayaran/bni.png');
+      case 'permata':
+        return require('./../../../assets/pembayaran/permata.png');
+    }
+  }
 
   render() {
     const { navigation, route } = this.props;
     const { params: data, isfirstpay: isfirstpay } = route.params;
+
+    // console.log(route.params.paymentmethod);
 
     return (
       <View style={[Style.container]}>
@@ -319,6 +390,17 @@ class RegistasiBill extends React.Component {
                 />
               )}
             </View>
+            {/* <View style={[Style.NavBackContainer,{marginTop: 5}]}>
+              <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>METODE PEMBAYARAN</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                
+              </View>
+            </View> */}
           </ScrollView>
         </SafeAreaView>
         <View
@@ -328,21 +410,66 @@ class RegistasiBill extends React.Component {
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
             width: WIDTH,
-            height: 150,
+            height: 200,
             backgroundColor: "#23243B",
             position: "absolute",
             bottom: 0,
           }}
         >
+
+              <TouchableOpacity onPress={() => navigation.navigate("MetodePembayaranRegis")}>
+                  <View style={[PembayaranStyle.CardPembayaran,{flexDirection: "column", width: 330, backgroundColor:"", marginTop: 10 },]}>
+                      <View style={{flexDirection:'row'}}>
+                      {route.params.paymentmethod == undefined  ? 
+                              <View style={{margin: 20, flexDirection: 'row', justifyContent: "space-between"}}>
+                                <Text style={{color: 'white'}}>Pilih Metode Pembayaran</Text>
+                                <Icon
+                                  style={{marginLeft: 140}}
+                                  name={"ios-chevron-forward-sharp"}
+                                  size={22}
+                                  color={"#fff"}
+                                />
+                              </View>
+                        : 
+                        // Buat yang kosong
+                          <View style={{margin: 20}}>
+                              <View style={{flexDirection: "row"}}>
+                                <Image source={this.checkMethodImg(route.params.paymentmethod)} style={{width:40,height:40}} />
+                                {/* <Text style={{ fontSize: 13, marginTop:8, marginLeft: 15 }}>
+                                  Metode Pembayaran : 
+                                </Text> */}
+                                <Text style={{ fontSize: 13, marginTop:8, marginLeft: 15, fontWeight: "bold",color: 'white' }}>
+                                  {this.checkMethod(route.params.paymentmethod)}
+                                </Text>
+                              </View>
+
+                              {/* check method , if OVO , show phone number field */}
+                              {route.params.paymentmethod == "OVO" ? 
+
+                              <View style={{flexDirection: "row"}}>
+                                <Text style={{ fontSize: 12,marginTop:8, marginRight: 15, color: 'white' }}>
+                                No Handphone  :
+                                </Text>
+                                <TextInput style={[Style.input,{width:'65%', height:35, paddingLeft: 15}]} onChangeText={(val)=> this.setState({nohp:val})} keyboardType={"number-pad"} />
+                              </View>
+                              :
+                              <View></View>
+                            }
+                          </View>
+                        }
+                      </View>
+                  </View>
+                </TouchableOpacity>
+
           <View
             style={{
-              margin: 25,
+              marginHorizontal: 25,
             }}
           >
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text
+              {/* <Text
                 style={[
                   Style.textBold20,
                   { color: white, fontWeight: "normal", fontSize: 16 },
@@ -352,18 +479,33 @@ class RegistasiBill extends React.Component {
               </Text>
               <Text style={[Style.textBold20, { color: white }]}>
                 {this.currencyFormat(this.state.jumlahBayar)}
-              </Text>
+              </Text> */}
             </View>
-            <TouchableOpacity
-              style={[
+            <TouchableOpacity style={[
                 Style.buttonRed,
-                { width: WIDTH / 2.2, alignSelf: "flex-end" },
+                { width: WIDTH-50, alignSelf: "flex-end" },
               ]}
               onPress={() => this.submitBayar()}
             >
-              <Text style={[Style.textNormalWhite, { alignSelf: "center" }]}>
+              <View style={{flexDirection: "row", justifyContent: "space-between"}}>  
+                {/* <Text style={[Style.textNormalWhite, { alignSelf: "center", marginLeft: 20 }]}>
+                  Generate Kode Bayar
+                </Text> */}
+                <Text style={[Style.textBold20, { fontSize:18 ,color: white, marginLeft: 20 }]}>
+                  {this.currencyFormat(this.state.jumlahBayar)}
+                </Text>
+                <View style={{flexDirection: 'row'}}>
+                <Text style={[Style.textNormalWhite, { alignSelf: "center", marginLeft: 20 }]}>
                 Generate Kode Bayar
-              </Text>
+                </Text>
+                <Icon
+                  style={{marginRight: 20}}
+                    name={"ios-arrow-forward-sharp"}
+                    size={25}
+                    color={"#fff"}
+                  />
+                </View>
+            </View>
             </TouchableOpacity>
           </View>
         </View>
