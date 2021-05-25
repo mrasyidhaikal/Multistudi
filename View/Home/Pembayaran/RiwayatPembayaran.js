@@ -39,7 +39,7 @@ class RiwayatPembayaran extends React.Component {
   }
 
   getDataStatusPembayaran = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillHeader/MHS0001418/`;
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillHeader/MHS0001332/`;
     const response = await callAPI.getData(url);
     const { data } = response;
    
@@ -108,7 +108,7 @@ class RiwayatPembayaran extends React.Component {
               
               <TouchableOpacity style={PembayaranStyle.containerMetodePembayaran} onPress={this.copyToClipboard}>
                     <Text style={{fontWeight: 'bold'}}>No. VA :</Text>
-                    <Text> {this.state.contentData.virtualaccount_full} </Text>
+                    <Text>{this.state.contentData.virtualaccount_full}</Text>
                     <View >
                         <Icon name={'ios-copy-outline'} size={25} color={'#000'}/>
                     </View>

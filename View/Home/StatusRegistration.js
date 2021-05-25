@@ -108,7 +108,7 @@ change = ({ nativeEvent }) => {
 
                     <View style={{borderColor: this.state.statusborderColor,  backgroundColor: '#FBFBFF', borderWidth: 1, padding: 17.5, borderRadius: 10, marginTop: 10, flexDirection: 'row'}}>
                         <View style={{padding: 7, borderRadius: 20, backgroundColor: this.state.statusColor, width: 35,}}>
-                            <Text style={{alignItems: 'center', marginLeft: 5, fontWeight: 'bold',color: this.state.numberColor}}>3</Text>
+                            <Text style={{alignItems: 'center', marginLeft: 5, fontWeight: 'bold', color: this.state.numberColor}}>3</Text>
                         </View>
                         <Text style={{alignItems: "center", marginTop: 7, marginLeft: 10, color: this.state.textColor}}>Komfirmasi Pembayaran dari Admin</Text>
                         <View>
