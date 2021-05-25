@@ -28,6 +28,7 @@ import StatusScreen from "./View/Home/StatusRegistration";
 import Pembayaran from "./View/Home/Pembayaran/Pembayaran";
 import Tagihan from "./View/Home/Pembayaran/Tagihan";
 import MetodePembayaran from "./View/Home/Pembayaran/MetodePembayaran";
+import MetodePembayaranRegis from "./View/Home/Pembayaran/MetodePembayaranRegis";
 import RiwayatPembayaran from "./View/Home/Pembayaran/RiwayatPembayaran";
 import DetailPembayaran from "./View/Home/Pembayaran/DetailPembayaran";
 import Profil from "./View/Home/Profil/Profil";
@@ -98,6 +99,7 @@ const pembayranStacks = () => {
       <pembayaranStack.Screen name="Pembayaran" component={Pembayaran} />
       <pembayaranStack.Screen name="Tagihan" component={Tagihan} />
       <pembayaranStack.Screen name="MetodePembayaran" component={MetodePembayaran} />
+      <pembayaranStack.Screen name="MetodePembayaranRegis" component={MetodePembayaranRegis} />
       <pembayaranStack.Screen name="RiwayatPembayaran" component={RiwayatPembayaran} />
       <pembayaranStack.Screen name="DetailPembayaran" component={DetailPembayaran} />
       <pembayaranStack.Screen name="RegistrasiBill" component={RegistrasiBill} />

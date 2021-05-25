@@ -422,7 +422,7 @@ class Pembayaran extends React.Component {
               </View>
             </View>
 
-            <Text style={{ marginLeft: 25, marginVertical: 15 }}>
+            <Text style={{ marginLeft: 25, marginVertical: 15, fontWeight: 'bold' }}>
               Pembayaran Pertama
             </Text>
 
@@ -508,8 +508,8 @@ class Pembayaran extends React.Component {
               </View>
             </TouchableOpacity>
 
-            <Text style={{ marginLeft: 25, marginVertical: 15 }}>
-              Pembayaran dapat di cicil
+            <Text style={{ marginLeft: 25, marginVertical: 15, fontWeight: 'bold' }}>
+              Pembayaran Dapat Dicicil
             </Text>
 
             <View

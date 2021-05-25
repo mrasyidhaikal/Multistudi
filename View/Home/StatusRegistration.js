@@ -79,7 +79,7 @@ change = ({ nativeEvent }) => {
                             <Text style={{alignItems: 'center', marginLeft: 5, fontWeight: 'bold',color: this.state.numberColor}}>1</Text>
                         </View>
                         <Text style={{alignItems: "center", marginTop: 7, marginLeft: 10, color: this.state.textColor}}>Konfirmasi Pembayaran Ke Admin</Text>
-                        <View style={{alignItems: 'flex-end'}}>
+                        <View style={{position: "absolute", right: 20, top: 17}}  >
                             <Icon name="ios-checkmark-circle" style={{marginTop: 4}} color={'#06BFAD'} size={28} />
                         </View>
                     </View>
@@ -95,7 +95,7 @@ change = ({ nativeEvent }) => {
                             <Text style={{alignItems: 'center', marginLeft: 5, fontWeight: 'bold',color: this.state.numberColor}}>2 </Text>
                         </View>
                         <Text style={{alignItems: "center", marginTop: 7, marginLeft: 10, color: this.state.textColor}}>Pembayaran Pendaftaran</Text>
-                        <View>
+                        <View style={{position: "absolute", right: 20, top: 17}}>
                             <Icon name="ios-checkmark-circle" style={{marginLeft: 30, marginTop: 4}} color={'#06BFAD'} size={28} />
                         </View>
                     </View>
@@ -111,7 +111,7 @@ change = ({ nativeEvent }) => {
                             <Text style={{alignItems: 'center', marginLeft: 5, fontWeight: 'bold', color: this.state.numberColor}}>3</Text>
                         </View>
                         <Text style={{alignItems: "center", marginTop: 7, marginLeft: 10, color: this.state.textColor}}>Komfirmasi Pembayaran dari Admin</Text>
-                        <View>
+                        <View style={{position: "absolute", right: 20, top: 17}}>
                             <Icon name="ios-checkmark-circle" style={{marginLeft: 30, marginTop: 4}} color={'#06BFAD'} size={28} />
                         </View>
                     </View>
