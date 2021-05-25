@@ -274,7 +274,9 @@ class RegistasiBill extends React.Component {
 
     console.log(paymentMethod);
     if(route.params.paymentmethod == undefined){
-      console.log('blm pilih metode pembayaran')
+      Alert.alert('Transaksi Gagal',"Pilih Metode Pembayaran Terlebih Dahulu !",[
+        {text: 'Oke',onPress:() => console.log('closed')}
+      ]);
     }
 
     let url =
@@ -295,7 +297,7 @@ class RegistasiBill extends React.Component {
       content: this.state.dataContent,
     };
     const res = await callAPI.postAPI(url, JSON.stringify(body));
-    console.log(res.data['success']);
+    console.log(res.data);
     if(res.data['success'] == false){
       Alert.alert('Transaksi Gagal',res.data['responseText'],[
         {text: 'Oke',onPress:() => console.log('closed')}

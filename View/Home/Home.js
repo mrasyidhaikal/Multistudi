@@ -290,7 +290,7 @@ class Home extends React.Component {
               >
                 {slider.map((item, index) => (
                   <TouchableOpacity
-                    key={item.key}
+                    key={item.key.toString()}
                     onPress={() =>
                       navigation.navigate(item.linkStack, {
                         screen: item.linkScren,
