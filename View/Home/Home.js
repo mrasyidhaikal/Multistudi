@@ -14,16 +14,19 @@ import {
   RefreshControl,
   ImageBackground,
 } from "react-native";
-
+import CallAPI from "../../Controller/CallAPI";
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CallAsyncData from "../../Controller/CallAsyncData";
 
 import moment from "moment";
-import Style from "./../Style/Style";
+import Style, { black, oren, white } from "./../Style/Style";
 import PembayaranStyle from "./../Style/PembayranStyle";
 import HomeStyle from "../Style/HomeStyle";
 import { FlatList } from "react-native-gesture-handler";
+import callAPI from "../../Controller/CallAPI";
+import { DataTable } from "react-native-paper";
+import styles from "./../Style/Style";
 
 const { width: WIDTH } = Dimensions.get("window");
 const slider = [
@@ -36,8 +39,8 @@ const slider = [
   {
     key: 2,
     image: require("./../../assets/banner2.png"),
-    linkStack: "RegisterNewSiswa",
-    linkScren: "RegisDataWali",
+    linkStack: "guruStacks",
+    linkScren: "Guru",
   },
   {
     key: 3,
@@ -154,6 +157,9 @@ class Home extends React.Component {
       refreshing: false,
       active: 0,
       dataprofile: [],
+      regisData: [],
+      SPPData: [],
+      totalSPP: 0,
     };
   }
 
@@ -185,6 +191,8 @@ class Home extends React.Component {
     };
 
     this.setState({ dataprofile: profile });
+    this.getDataRegistrasi();
+    this.getDataPembayaranSPP();
     // console.log(this.state.dataprofile['Picture'])
   };
 
@@ -201,6 +209,47 @@ class Home extends React.Component {
 
     // console.log(dataprofile2)
   }
+  getDataRegistrasi = async () => {
+    const userid = await CallAsyncData.getData("userid");
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/${userid}/`;
+
+   // const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/MHS0001932`;
+    //Lunas : MHS0001418
+    //Blm lunas : MHS0001932
+    const response = await callAPI.getData(url);
+    const { data, statusCode } = response;
+  
+    if (statusCode == 200) {
+      this.setState({ refreshing: false });
+      this.setState({ regisData: data.detail });
+      //console.log(this.state.regisData);
+    }
+  };
+  getDataPembayaranSPP = async () => {
+    const userid = await CallAsyncData.getData("userid");
+
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/${userid}/`;
+   // const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001418/`;
+    const response = await callAPI.getData(url);
+    const { data } = response;
+   
+    if (!data.error) {
+        var sum = 0;
+    data.map((item, index) => {
+      if (item.costid === "MHS001" && item.ispaid === 2) {
+        sum = sum + item.billvalue;
+      }
+    });
+   
+    this.setState({ totalSPP: sum });
+
+    this.setState({ SPPData: data });
+    console.log("ga oke")
+    }else{
+      console.log("oke")
+    }
+  
+  };
 
   change = ({ nativeEvent }) => {
     const slide = Math.ceil(
@@ -210,6 +259,10 @@ class Home extends React.Component {
       this.setState({ active: slide });
     }
   };
+
+  currencyFormat(num) {
+    return "Rp " + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+  }
   _renderMapel = ({ item, index }) => {
     return (
       <View style={[item.style, { backgroundColor: item.color }]}>
@@ -290,7 +343,7 @@ class Home extends React.Component {
               >
                 {slider.map((item, index) => (
                   <TouchableOpacity
-                    key={item.key.toString()}
+                    key={index}
                     onPress={() =>
                       navigation.navigate(item.linkStack, {
                         screen: item.linkScren,
@@ -325,7 +378,52 @@ class Home extends React.Component {
               ))}
             </View>
 
-            <View style={Style.ContainerViewBiasa}>
+            {/* <View
+              style={[PembayaranStyle.CardPembayaran, { marginVertical: 20 }]}
+            >
+              <View style={{ padding: 25 }}>
+                <View style={{ flexDirection: "row" }}>
+                  <Icon name="ios-calendar-outline" size={26} color={"#000"} />
+                  <Text
+                    style={[
+                      Style.textNormalBlack,
+                      { marginLeft: 10, marginTop: 3 },
+                    ]}
+                  >
+                    Maret 2021
+                  </Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                  <Text style={Style.textBold20}>Rp. 550.000</Text>
+                </View>
+              </View>
+
+              <View style={{ marginTop: 35 }}>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonRed}
+                  onPress={() =>
+                    navigation.navigate("pembayranStacks", {
+                      screen: "Tagihan",
+                    })
+                  }
+                >
+                  <Text
+                    style={[
+                      Style.textNormalWhite,
+                      {
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        marginTop: 12,
+                      },
+                    ]}
+                  >
+                    Bayar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View> */}
+
+            {/* <View style={Style.ContainerViewBiasa}>
               <View style={{ marginVertical: 15 }}>
                 <Text style={Style.textBold}>Mata Pelajaran</Text>
                 <Text style={Style.textNormalGrey}>Kelas XI</Text>
@@ -339,9 +437,9 @@ class Home extends React.Component {
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={1}
               />
-            </View>
+            </View> */}
 
-            <View style={[Style.ContainerViewBiasa]}>
+            {/* <View style={[Style.ContainerViewBiasa]}>
               <View style={{ marginVertical: 15 }}>
                 <Text style={Style.textBold}>Program Studi</Text>
               </View>
@@ -368,8 +466,134 @@ class Home extends React.Component {
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={1}
               />
-            </View>
-            <View>
+            </View> */}
+
+            {this.state.regisData.map((item, index) => {
+              if (item.pendingvalue == 0) {
+                null;
+              } else {
+                return (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      padding: 10,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        borderWidth: 1,
+                        flexDirection: "row",
+                        borderRadius: 17,
+                        borderColor: oren,
+                        paddingVertical: 2,
+                        width: WIDTH - 160,
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View style={{ flexDirection: "row" }}>
+                        <Icon
+                          name={"ios-alert-circle"}
+                          size={18}
+                          color={oren}
+                        />
+                        <Text>{item.description}</Text>
+                      </View>
+                      <View style={{ paddingRight: 10 }}>
+                        <Text style={{ color: oren }}>
+                          {this.currencyFormat(item.pendingvalue)}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={[Style.tableCell, { paddingLeft: 5 }]}>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: oren,
+                          borderRadius: 17,
+                          paddingVertical: 5,
+                          paddingHorizontal: 35,
+                        }}
+                        onPress={() =>
+                          navigation.navigate("pembayranStacks", {
+                            screen: "Pembayran",
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            color: white,
+                          }}
+                        >
+                          Details
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }
+            })}
+
+            {this.state.totalSPP === 0 ? null : (
+              <View
+                style={{
+                  flexDirection: "row",
+                  padding: 10,
+                  justifyContent: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderWidth: 1,
+                    flexDirection: "row",
+                    borderRadius: 17,
+                    borderColor: oren,
+                    paddingVertical: 2,
+                    width: WIDTH - 160,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Icon name={"ios-alert-circle"} size={18} color={oren} />
+                    <Text>SPP</Text>
+                  </View>
+                  <View style={{ paddingRight: 10 }}>
+                    <Text style={{ color: oren }}>
+                      {this.currencyFormat(this.state.totalSPP)}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={[Style.tableCell, { paddingLeft: 5 }]}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: oren,
+                      borderRadius: 17,
+                      paddingVertical: 5,
+                      paddingHorizontal: 35,
+                    }}
+                    onPress={() =>
+                      navigation.navigate("pembayranStacks", {
+                        screen: "Tagihan",
+                      })
+                    }
+                  >
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight: "bold",
+                        color: white,
+                      }}
+                    >
+                      Details
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            {/* <View>
               <Text
                 style={[
                   Style.textBoldCenter,
@@ -378,73 +602,6 @@ class Home extends React.Component {
               >
                 Menu
               </Text>
-
-              <View
-                style={{
-                  marginTop: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <TouchableOpacity style={Style.cardFeature}>
-                  <Icon
-                    style={{ alignSelf: "center", marginVertical: 7 }}
-                    name={"ios-people-outline"}
-                    size={48}
-                    color={"#FF3737"}
-                  />
-                  <Text
-                    style={{
-                      alignSelf: "center",
-                      marginBottom: 10,
-                      color: "#FF3737",
-                    }}
-                  >
-                    Kehadiran
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={Style.cardFeature}>
-                  <Icon
-                    style={{ alignSelf: "center", marginVertical: 7 }}
-                    name={"ios-book-outline"}
-                    size={48}
-                    color={"#FF3737"}
-                  />
-                  <Text
-                    style={{
-                      alignSelf: "center",
-                      marginBottom: 10,
-                      color: "#FF3737",
-                    }}
-                  >
-                    Jadwal Pel.
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={Style.cardFeature}
-                  onPress={() =>
-                    navigation.navigate("guruStacks", { screen: "Guru" })
-                  }
-                >
-                  <Icon
-                    style={{ alignSelf: "center", marginVertical: 7 }}
-                    name={"ios-person-circle-outline"}
-                    size={48}
-                    color={"#FF3737"}
-                  />
-                  <Text
-                    style={{
-                      alignSelf: "center",
-                      marginBottom: 10,
-                      color: "#FF3737",
-                    }}
-                  >
-                    Guru
-                  </Text>
-                </TouchableOpacity>
-              </View>
 
               <View
                 style={{
@@ -514,7 +671,74 @@ class Home extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
+
+              <View
+                style={{
+                  marginTop: 10,
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <TouchableOpacity style={Style.cardFeature}>
+                  <Icon
+                    style={{ alignSelf: "center", marginVertical: 7 }}
+                    name={"ios-people-outline"}
+                    size={25}
+                    color={"#FF3737"}
+                  />
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      marginBottom: 10,
+                      color: "#FF3737",
+                    }}
+                  >
+                    Kehadiran
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={Style.cardFeature}>
+                  <Icon
+                    style={{ alignSelf: "center", marginVertical: 7 }}
+                    name={"ios-book-outline"}
+                    size={25}
+                    color={"#FF3737"}
+                  />
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      marginBottom: 10,
+                      color: "#FF3737",
+                    }}
+                  >
+                    Jadwal Pel.
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={Style.cardFeature}
+                  onPress={() =>
+                    navigation.navigate("guruStacks", { screen: "Guru" })
+                  }
+                >
+                  <Icon
+                    style={{ alignSelf: "center", marginVertical: 7 }}
+                    name={"ios-person-circle-outline"}
+                    size={25}
+                    color={"#FF3737"}
+                  />
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      marginBottom: 10,
+                      color: "#FF3737",
+                    }}
+                  >
+                    Guru
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View> */}
           </ScrollView>
         </SafeAreaView>
         <StatusBar backgroundColor="#FFF" barStyle="dark-content" />

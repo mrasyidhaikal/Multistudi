@@ -26,8 +26,7 @@ const PembayranStyle = StyleSheet.create({
     width: WIDTH - 50,
     marginTop: -20,
     paddingTop: 10,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
+
     marginLeft: 20,
     borderRadius: 20,
     backgroundColor: "#eef3fa",

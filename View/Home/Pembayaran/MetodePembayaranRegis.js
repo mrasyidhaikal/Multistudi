@@ -22,7 +22,6 @@ import moment from "moment";
 import Style, { black, WIDTH } from "../../Style/Style";
 import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
-import { Table, Row, Rows } from 'react-native-table-component';
 
 class Tagihan extends React.Component {
   constructor() {
@@ -31,13 +30,13 @@ class Tagihan extends React.Component {
     this.state = {
       refreshing: false,
       active: 0,
-    }
+    };
   }
 
   RegisBill = (paymentmethod) => {
     console.log(paymentmethod);
     const { navigation } = this.props;
-    navigation.navigate("RegistrasiBill", {paymentmethod : paymentmethod});
+    navigation.navigate("RegistrasiBill", { paymentmethod: paymentmethod });
   };
 
   render() {
@@ -65,78 +64,126 @@ class Tagihan extends React.Component {
                 Metode Pembayaran Registrasi
               </Text>
             </View>
-            
+
             <View>
               <View style={Style.ContainerViewHorizontal}>
-                <Text style={{color: '#B2B5BF', fontSize: 18, fontWeight: 'bold'}}>Transfer Virtual Account</Text> 
+                <Text
+                  style={{ color: "#B2B5BF", fontSize: 18, fontWeight: "bold" }}
+                >
+                  Transfer Virtual Account
+                </Text>
               </View>
-              
+
               <View>
-                <TouchableOpacity style={PembayaranStyle.buttonMetodeBank}
-                onPress={() => this.RegisBill('bca')}>
-                    <Image source={require('../../../assets/pembayaran/bca.png')} style={{width:40,height:40}}/>
-                    <Text style={{fontSize: 14, marginHorizontal: 10}}>Bank Central Asia</Text>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonMetodeBank}
+                  onPress={() => this.RegisBill("bca")}
+                >
+                  <Image
+                    source={require("../../../assets/pembayaran/bca.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                  <Text style={{ fontSize: 14, marginHorizontal: 10 }}>
+                    Bank Central Asia
+                  </Text>
                 </TouchableOpacity>
               </View>
-              
+
               <View>
-                  <TouchableOpacity style={PembayaranStyle.buttonMetodeBank}
-                    onPress={() => this.RegisBill('mandiri')}
-                  
-                  >
-                    <Image source={require('../../../assets/pembayaran/mandiri.png')} style={{width:40,height:40}} />
-                    <Text style={{fontSize: 14, marginHorizontal: 10}}>Bank Mandiri</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonMetodeBank}
+                  onPress={() => this.RegisBill("mandiri")}
+                >
+                  <Image
+                    source={require("../../../assets/pembayaran/mandiri.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                  <Text style={{ fontSize: 14, marginHorizontal: 10 }}>
+                    Bank Mandiri
+                  </Text>
+                </TouchableOpacity>
               </View>
-              
+
               <View>
-                  <TouchableOpacity style={PembayaranStyle.buttonMetodeBank}
-                   onPress={() => this.RegisBill('bni')}
-                  >
-                    <Image source={require('../../../assets/pembayaran/bni.png')} style={{width:40,height:40}} />
-                    <Text style={{fontSize: 14, marginHorizontal: 10}}>Bank Negara Indonesia</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonMetodeBank}
+                  onPress={() => this.RegisBill("bni")}
+                >
+                  <Image
+                    source={require("../../../assets/pembayaran/bni.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                  <Text style={{ fontSize: 14, marginHorizontal: 10 }}>
+                    Bank Negara Indonesia
+                  </Text>
+                </TouchableOpacity>
               </View>
-              
+
               <View>
-                  <TouchableOpacity style={PembayaranStyle.buttonMetodeBank}
-                   onPress={() => this.RegisBill('permata')}>
-                    <Image source={require('../../../assets/pembayaran/permata.png')} style={{width:40,height:40}} />
-                    <Text style={{fontSize: 14, marginHorizontal: 10}}>Permata Bank</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonMetodeBank}
+                  onPress={() => this.RegisBill("permata")}
+                >
+                  <Image
+                    source={require("../../../assets/pembayaran/permata.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                  <Text style={{ fontSize: 14, marginHorizontal: 10 }}>
+                    Permata Bank
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
             <View>
               <View style={Style.ContainerViewHorizontal}>
-                <Text style={{color: '#B2B5BF', fontSize: 18, fontWeight: 'bold'}}>Retail Outlet</Text> 
+                <Text
+                  style={{ color: "#B2B5BF", fontSize: 18, fontWeight: "bold" }}
+                >
+                  Retail Outlet
+                </Text>
               </View>
-              
+
               <View>
-                  <TouchableOpacity style={PembayaranStyle.buttonMetodeBank}
-                    onPress={() => this.RegisBill('alfamart')}
-                  >
-                    <Image source={require('../../../assets/pembayaran/alfamart.png')} style={{width:40,height:40}}/>
-                    <Text style={{fontSize: 14, marginHorizontal: 10}}>Alfamart</Text>
-                  </TouchableOpacity>
-              </View>
-            </View>
-            
-            <View>
-              <View style={Style.ContainerViewHorizontal}>
-                <Text style={{color: '#B2B5BF', fontSize: 18, fontWeight: 'bold'}}>eWallet</Text> 
-              </View>
-              
-              <View>
-                  <TouchableOpacity style={PembayaranStyle.buttonMetodeBank} 
-                    onPress={() => this.RegisBill('OVO')}
-                  >
-                    <Image source={require('../../../assets/pembayaran/ovo.png')} style={{width:40,height:40}} />
-                    <Text style={{fontSize: 14, marginHorizontal: 10}}>OVO</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonMetodeBank}
+                  onPress={() => this.RegisBill("alfamart")}
+                >
+                  <Image
+                    source={require("../../../assets/pembayaran/alfamart.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                  <Text style={{ fontSize: 14, marginHorizontal: 10 }}>
+                    Alfamart
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
+            <View>
+              <View style={Style.ContainerViewHorizontal}>
+                <Text
+                  style={{ color: "#B2B5BF", fontSize: 18, fontWeight: "bold" }}
+                >
+                  eWallet
+                </Text>
+              </View>
+
+              <View>
+                <TouchableOpacity
+                  style={PembayaranStyle.buttonMetodeBank}
+                  onPress={() => this.RegisBill("OVO")}
+                >
+                  <Image
+                    source={require("../../../assets/pembayaran/ovo.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                  <Text style={{ fontSize: 14, marginHorizontal: 10 }}>
+                    OVO
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </ScrollView>
         </SafeAreaView>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -146,9 +193,9 @@ class Tagihan extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
   head: { height: 40 },
-  text: { margin: 6, fontSize: 12 }
+  text: { margin: 6, fontSize: 12 },
 });
 
 export default Tagihan;

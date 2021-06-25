@@ -64,7 +64,11 @@ class Welcome extends React.Component {
                     <Text style={{alignSelf:'center', margin: 15, color: '#FF3737'}}>Masuk</Text>
                   </TouchableOpacity>
                   
-                  <TouchableOpacity style={{backgroundColor: '#FF3737', borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 15, alignSelf: 'center', width: '85%', marginTop: 10}}>
+                  <TouchableOpacity style={{backgroundColor: '#FF3737', borderColor: '#FFFFFF', borderWidth: 1, borderRadius: 15, alignSelf: 'center', width: '85%', marginTop: 10}}  onPress={() =>
+                      navigation.navigate("RegisterNewSiswa", {
+                        screen: "RegisDataSiswa",
+                      })
+                    }>
                   <Text style={{alignSelf:'center', margin: 15, color: '#FFFFFF'}}>Daftar</Text>
                   </TouchableOpacity>
                 </View>

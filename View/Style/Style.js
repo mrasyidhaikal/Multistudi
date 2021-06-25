@@ -17,6 +17,7 @@ export const kuning = "#FFD671";
 export const ungu = "#7772D6";
 export const biruMuda = "#3797DB";
 export const biruTua = "#4951EC";
+export const oren = "#F07031";
 
 const styles = StyleSheet.create({
   container: {
@@ -164,12 +165,12 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: "#fff",
     borderRadius: 20,
-    width: WIDTH / 3.7,
-    shadowColor: "#93A5BA",
-    shadowOpacity: 0.5,
-    elevation: 3,
-    shadowRadius: 35,
-    shadowOffset: { width: 1, height: 13 },
+    width: WIDTH / 4.5,
+    // shadowColor: "#93A5BA",
+    // shadowOpacity: 0.5,
+    // elevation: 3,
+    // shadowRadius: 35,
+    // shadowOffset: { width: 1, height: 13 },
   },
   CardAddNotes: {
     backgroundColor: "#fff",
@@ -181,6 +182,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 13 },
     marginHorizontal: 20,
     marginBottom: 25,
+  },
+  tableCell: {
+    justifyContent: "center",
   },
 });
 

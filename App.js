@@ -6,21 +6,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 
-import CallAsyncData from './Controller/CallAsyncData';
+import CallAsyncData from "./Controller/CallAsyncData";
 
 import HomeScreen from "./View/Home/Home";
 
 import WelcomeScreen from "./View/Home/Welcome";
 import LoginScreen from "./View/Home/Login";
 
-
 // Screen Register Siswa Baru
 import RegisDataSiswa from "./View/Home/Daftar/RegisDataSiswa";
-import RegisDataWali from "./View/Home/Daftar/RegisDataWali";
-import RegisHobi from "./View/Home/Daftar/RegisHobi";
-import RegisPrestasi from "./View/Home/Daftar/RegisPrestasi";
-import RegisDataFoto from "./View/Home/Daftar/RegisDataFoto";
-import RegisSelesai from "./View/Home/Daftar/RegisSelesai";
+
 import Guru from "./View/Home/Guru/Guru";
 import DetailGuru from "./View/Home/Guru/DetailGuru";
 import NoteScreen from "./View/Notes/NotesView";
@@ -34,8 +29,9 @@ import DetailPembayaran from "./View/Home/Pembayaran/DetailPembayaran";
 import Profil from "./View/Home/Profil/Profil";
 import InfoAplikasi from "./View/Home/Profil/InfoAplikasi";
 import TentangKami from "./View/Home/Profil/TentangKami";
-import RegistrasiBill from "./View/Home/Pembayaran/RegistrasiBill"
-
+import RegistrasiBill from "./View/Home/Pembayaran/RegistrasiBill";
+import RiwayatPembayaranRegis from "./View/Home/Pembayaran/RiwayatPembayaranRegis";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -53,11 +49,6 @@ const RegisterNewSiswaStack = () => {
         name="RegisDataSiswa"
         component={RegisDataSiswa}
       />
-      <RegisterNewSiswa.Screen name="RegisDataWali" component={RegisDataWali} />
-      <RegisterNewSiswa.Screen name="RegisHobi" component={RegisHobi} />
-      <RegisterNewSiswa.Screen name="RegisPrestasi" component={RegisPrestasi} />
-      <RegisterNewSiswa.Screen name="RegisDataFoto" component={RegisDataFoto} />
-      <RegisterNewSiswa.Screen name="RegisSelesai" component={RegisSelesai} />
     </RegisterNewSiswa.Navigator>
   );
 };
@@ -75,14 +66,15 @@ const MainStack = () => {
 };
 
 const LoginStack = () => {
-  return(
-    <Login.Navigator screenOptions={{headerShown : false}}>
-      <Login.Screen name="Welcome" component={WelcomeScreen}/>
-      <Login.Screen name="Login" component={LoginScreen}/>
-      <Login.Screen name="MainStack" component={MainStack}/>
+  return (
+    <Login.Navigator screenOptions={{ headerShown: false }}>
+      <Login.Screen name="Welcome" component={WelcomeScreen} />
+      <Login.Screen name="Login" component={LoginScreen} />
+      <Login.Screen name="MainStack" component={MainStack} />
+      <Main.Screen name="RegisterNewSiswa" component={RegisterNewSiswaStack} />
     </Login.Navigator>
-  )
-}
+  );
+};
 
 const guruStacks = () => {
   return (
@@ -98,11 +90,30 @@ const pembayranStacks = () => {
     <pembayaranStack.Navigator screenOptions={{ headerShown: false }}>
       <pembayaranStack.Screen name="Pembayaran" component={Pembayaran} />
       <pembayaranStack.Screen name="Tagihan" component={Tagihan} />
-      <pembayaranStack.Screen name="MetodePembayaran" component={MetodePembayaran} />
-      <pembayaranStack.Screen name="MetodePembayaranRegis" component={MetodePembayaranRegis} />
-      <pembayaranStack.Screen name="RiwayatPembayaran" component={RiwayatPembayaran} />
-      <pembayaranStack.Screen name="DetailPembayaran" component={DetailPembayaran} />
-      <pembayaranStack.Screen name="RegistrasiBill" component={RegistrasiBill} />
+      <pembayaranStack.Screen
+        name="MetodePembayaran"
+        component={MetodePembayaran}
+      />
+      <pembayaranStack.Screen
+        name="MetodePembayaranRegis"
+        component={MetodePembayaranRegis}
+      />
+      <pembayaranStack.Screen
+        name="RiwayatPembayaran"
+        component={RiwayatPembayaran}
+      />
+      <pembayaranStack.Screen
+        name="DetailPembayaran"
+        component={DetailPembayaran}
+      />
+      <pembayaranStack.Screen
+        name="RegistrasiBill"
+        component={RegistrasiBill}
+      />
+      <pembayaranStack.Screen
+      name="RiwayatPembayaranRegis"
+      component={RiwayatPembayaranRegis}
+      />
     </pembayaranStack.Navigator>
   );
 };
@@ -113,7 +124,7 @@ const profilStacks = () => {
       <profilStack.Screen name="Profil" component={Profil} />
       <profilStack.Screen name="InfoAplikasi" component={InfoAplikasi} />
       <profilStack.Screen name="TentangKami" component={TentangKami} />
-      <profilStack.Screen name="LoginProfile" component={LoginStack} />
+      <profilStack.Screen name="login" component={LoginStack} />
     </profilStack.Navigator>
   );
 };
@@ -182,41 +193,32 @@ const AppTabs = () => {
 };
 
 export default class App extends React.Component {
-
   constructor() {
-    super()
+    super();
 
-    this.UserData()
+    this.UserData();
     this.state = {
-      tokenUser : "",
-        tokenExpire : "",
-      }
-    }
-
-  UserData = async() => {
-    const tokenUser = await CallAsyncData.getData('token')
-    const tokenExpire = await CallAsyncData.getData('tokenExpire')
-    this.setState({tokenExpire: tokenExpire,tokenUser:tokenUser})
-    
+      tokenUser: "",
+      tokenExpire: "",
+    };
   }
 
-  render(){
+  UserData = async () => {
+    const tokenUser = await CallAsyncData.getData("token");
+    const tokenExpire = await CallAsyncData.getData("tokenExpire");
+    // await AsyncStorage.clear();
+    this.setState({ tokenExpire: tokenExpire, tokenUser: tokenUser });
+  };
+
+  render() {
     return (
       <NavigationContainer>
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-
-        {this.state.tokenUser ?(
-       <AuthStack.Screen
-       name="HomeStackScreen"
-       component={MainStack}
-     />
-    ): (
-      <AuthStack.Screen
-      name="login"
-      component={LoginStack}
-    />
-    )}
-
+          {this.state.tokenUser ? (
+            <AuthStack.Screen name="HomeStackScreen" component={MainStack} />
+          ) : (
+            <AuthStack.Screen name="login" component={LoginStack} />
+          )}
         </AuthStack.Navigator>
       </NavigationContainer>
     );

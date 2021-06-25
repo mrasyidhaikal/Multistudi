@@ -20,12 +20,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import Style from "./../../Style/Style";
-import CallAPIData from '../../../Controller/CallAPI';
+import CallAPIData from "../../../Controller/CallAPI";
 import { FlatList } from "react-native-gesture-handler";
 
 const { width: WIDTH } = Dimensions.get("window");
 
-const numColumn = 1
+const numColumn = 1;
 
 class Guru extends React.Component {
   constructor() {
@@ -35,36 +35,35 @@ class Guru extends React.Component {
       refreshing: false,
       active: 0,
       dataTeacher: [],
-      selectedId:'',
+      selectedId: "",
     };
   }
 
-  getTeacher = async() =>{
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/Teacher`
-    const response = await CallAPIData.getData(url)
-    const {data,statusCode} = response
-    
-    if(statusCode == 200){
-      this.setState({dataTeacher:data})
-      // console.log(this.state.dataTeacher)
-    }else{
-      console.log('Gagal Akses API')
-    }
-  }
+  getTeacher = async () => {
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/Teacher`;
+    const response = await CallAPIData.getData(url);
+    const { data, statusCode } = response;
 
-  componentDidMount(){
-    this.getTeacher()
+    if (statusCode == 200) {
+      this.setState({ dataTeacher: data });
+      // console.log(this.state.dataTeacher)
+    } else {
+      console.log("Gagal Akses API");
+    }
+  };
+
+  componentDidMount() {
+    this.getTeacher();
   }
 
   checkIDGuru = (teacherID) => {
-    const { navigation } = this.props
-    navigation.navigate('DetailGuru',{params: teacherID})
-  }
-  
+    const { navigation } = this.props;
+    navigation.navigate("DetailGuru", { params: teacherID });
+  };
 
-  _renderItem = ({item,index}) =>{
-    return(
-    <TouchableOpacity onPress={() => this.checkIDGuru(item.teacherid)}>
+  _renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity onPress={() => this.checkIDGuru(item.teacherid)}>
         <View
           style={{
             flexDirection: "row",
@@ -73,21 +72,35 @@ class Guru extends React.Component {
             width: WIDTH - 50,
           }}
         >
-          <View style={{margin: 10, width: 60, height: 60, overflow: 'hidden', borderRadius: 30}}>
+          <View
+            style={{
+              margin: 10,
+              width: 60,
+              height: 60,
+              overflow: "hidden",
+              borderRadius: 30,
+            }}
+          >
             <Image
-              style={{  width: '100%', height: '120%'}}
-              source={{uri:item.picture}}
+              style={{ width: "100%", height: "120%" }}
+              source={{ uri: item.picture }}
             />
           </View>
-          <View style={{ margin: 10,flexDirection:'column'}}>
-            <Text style={[Style.textBold,{fontSize: 16, width: 250, flexWrap: 'wrap'}]}>{item.name}</Text>
+          <View style={{ margin: 10, flexDirection: "column" }}>
+            <Text
+              style={[
+                Style.textBold,
+                { fontSize: 16, width: 250, flexWrap: "wrap" },
+              ]}
+            >
+              {item.name}
+            </Text>
             <Text style={{ color: "#B2B5BF" }}>{item.title}</Text>
           </View>
         </View>
-    </TouchableOpacity>
-    )  
-}
-
+      </TouchableOpacity>
+    );
+  };
 
   render() {
     const { navigation } = this.props;
@@ -103,13 +116,13 @@ class Guru extends React.Component {
             <ScrollView style={{}}>
               <View style={{ marginTop: 10, flexDirection: "row" }}>
                 <FlatList
-                  data = {this.state.dataTeacher}
-                  renderItem = {this._renderItem}
-                  keyExtractor={(item, index)=> index.toString()}
+                  data={this.state.dataTeacher}
+                  renderItem={this._renderItem}
+                  keyExtractor={(item, index) => index.toString()}
                   extraData={
-                    this.state.selectedId     // for single item
+                    this.state.selectedId // for single item
                   }
-                  numColumns = {numColumn}
+                  numColumns={numColumn}
                 />
               </View>
             </ScrollView>

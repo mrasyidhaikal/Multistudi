@@ -17,17 +17,15 @@ import {
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import moment from "moment";
 import Style, { biru, black, WIDTH } from "./../../Style/Style";
-import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "./../../Style/PembayranStyle";
-import { Table, Row, Rows } from "react-native-table-component";
+import CallAsyncData from "./../../../Controller/CallAsyncData";
 import callAPI from "./../../../Controller/CallAPI";
-import { sub } from "react-native-reanimated";
-
-const windowHeight = Dimensions.get('window').height;
-
+import listEmptyComponent from "../../Component/ListEmptyComponent";
+import { DataTable } from "react-native-paper";
+const windowHeight = Dimensions.get("window").height;
 
 const numColumn = 1;
 class Pembayaran extends React.Component {
@@ -77,11 +75,11 @@ class Pembayaran extends React.Component {
     };
   }
 
-  checkStatus(billvalue, pendingvalue) {
-    if (pendingvalue == 0) {
+  checkStatus(pendingvalue) {
+    if (pendingvalue === 0) {
       return " Lunas";
     } else {
-      return " " + this.currencyFormat(pendingvalue);
+      return this.currencyFormat(pendingvalue);
     }
   }
 
@@ -89,12 +87,12 @@ class Pembayaran extends React.Component {
     return "Rp " + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
   }
 
-  setRefreshing = () =>{
-    if(this.state.refreshing == false){
-       this.setState({ refreshing: true })
-       this.getDataRegistrasi()
-     }
-  }
+  setRefreshing = () => {
+    if (this.state.refreshing == false) {
+      this.setState({ refreshing: true });
+      this.getDataRegistrasi();
+    }
+  };
 
   checkWarna = (data) => {
     let array = [];
@@ -139,15 +137,20 @@ class Pembayaran extends React.Component {
   };
 
   getDataRegistrasi = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/MHS0001932`;
+  const userid = await CallAsyncData.getData("userid");
+  const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/${userid}/`;
+
+   // const url = `http://104.248.156.113:8025/api/v1/AppAccount/RegistrationBill/MHS0001932`;
+    //Lunas : MHS0001418
+    //Blm lunas : MHS0001932
     const response = await callAPI.getData(url);
     const { data, statusCode } = response;
     this.checkWarna(data);
-    this.setState({ regisData: data.detail });
 
-    if(statusCode == 200){
-      this.setState({ refreshing: false })
+    if (statusCode == 200) {
+      this.setState({ refreshing: false });
       this.setState({ regisData: data.detail, headerData: data.header });
+     
     }
   };
 
@@ -183,43 +186,6 @@ class Pembayaran extends React.Component {
   //   console.log(this.state.ModelArray);
   // };
 
-  _renderItem = ({ item, index }) => {
-    if (item.isfirstpay === 1) {
-      return (
-        <View
-          style={{
-            margin: 25,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-          }}
-        >
-          <Text style={{ fontsize: 12 }}>{item.description}</Text>
-          <Text style={{ fontsize: 12 }}>
-            {this.currencyFormat(item.billvalue)}
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              borderRadius: 50,
-              borderWidth: 1,
-              padding: 6,
-              borderColor: "#06BFAD",
-            }}
-          >
-            <Icon name={"ios-checkmark-circle"} size={18} color={"#06BFAD"} />
-            <Text style={{ color: "#06BFAD" }}>
-              {this.checkStatus(
-                this.currencyFormat(item.billvalue),
-                item.pendingvalue
-              )}
-            </Text>
-          </View>
-        </View>
-      );
-    }
-  };
-
   _renderItemCicil = ({ item, index }) => {
     if (item.isfirstpay === 0) {
       return (
@@ -232,10 +198,10 @@ class Pembayaran extends React.Component {
             alignItems: "baseline",
           }}
         >
-          <View style={{ width: WIDTH / 3.2 }}>
+          <View style={{ width: WIDTH / 4 }}>
             <Text style={{ fontSize: 12 }}>{item.description}</Text>
           </View>
-          <View style={{ width: WIDTH / 3.7 }}>
+          <View style={{ width: WIDTH / 4.5 }}>
             <Text style={{ fontSize: 12 }}>
               {this.currencyFormat(item.billvalue)}
             </Text>
@@ -247,7 +213,7 @@ class Pembayaran extends React.Component {
               borderWidth: 1,
               padding: 6,
               borderColor: this.state.colorText2,
-              width: WIDTH / 3.5,
+              width: WIDTH / 4.5,
             }}
           >
             <Icon
@@ -255,7 +221,12 @@ class Pembayaran extends React.Component {
               size={18}
               color={this.state.colorText2}
             />
-            <Text style={{ color: this.state.colorText2, fontSize: 12 }}>
+            <Text
+              style={{
+                color: this.state.colorText2,
+                fontSize: 12,
+              }}
+            >
               {this.checkStatus(item.billvalue, item.pendingvalue)}
             </Text>
           </View>
@@ -270,13 +241,14 @@ class Pembayaran extends React.Component {
       <View style={Style.container}>
         <SafeAreaView>
           <ScrollView
-          style={{height:windowHeight}}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.setRefreshing}
-            />
-          }>
+            style={{ height: windowHeight }}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.setRefreshing}
+              />
+            }
+          >
             <View style={Style.NavBackContainer}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Icon
@@ -287,7 +259,7 @@ class Pembayaran extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ position: "absolute", left: WIDTH - 85 }}
-                onPress={() => navigation.navigate("RiwayatPembayaran")}
+                onPress={() => navigation.navigate("RiwayatPembayaranRegis",{headerData:this.state.headerData})}
               >
                 <Icon name={"ios-timer-outline"} size={25} color={"#000"} />
               </TouchableOpacity>
@@ -338,7 +310,7 @@ class Pembayaran extends React.Component {
                     { fontWeight: "bold", textAlign: "left", fontSize: 14 },
                   ]}
                 >
-                  : PB201-03-011233
+                  : {this.state.headerData.nopendaftaran}
                 </Text>
                 <Text
                   style={[
@@ -346,47 +318,9 @@ class Pembayaran extends React.Component {
                     { fontWeight: "bold", fontSize: 14 },
                   ]}
                 >
-                  : 2021/2022 | Gelombang II
+                  : {this.state.headerData.tahunajaran} |{" "}
+                  {this.state.headerData.gelombangdesc}
                 </Text>
-              </View>
-            </View>
-
-            <View style={PembayaranStyle.CardPembayaran}>
-              <View style={{ padding: 25 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Icon name="ios-calendar-outline" size={26} color={black} />
-                  <Text
-                    style={[
-                      Style.textNormalBlack,
-                      { marginLeft: 10, marginTop: 3 },
-                    ]}
-                  >
-                    Maret 2021
-                  </Text>
-                </View>
-                <View style={{ marginTop: 10 }}>
-                  <Text style={Style.textBold20}>Rp. 550.000</Text>
-                </View>
-              </View>
-
-              <View style={{ marginTop: 35 }}>
-                <TouchableOpacity
-                  style={PembayaranStyle.buttonRed}
-                  onPress={() => navigation.navigate("Tagihan")}
-                >
-                  <Text
-                    style={[
-                      Style.textNormalWhite,
-                      {
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        marginTop: 12,
-                      },
-                    ]}
-                  >
-                    Bayar
-                  </Text>
-                </TouchableOpacity>
               </View>
             </View>
 
@@ -422,7 +356,9 @@ class Pembayaran extends React.Component {
               </View>
             </View>
 
-            <Text style={{ marginLeft: 25, marginVertical: 15, fontWeight: 'bold' }}>
+            <Text
+              style={{ marginLeft: 25, marginVertical: 15, fontWeight: "bold" }}
+            >
               Pembayaran Pertama
             </Text>
 
@@ -433,56 +369,85 @@ class Pembayaran extends React.Component {
               ]}
             >
               <View>
-                {/* <Table>
-                  <Row data={this.state.tableHead} style={styles.head} textStyle={[styles.text,{color:'#B2B5BF'}]}/>
-                  <Rows data={this.state.tableData} textStyle={styles.text}/>
-                </Table> */}
                 <View
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
-                    marginTop: 20,
                   }}
-                >
-                  <Text
-                    style={{
-                      color: "#55769F",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Kategori
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#55769F",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Jumlah Tagihan
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#55769F",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Status
-                  </Text>
-                </View>
-                <View>
-                  <FlatList
-                    data={this.state.regisData}
-                    extraData={
-                      this.state.selectedId // for single item
+                ></View>
+
+                <DataTable>
+                  <DataTable.Header style={{ borderBottomWidth: 0 }}>
+                    <DataTable.Title>
+                      <Text
+                        style={{
+                          color: "#55769F",
+                          fontSize: 14,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Kategori
+                      </Text>
+                    </DataTable.Title>
+                    <DataTable.Title style={Style.tableCell}>
+                      <Text
+                        style={{
+                          color: "#55769F",
+                          fontSize: 14,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Junlah Tagihan
+                      </Text>
+                    </DataTable.Title>
+                    <DataTable.Title style={Style.tableCell}>
+                      <Text
+                        style={{
+                          color: "#55769F",
+                          fontSize: 14,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Status
+                      </Text>
+                    </DataTable.Title>
+                  </DataTable.Header>
+                  {this.state.regisData.map((item, index) => {
+                    if (item.isfirstpay === 1) {
+                      return (
+                        <DataTable.Row key={index}>
+                          <DataTable.Cell>{item.description}</DataTable.Cell>
+                          <DataTable.Cell style={Style.tableCell}>
+                            {this.currencyFormat(item.billvalue)}
+                          </DataTable.Cell>
+                          <DataTable.Cell style={Style.tableCell}>
+                            <View
+                              style={{
+                                borderRadius: 15,
+                                borderWidth: 1,
+                                borderColor: this.state.colorText1,
+                                paddingVertical: 5,
+                                paddingHorizontal: 5,
+                                flexDirection: "row",
+                              }}
+                            >
+                              <Icon
+                                name={this.state.iconPembayaran1}
+                                size={18}
+                                color={this.state.colorText1}
+                              />
+                              <Text style={{ color: this.state.colorText1 }}>
+                                {this.checkStatus(item.pendingvalue)}
+
+                                {/* {item.pendingvalue} */}
+                              </Text>
+                            </View>
+                          </DataTable.Cell>
+                        </DataTable.Row>
+                      );
                     }
-                    renderItem={this._renderItem}
-                    keyExtractor={(item, index) => index.toString()}
-                    numColumns={numColumn}
-                  />
-                </View>
+                  })}
+                </DataTable>
               </View>
             </View>
 
@@ -508,7 +473,9 @@ class Pembayaran extends React.Component {
               </View>
             </TouchableOpacity>
 
-            <Text style={{ marginLeft: 25, marginVertical: 15, fontWeight: 'bold' }}>
+            <Text
+              style={{ marginLeft: 25, marginVertical: 15, fontWeight: "bold" }}
+            >
               Pembayaran Dapat Dicicil
             </Text>
 
@@ -518,48 +485,91 @@ class Pembayaran extends React.Component {
                 { flexDirection: "column", marginBottom: 20 },
               ]}
             >
-              <View>
-                {/* <Table>
-                  <Row data={this.state.tableHead} style={styles.head} textStyle={[styles.text,{color:'#B2B5BF'}]}/>
-                  <Rows data={this.state.tableData} textStyle={styles.text}/>
-                </Table> */}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    marginTop: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#55769F",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Kategori
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#55769F",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Jumlah Tagihan
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#55769F",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Status
-                  </Text>
-                </View>
-                <View>
-                  <FlatList
+              <DataTable>
+                <DataTable.Header style={{ borderBottomWidth: 0 }}>
+                  <DataTable.Title>
+                    <Text
+                      style={{
+                        color: "#55769F",
+                        fontSize: 14,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Kategori
+                    </Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={Style.tableCell}>
+                    <Text
+                      style={{
+                        color: "#55769F",
+                        fontSize: 14,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Junlah Tagihan
+                    </Text>
+                  </DataTable.Title>
+                  <DataTable.Title style={Style.tableCell}>
+                    <Text
+                      style={{
+                        color: "#55769F",
+                        fontSize: 14,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Status
+                    </Text>
+                  </DataTable.Title>
+                </DataTable.Header>
+                {this.state.regisData.map((item, index) => {
+                  if (item.isfirstpay === 0) {
+                    return (
+                      <DataTable.Row>
+                        <DataTable.Cell>
+                          <Text style={{ fontSize: 12 }}>
+                            {item.description}
+                          </Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell>
+                          <Text style={{ fontSize: 12 }}>
+                            {this.currencyFormat(item.billvalue)}
+                          </Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              borderRadius: 50,
+                              borderWidth: 1,
+                              padding: 5,
+                              borderColor: this.state.colorText2,
+                            }}
+                          >
+                            <Icon
+                              name={this.state.iconPembayaran2}
+                              size={18}
+                              color={this.state.colorText2}
+                            />
+                            <Text
+                              style={{
+                                color: this.state.colorText2,
+                                fontSize: 12,
+                              }}
+                            >
+                              {this.checkStatus(
+                                item.billvalue,
+                                item.pendingvalue
+                              )}
+                            </Text>
+                          </View>
+                        </DataTable.Cell>
+                      </DataTable.Row>
+                    );
+                  }
+                })}
+              </DataTable>
+
+              {/* <FlatList
                     data={this.state.regisData}
                     extraData={
                       this.state.selectedId // for single item
@@ -567,9 +577,7 @@ class Pembayaran extends React.Component {
                     renderItem={this._renderItemCicil}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={numColumn}
-                  />
-                </View>
-              </View>
+                  /> */}
             </View>
 
             <TouchableOpacity
@@ -583,6 +591,7 @@ class Pembayaran extends React.Component {
                 navigation.navigate("RegistrasiBill", {
                   params: this.state.regisData,
                   isfirstpay: false,
+                  headerData: this.state.headerData,
                 })
               }
             >
@@ -597,7 +606,7 @@ class Pembayaran extends React.Component {
               </View>
             </TouchableOpacity>
 
-            <View
+            {/* <View
               style={{
                 backgroundColor: "#06BFAD",
                 flexDirection: "row",
@@ -611,7 +620,7 @@ class Pembayaran extends React.Component {
               <Text style={{ color: "#fff", fontSize: 12, marginLeft: 7 }}>
                 Pembayaran ke-1 (15 Maret 2021) Telah Dikonfirmasi
               </Text>
-            </View>
+            </View> */}
 
             <View
               style={[

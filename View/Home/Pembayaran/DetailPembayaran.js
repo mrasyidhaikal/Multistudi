@@ -69,7 +69,8 @@ class DetailPembayaran extends React.Component {
         {text: 'Oke',onPress:() => console.log("closed")}
       ])
     }else{
-      navigation.navigate('RiwayatPembayaran')
+       bnavigation.navigate('RiwayatPembayaran')
+    
   }
  }
 

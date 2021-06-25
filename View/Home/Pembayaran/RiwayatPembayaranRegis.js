@@ -28,10 +28,10 @@ import callAPI from "./../../../Controller/CallAPI";
 import Clipboard from "expo-clipboard";
 import ListEmptyComponent from "../../Component/ListEmptyComponent";
 
-class RiwayatPembayaran extends React.Component {
+class RiwayatPembayaranRegis extends React.Component {
   constructor() {
     super();
-    this.getDataStatusPembayaran();
+ 
     this.state = {
       refreshing: false,
       active: 0,
@@ -40,12 +40,14 @@ class RiwayatPembayaran extends React.Component {
   }
 
   getDataStatusPembayaran = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillHeader/MHS0001418/`;
-    const response = await callAPI.getData(url);
-    const { data } = response;
+    // const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillHeader/MHS0001418/`;
+    // const response = await callAPI.getData(url);
+    // const { data } = response;
+    const { navigation, route } = this.props;
+    const {headerData: headerData} = route.params;
   
-    this.setState({ contentData: data.detail[0]});
-    console.log(this.state.contentData)
+     this.setState({ contentData: headerData})
+    //console.log(headerData)
   };
 
   currencyFormat(num) {
@@ -60,9 +62,14 @@ class RiwayatPembayaran extends React.Component {
     Clipboard.setString(this.state.contentData.virtualaccount_full);
     this.showToast("Text Copied !");
   };
+  componentDidMount(){
+    this.getDataStatusPembayaran()
+  }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, route } = this.props;
+
+   
     return (
       <View style={Style.container}>
         <SafeAreaView>
@@ -125,8 +132,8 @@ class RiwayatPembayaran extends React.Component {
                 </View>
 
                 <Text style={{ fontSize: 14, marginLeft: 20 }}>
-                  Metode Pembayaran : {this.state.contentData.bankname} Virtual
-                  Account{" "}
+                {this.state.contentData.vatypedesc} 
+                 
                 </Text>
 
                 <TouchableOpacity
@@ -154,7 +161,7 @@ class RiwayatPembayaran extends React.Component {
                       style={{ fontWeight: "bold", fontSize: 16, marginTop: 2 }}
                     >
                       {this.currencyFormat(
-                        Number(this.state.contentData.pendingvalue)
+                        Number(this.state.contentData.strtotal)
                       )}
                     </Text>
                   </View>
@@ -177,4 +184,4 @@ class RiwayatPembayaran extends React.Component {
   }
 }
 
-export default RiwayatPembayaran;
+export default RiwayatPembayaranRegis;

@@ -18,12 +18,13 @@ import {
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CallAsyncData from "./../../../Controller/CallAsyncData";
 import moment from "moment";
 import Style, { black, WIDTH } from "../../Style/Style";
 import CalendarStrip from "react-native-calendar-strip";
 import PembayaranStyle from "../../Style/PembayranStyle";
-import { Table, Row, Rows } from "react-native-table-component";
 import callAPI from "./../../../Controller/CallAPI";
+import listEmptyComponent from "../../Component/ListEmptyComponent";
 
 const numColumn = 1;
 class Tagihan extends React.Component {
@@ -39,20 +40,29 @@ class Tagihan extends React.Component {
   }
 
   getDataPembayaran = async () => {
-    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001332/`;
+    const userid = await CallAsyncData.getData("userid");
+
+    const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/${userid}/`;
+    //const url = `http://104.248.156.113:8025/api/v1/AppAccount/MonthlyBillList/MHS0001418/`;
     const response = await callAPI.getData(url);
     const { data } = response;
- 
-    this.setState({ contentData: data });
+
+    if (!data.error) {
+      this.setState({ contentData: data });
+    }else{
+      null
+    }
+
+  
   };
 
   currencyFormat(num) {
-    return 'Rp ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    return "Rp " + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
   }
 
-  checkBulan(bulan){
-    switch(bulan){
-      case 1: 
+  checkBulan(bulan) {
+    switch (bulan) {
+      case 1:
         return "Jan";
       case 2:
         return "Feb";
@@ -105,7 +115,9 @@ class Tagihan extends React.Component {
           <Text>
             {this.checkBulan(item.nmonth)} {item.nyear}
           </Text>
-          <Text style={PembayaranStyle.TextTagihanSPP}>{this.currencyFormat(item.billvalue)}</Text>
+          <Text style={PembayaranStyle.TextTagihanSPP}>
+            {this.currencyFormat(item.billvalue)}
+          </Text>
           <TouchableOpacity disabled={true} style={PembayaranStyle.buttonLunas}>
             <Text style={PembayaranStyle.buttonLunasText}>Lunas</Text>
           </TouchableOpacity>
@@ -125,7 +137,9 @@ class Tagihan extends React.Component {
           <Text>
             {this.checkBulan(item.nmonth)} {item.nyear}
           </Text>
-          <Text style={PembayaranStyle.TextTagihanSPP}>{this.currencyFormat(item.billvalue)}</Text>
+          <Text style={PembayaranStyle.TextTagihanSPP}>
+            {this.currencyFormat(item.billvalue)}
+          </Text>
           <TouchableOpacity
             style={PembayaranStyle.buttonBayar}
             onPress={() =>
@@ -165,11 +179,11 @@ class Tagihan extends React.Component {
                 <Icon name={"ios-timer-outline"} size={25} color={"#000"} />
               </TouchableOpacity>
               <Text style={[Style.headerText, { marginVertical: 10 }]}>
-                Informasi Tagihan
+                Informasi Tagihan SPP
               </Text>
             </View>
 
-            <View
+            {/* <View
               style={[
                 Style.ContainerViewBiasa,
                 { flexDirection: "row", marginTop: 10 },
@@ -222,7 +236,7 @@ class Tagihan extends React.Component {
                   : 2021/2022 | Gelombang II
                 </Text>
               </View>
-            </View>
+            </View> */}
 
             <View
               style={{
@@ -240,6 +254,7 @@ class Tagihan extends React.Component {
                 renderItem={this._renderItem}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={numColumn}
+                ListEmptyComponent={listEmptyComponent}
               />
             </View>
           </ScrollView>

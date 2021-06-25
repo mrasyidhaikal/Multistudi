@@ -12,6 +12,7 @@ import {
   StatusBar,
   ScrollView,
   RefreshControl,
+  Alert,
   FlatList,
 } from "react-native";
 
@@ -23,6 +24,7 @@ import moment from "moment";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Style from "./../../Style/Style";
+import CallAsyncData from "./../../../Controller/CallAsyncData";
 import callAPI from "./../../../Controller/CallAPI";
 import { cos } from "react-native-reanimated";
 const numColumn = 1;
@@ -314,7 +316,46 @@ class RegisDataSiswa extends React.Component {
     if (this.state.display >= 6) {
       return;
     }
-    this.setState({ display: this.state.display + 1 });
+    if (this.state.display == 1) {
+      if (this.state.kodeJurusan === "" || this.state.nickname ==="" || this.state.jenisKelaminSiswa === "" || this.state.Agama === "" || this.state.birthplace==="" || this.state.BirthDateSiswa==="" || this.state.address === "" || this.state.mobileno==""||this.state.lastschool==""||this.state.addresslastschool==""||this.state.childno==""||this.state.totalsiblings=="") {
+        Alert.alert('Form tidak boleh kosong',"Mohon di isi terlebih dahulu",[
+          {text: 'Oke'}
+        ])
+      }else{
+        this.setState({ display: this.state.display + 1 });
+      }
+    }
+    if (this.state.display == 2) {
+      if (this.state.Wali1 === "" || this.state.mguardname==""||this.state.mguardmobile==""||this.state.mguardaddress==""||this.state.mguardbirthplace==""||this.state.DateBirthWali1==""||this.state.LastEdWali1==""||this.state.agamaWali1==""||this.state.mguardoccupation==""||this.state.mguardoccupationaddress==""||this.state.Wali2==""||this.state.fguardname==""||this.state.fguardmobile==""||this.state.fguardaddress==""||this.state.fguardbirthplace==""||this.state.DateBirthWali2==""||this.state.LastEdWali2==""||this.state.agamaWali2==""||this.state.fguardoccupation==""||this.state.fguardoccupationaddress=="") {
+        Alert.alert('Form tidak boleh kosong',"Mohon di isi terlebih dahulu",[
+          {text: 'Oke'}
+        ])
+      }
+      else{
+        this.setState({ display: this.state.display + 1 });
+      }
+    }
+    if (this.state.display== 3) {
+      this.setState({ display: this.state.display + 1 });
+    }
+    if (this.state.display== 4) {
+      this.setState({ display: this.state.display + 1 });
+    }
+    if (this.state.display== 5) {
+      this.setState({ display: this.state.display + 1 });
+    }
+    if (this.state.display== 6) {
+      if (this.state.studentemail == "" || this.state.pwd==""||this.state.repw==""||reginfo_origin=="") {
+        Alert.alert('Form tidak boleh kosong',"Mohon di isi terlebih dahulu",[
+          {text: 'Oke'}
+        ])
+      }else{
+        this.setState({ display: this.state.display + 1 });
+      }
+     
+    }
+    
+   // this.setState({ display: this.state.display + 1 });
   };
   showDialog = () => {
     this.setState({ dialogvisible: true });
@@ -372,7 +413,7 @@ class RegisDataSiswa extends React.Component {
     const url = `http://104.248.156.113:8025/api/v1/AppAccount/GetDataRegister`;
     const response = await callAPI.getData(url);
     const { data } = response;
-
+    console.log(data.activeGelombang)
     this.setState({
       dataSiswa: data,
       majorlist: data.majorlist,
@@ -387,13 +428,15 @@ class RegisDataSiswa extends React.Component {
   };
 
   onSubmitData = async () => {
+    const { navigation } = this.props;
+    const tokenUser = await CallAsyncData.getData("token");
     let url = "http://104.248.156.113:8025/api/v1/AppAccount/SaveRegister";
      //Image
 
-    const base64 = await FileSystem.readAsStringAsync(this.state.imageKK, {
-      encoding: "base64",
-    });
-    let body = JSON.stringify( {
+    // const base64 = await FileSystem.readAsStringAsync(this.state.imageKK, {
+    //   encoding: "base64",
+    // });
+    let body =  {
       "prstudentid": "",
       "studentid": "",
       "roomid": "",
@@ -613,17 +656,44 @@ class RegisDataSiswa extends React.Component {
           "prstudentid": "",
           "description": "",
           "docfile": "",
-          "filedata": base64,
+          "filedata": "",
           "filename": ""
         }
 
       ]
 
-    });
-
+    };
+  
    
-    const response = await callAPI.postAPI(url, body);
-    console.log(response);
+    const response = await callAPI.postAPI(url, JSON.stringify(body));
+    console.log(response)
+
+    //MASIH BUG untuk kondisi nya
+    if (response.data.sukses == true) {
+      if (!tokenUser) {
+        Alert.alert(response.data.msg,[
+          {text: 'Oke',onPress:() =>  navigation.navigate("login", { screen: "Login" })}
+        ])
+      }else{
+        Alert.alert(response.data.msg,[
+          {text: 'Oke',onPress:() =>  navigation.navigate("AppTabs", { screen: "Home" })}
+        ])
+      }
+    }else{
+      if (!tokenUser) {
+        Alert.alert(response.data.msg,[
+          {text: 'Oke',onPress:() =>  navigation.navigate("login", { screen: "Welcome" })}
+        ])
+      }else{
+        Alert.alert(response.data.msg,[
+          {text: 'Oke',onPress:() =>  navigation.navigate("AppTabs", { screen: "Home" })}
+        ])
+      }
+     
+    }
+
+    
+    
   };
   render() {
     const layer = 6;
@@ -1596,9 +1666,7 @@ class RegisDataSiswa extends React.Component {
                 { display: this.state.display === 6 ? "flex" : "none" },
               ]}
             >
-              <TouchableOpacity onPress={() => this.onSubmitData()}>
-                <Text style={Style.textBold}>asd</Text>
-              </TouchableOpacity>
+           
               <View style={Style.inputContainer}>
                 <Text style={Style.textNormalBlack}>Email</Text>
                 <View style={Style.input}>
@@ -1688,10 +1756,10 @@ class RegisDataSiswa extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={Style.buttonBlank}
-                onPress={this.handlePress}
+                onPress={this.state.display === 6 ? this.onSubmitData : this.handlePress}
               >
                 <View style={{ flexDirection: "row" }}>
-                  <Text style={Style.textNormalBlack}>Selanjutnya</Text>
+                  <Text style={Style.textNormalBlack}>{this.state.display === 6 ?("Selesai") : ("Selanjutnya")}</Text>
                   <Icon
                     name={"ios-chevron-forward-sharp"}
                     size={20}
